@@ -374,7 +374,7 @@ function classifyCommit(subject) {
 app.get('/api/history', (req, res) => {
   try {
     const raw = execSync(
-      `git -C "${PROJECT_DIR}" log --format="%H|%h|%s|%aI" -50`,
+      `git -C "${PROJECT_DIR}" log --format="%H|%h|%s|%aI" -50 -- .`,
       { stdio: 'pipe' }
     ).toString().trim()
 
