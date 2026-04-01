@@ -231,6 +231,7 @@ let autosaveTimer = null  // debounce handle
 // ── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
   await Promise.all([loadFiles(), loadCalls()])
+  // loadCalls already fetches history — nothing extra needed
 }
 
 async function loadFiles() {
@@ -240,10 +241,14 @@ async function loadFiles() {
 }
 
 async function loadCalls() {
-  const res = await fetch('/api/calls')
-  allCalls = await res.json()
+  const [callsRes, historyRes] = await Promise.all([
+    fetch('/api/calls'),
+    fetch('/api/history')
+  ])
+  allCalls = await callsRes.json()
+  const history = await historyRes.json()
   renderCallsNav(allCalls)
-  renderVersionHistory(allCalls)
+  renderVersionHistory(history)
 }
 
 // ── Left nav ─────────────────────────────────────────────────────────────────
@@ -284,37 +289,53 @@ function renderCallsNav(calls) {
   }).join('')
 }
 
-function renderVersionHistory(calls) {
-  const panel = document.getElementById('history-panel')
-  const applied = [...calls].filter(c => c.status === 'applied').reverse()
+// type → display config
+const VERSION_TYPE = {
+  'ai-post':    { label: 'AI edit',     dot: '#22c55e', protect: true  },
+  'ai-pre':     { label: 'snapshot',    dot: '#94a3b8', protect: true  },
+  'checkpoint': { label: 'checkpoint',  dot: '#3b82f6', protect: false },
+  'new-file':   { label: 'new file',    dot: '#a78bfa', protect: false },
+  'manual':     { label: 'manual edit', dot: '#f59e0b', protect: false },
+  'other':      { label: '',            dot: '#d1d5db', protect: false },
+}
 
-  if (!applied.length) {
-    panel.innerHTML = `<div style="font-size:12px;color:#d1d5db;padding:10px 14px;">No applied calls yet</div>`
+function renderVersionHistory(entries) {
+  const panel = document.getElementById('history-panel')
+  if (!entries.length) {
+    panel.innerHTML = `<div style="font-size:12px;color:#d1d5db;padding:10px 14px;">No history yet</div>`
     return
   }
 
-  panel.innerHTML = applied.map((c, i) => {
-    const date = c.date
-      ? new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-      : new Date(c.applied_at || c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-    const editCount = c.applied_edits?.length || 0
-    const isSelected = selectedVersionId === c.id
+  panel.innerHTML = entries.map((e, i) => {
+    const cfg = VERSION_TYPE[e.type] || VERSION_TYPE.other
+    const label = e.named ? e.named.name : e.subject
+    const isSelected = selectedVersionId === e.hash
     const currentBadge = i === 0
-      ? `<span style="font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;margin-top:3px;display:inline-block;">CURRENT</span>`
+      ? `<span style="font-size:9px;font-weight:600;padding:1px 5px;border-radius:8px;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;">CURRENT</span> `
       : ''
+    const namedPin = e.named
+      ? `<span style="font-size:10px;color:#6b7280;" title="${e.named.name}">📌</span> `
+      : ''
+
     return `
-      <div class="ver-item ${isSelected ? 'selected' : ''}" onclick="selectVersion('${c.id}')">
-        <div class="ver-label">${c.name}</div>
-        <div class="ver-meta">${date} · ${editCount} change${editCount !== 1 ? 's' : ''}</div>
-        ${currentBadge}
+      <div class="ver-item ${isSelected ? 'selected' : ''}" onclick="selectVersionEntry('${e.hash}')">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:${cfg.dot};flex-shrink:0;display:inline-block;"></span>
+          <span class="ver-label" style="font-size:12px;">${namedPin}${label}</span>
+        </div>
+        <div class="ver-meta" style="padding-left:13px;">
+          ${currentBadge}${e.age} · <span style="font-family:monospace;">${e.shortHash}</span>
+        </div>
       </div>`
   }).join('')
 }
 
-function selectVersion(callId) {
-  selectedVersionId = callId
-  renderVersionHistory(allCalls)
-  const call = allCalls.find(c => c.id === callId)
+function selectVersionEntry(hash) {
+  selectedVersionId = hash
+  // Re-fetch history to re-render with selection
+  fetch('/api/history').then(r => r.json()).then(renderVersionHistory)
+  // If it's an AI-post entry, find the matching call and show its detail
+  const call = allCalls.find(c => c.commit_hash === hash)
   if (call) showCallDetail(call)
 }
 

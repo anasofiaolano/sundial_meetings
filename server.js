@@ -326,15 +326,62 @@ app.post('/api/commit-checkpoint', (req, res) => {
   }
 })
 
-// GET /api/history — recent git log
+// GET /api/history — structured git log with age, type, named flag
+const NAMED_VERSIONS_FILE = path.join(__dirname, 'test-data/named-versions.json')
+
+function loadNamedVersions() {
+  if (!fs.existsSync(NAMED_VERSIONS_FILE)) return []
+  return JSON.parse(fs.readFileSync(NAMED_VERSIONS_FILE, 'utf8'))
+}
+
+function formatAge(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime()
+  const mins  = Math.floor(diff / 60000)
+  const hours = Math.floor(diff / 3600000)
+  const days  = Math.floor(diff / 86400000)
+  if (mins  <  1) return 'just now'
+  if (mins  < 60) return `${mins}m ago`
+  if (hours < 24) return `${hours}h ago`
+  return `${days}d ago`
+}
+
+function classifyCommit(subject) {
+  if (subject.startsWith('call:'))          return 'ai-post'
+  if (subject.startsWith('snapshot:'))      return 'ai-pre'
+  if (subject.startsWith('checkpoint:'))    return 'checkpoint'
+  if (subject.startsWith('new file:'))      return 'new-file'
+  if (subject.startsWith('manual edit:'))   return 'manual'
+  return 'other'
+}
+
 app.get('/api/history', (req, res) => {
   try {
-    const log = execSync(
-      `git -C "${PROJECT_DIR}" log --oneline -20 2>&1`
+    const raw = execSync(
+      `git -C "${PROJECT_DIR}" log --format="%H|%h|%s|%aI" -50`,
+      { stdio: 'pipe' }
     ).toString().trim()
-    res.json({ log })
+
+    if (!raw) return res.json([])
+
+    const named = loadNamedVersions()
+    const namedByHash = Object.fromEntries(named.map(n => [n.hash, n]))
+
+    const entries = raw.split('\n').map(line => {
+      const [hash, shortHash, subject, date] = line.split('|')
+      return {
+        hash,
+        shortHash,
+        subject,
+        date,
+        age: formatAge(date),
+        type: classifyCommit(subject),
+        named: namedByHash[hash] || null
+      }
+    })
+
+    res.json(entries)
   } catch (err) {
-    res.json({ log: '(no git history yet)' })
+    res.json([])
   }
 })
 
