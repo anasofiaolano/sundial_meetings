@@ -111,7 +111,7 @@ app.get('/api/calls', (req, res) => {
 // POST /api/extract — run Claude extraction on a pasted transcript
 // Body: { transcript: string, callName: string }
 app.post('/api/extract', async (req, res) => {
-  const { transcript, callName } = req.body
+  const { transcript, callName, callDate } = req.body
   if (!transcript?.trim()) return res.status(400).json({ error: 'transcript is required' })
 
   try {
@@ -161,6 +161,7 @@ app.post('/api/extract', async (req, res) => {
     calls.push({
       id: callId,
       name: callName || `Call ${calls.length + 1}`,
+      date: callDate || null,
       timestamp: new Date().toISOString(),
       token_count: count.input_tokens,
       edits,

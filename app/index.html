@@ -143,17 +143,33 @@
         <button onclick="closeModal()" style="background:none;border:none;font-size:20px;color:#9ca3af;cursor:pointer;line-height:1;">×</button>
       </div>
       <div style="padding:16px 20px; display:flex; flex-direction:column; gap:12px; flex:1; overflow:hidden;">
-        <div>
-          <label style="font-size:12px; font-weight:500; color:#374151; display:block; margin-bottom:4px;">Call name (optional)</label>
-          <input id="call-name-input" type="text" placeholder="e.g. Sean Flaherty — Discovery"
-            style="width:100%; border:1px solid #e5e7eb; border-radius:6px; padding:7px 10px; font-size:13px; outline:none;"
-            onfocus="this.style.borderColor='#93c5fd'" onblur="this.style.borderColor='#e5e7eb'">
+        <div style="display:flex; gap:10px;">
+          <div style="flex:1;">
+            <label style="font-size:12px; font-weight:500; color:#374151; display:block; margin-bottom:4px;">Call name (optional)</label>
+            <input id="call-name-input" type="text" placeholder="e.g. Sean Flaherty — Discovery"
+              style="width:100%; border:1px solid #e5e7eb; border-radius:6px; padding:7px 10px; font-size:13px; outline:none;"
+              onfocus="this.style.borderColor='#93c5fd'" onblur="this.style.borderColor='#e5e7eb'">
+          </div>
+          <div style="width:140px;">
+            <label style="font-size:12px; font-weight:500; color:#374151; display:block; margin-bottom:4px;">Date (optional)</label>
+            <input id="call-date-input" type="date"
+              style="width:100%; border:1px solid #e5e7eb; border-radius:6px; padding:7px 10px; font-size:13px; outline:none; color:#374151;"
+              onfocus="this.style.borderColor='#93c5fd'" onblur="this.style.borderColor='#e5e7eb'">
+          </div>
         </div>
         <div style="flex:1; display:flex; flex-direction:column; min-height:0;">
           <label style="font-size:12px; font-weight:500; color:#374151; display:block; margin-bottom:4px;">Transcript</label>
+          <!-- Drop zone -->
+          <div id="drop-zone"
+            ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"
+            onclick="document.getElementById('file-input').click()"
+            style="border:2px dashed #e5e7eb; border-radius:6px; padding:12px 14px; text-align:center; font-size:12px; color:#9ca3af; cursor:pointer; margin-bottom:8px; transition:all .15s; display:flex; align-items:center; justify-content:center; gap:8px;">
+            <span id="drop-label">Drop a .txt file here, or click to browse</span>
+          </div>
+          <input id="file-input" type="file" accept=".txt" style="display:none;" onchange="handleFileSelect(event)">
           <textarea id="transcript-input"
-            placeholder="Paste the full call transcript here..."
-            style="flex:1; min-height:280px; border:1px solid #e5e7eb; border-radius:6px; padding:10px; font-size:13px; resize:none; outline:none; font-family:inherit; line-height:1.5;"
+            placeholder="Or paste the transcript here..."
+            style="flex:1; min-height:220px; border:1px solid #e5e7eb; border-radius:6px; padding:10px; font-size:13px; resize:none; outline:none; font-family:inherit; line-height:1.5;"
             onfocus="this.style.borderColor='#93c5fd'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
         </div>
       </div>
@@ -221,7 +237,9 @@ function renderCallsNav(calls) {
   }
   const sorted = [...calls].reverse()
   container.innerHTML = sorted.map((c, i) => {
-    const date = new Date(c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    const date = c.date
+      ? new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      : new Date(c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
     const dotClass = c.status === 'applied' ? 'applied' : 'pending'
     const isLast = i === sorted.length - 1
     return `
@@ -244,7 +262,9 @@ function renderVersionHistory(calls) {
   }
 
   panel.innerHTML = applied.map((c, i) => {
-    const date = new Date(c.applied_at || c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    const date = c.date
+      ? new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      : new Date(c.applied_at || c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
     const editCount = c.applied_edits?.length || 0
     const isSelected = selectedVersionId === c.id
     const currentBadge = i === 0
@@ -356,6 +376,51 @@ function openModal() {
   document.getElementById('transcript-input').focus()
 }
 
+function handleDragOver(e) {
+  e.preventDefault()
+  const zone = document.getElementById('drop-zone')
+  zone.style.borderColor = '#93c5fd'
+  zone.style.background = '#f0f9ff'
+}
+
+function handleDragLeave(e) {
+  const zone = document.getElementById('drop-zone')
+  zone.style.borderColor = '#e5e7eb'
+  zone.style.background = ''
+}
+
+function handleDrop(e) {
+  e.preventDefault()
+  handleDragLeave(e)
+  const file = e.dataTransfer.files[0]
+  if (file) loadFile(file)
+}
+
+function handleFileSelect(e) {
+  const file = e.target.files[0]
+  if (file) loadFile(file)
+}
+
+function loadFile(file) {
+  if (!file.name.endsWith('.txt')) {
+    document.getElementById('modal-status').textContent = 'Only .txt files are supported.'
+    return
+  }
+  const reader = new FileReader()
+  reader.onload = e => {
+    document.getElementById('transcript-input').value = e.target.result
+    document.getElementById('drop-label').textContent = `✓ ${file.name}`
+    document.getElementById('drop-zone').style.borderColor = '#22c55e'
+    document.getElementById('drop-zone').style.background = '#f0fdf4'
+    // Auto-fill call name from filename if empty
+    const nameInput = document.getElementById('call-name-input')
+    if (!nameInput.value) {
+      nameInput.value = file.name.replace(/\.txt$/, '').replace(/-/g, ' ').replace(/_/g, ' ')
+    }
+  }
+  reader.readAsText(file)
+}
+
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open')
   document.getElementById('modal-status').textContent = ''
@@ -383,10 +448,11 @@ async function runExtraction() {
   status.textContent = 'Analyzing transcript...'
 
   try {
+    const callDate = document.getElementById('call-date-input').value || null
     const res = await fetch('/api/extract', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ transcript, callName })
+      body: JSON.stringify({ transcript, callName, callDate })
     })
     const data = await res.json()
     if (!res.ok) throw new Error(data.error || 'Extraction failed')
@@ -394,6 +460,10 @@ async function runExtraction() {
     closeModal()
     document.getElementById('transcript-input').value = ''
     document.getElementById('call-name-input').value = ''
+    document.getElementById('call-date-input').value = ''
+    document.getElementById('drop-label').textContent = 'Drop a .txt file here, or click to browse'
+    document.getElementById('drop-zone').style.borderColor = '#e5e7eb'
+    document.getElementById('drop-zone').style.background = ''
 
     pendingEdits   = data.edits
     currentCallId  = data.callId
