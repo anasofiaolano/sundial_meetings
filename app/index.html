@@ -385,12 +385,12 @@ function enterEditMode(rel) {
     autosaveTimer = setTimeout(() => autosave(rel), 2000)
   })
 
-  // Cmd/Ctrl+S — will become a checkpoint commit in step 4
+  // Cmd/Ctrl+S — checkpoint commit (visible in version history)
   ta.addEventListener('keydown', e => {
     if ((e.metaKey || e.ctrlKey) && e.key === 's') {
       e.preventDefault()
       clearTimeout(autosaveTimer)
-      autosave(rel)
+      commitCheckpoint(rel)
     }
   })
 }
@@ -443,6 +443,49 @@ function insertBullet() {
   ta.focus()
 }
 
+
+async function commitCheckpoint(rel) {
+  const ta = document.getElementById('edit-textarea')
+  if (!ta) return
+  const content = ta.value
+  const status = document.getElementById('save-status')
+  if (status) { status.textContent = 'Saving…'; status.style.color = '#9ca3af' }
+
+  try {
+    const res = await fetch('/api/commit-checkpoint', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file_path: rel, content })
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error)
+
+    files[rel] = content
+    if (status) { status.textContent = 'Saved'; status.style.color = '#22c55e' }
+    showToast(data.commitHash ? `Checkpoint saved · ${data.commitHash}` : 'Saved (no changes)')
+    await loadCalls()
+  } catch (err) {
+    showToast(`Save failed: ${err.message}`, true)
+  }
+}
+
+function showToast(message, isError = false) {
+  const existing = document.getElementById('toast')
+  if (existing) existing.remove()
+
+  const toast = document.createElement('div')
+  toast.id = 'toast'
+  toast.textContent = message
+  Object.assign(toast.style, {
+    position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
+    background: isError ? '#ef4444' : '#111827', color: 'white',
+    padding: '8px 16px', borderRadius: '8px', fontSize: '13px',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: '100',
+    transition: 'opacity .3s', opacity: '1'
+  })
+  document.body.appendChild(toast)
+  setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300) }, 2500)
+}
 
 // ── New file ──────────────────────────────────────────────────────────────────
 function toggleNewFileForm() {
