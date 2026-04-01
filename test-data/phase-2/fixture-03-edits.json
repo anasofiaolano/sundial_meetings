@@ -1,0 +1,10 @@
+[
+  {
+    "file_path": "fixture-01-before.md",
+    "field_label": "Title",
+    "old_value": "THIS TEXT DOES NOT EXIST IN THE FILE",
+    "new_value": "something",
+    "confidence": "high",
+    "source_quote": "..."
+  }
+]

@@ -1,0 +1,753 @@
+[
+  {
+    "run_id": 1,
+    "timestamp": "2026-04-01T00:33:09.301Z",
+    "prompt_version": "extraction-v1",
+    "results": [
+      {
+        "transcript": "transcript-01-golden-eagle-discovery.txt",
+        "edits": [],
+        "token_count": 0,
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"tools.0.custom.input_schema.type: Input should be 'object'\"},\"request_id\":\"req_011CZc7P5GUbgnPQ6X95CUpa\"}"
+      },
+      {
+        "transcript": "transcript-02-internal-planning.txt",
+        "edits": [],
+        "token_count": 0,
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"tools.0.custom.input_schema.type: Input should be 'object'\"},\"request_id\":\"req_011CZc7P73PRqJhkki5Z2uqK\"}"
+      },
+      {
+        "transcript": "transcript-03-mockup-demo.txt",
+        "edits": [],
+        "token_count": 0,
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"tools.0.custom.input_schema.type: Input should be 'object'\"},\"request_id\":\"req_011CZc7P8Ux4AJx2DJvuWvDe\"}"
+      },
+      {
+        "transcript": "transcript-04-feature-planning.txt",
+        "edits": [],
+        "token_count": 0,
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"tools.0.custom.input_schema.type: Input should be 'object'\"},\"request_id\":\"req_011CZc7PAbSvV5uviZokhXT6\"}"
+      },
+      {
+        "transcript": "transcript-05-coordination.txt",
+        "edits": [],
+        "token_count": 0,
+        "error": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"tools.0.custom.input_schema.type: Input should be 'object'\"},\"request_id\":\"req_011CZc7PC4FnMKrSPKK4Z5aW\"}"
+      }
+    ]
+  },
+  {
+    "run_id": 2,
+    "timestamp": "2026-04-01T00:37:56.285Z",
+    "prompt_version": "extraction-v1",
+    "results": [
+      {
+        "transcript": "transcript-01-golden-eagle-discovery.txt",
+        "edits": [
+          {
+            "file_path": "people/andy-eichinger.md",
+            "field_label": "Title",
+            "old_value": "Unknown",
+            "new_value": "Pricing",
+            "confidence": "medium",
+            "source_quote": "Andy Eichinger, he is lip pricing.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/chris-stitcher.md",
+            "field_label": "Title",
+            "old_value": "Unknown",
+            "new_value": "General Manager",
+            "confidence": "high",
+            "source_quote": "And Chris Stitcher is our general manager.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/lucas-eichinger.md",
+            "field_label": "Title",
+            "old_value": "Unknown",
+            "new_value": "Sales staff",
+            "confidence": "high",
+            "source_quote": "This is Lucas Eichinger, one of the sales staff.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/lucas-eichinger.md",
+            "field_label": "Relationship to Jay",
+            "old_value": "Unknown",
+            "new_value": "Stepson",
+            "confidence": "high",
+            "source_quote": "Jay's son, Luke. Not to be confused with Lucas, who's stepson.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/sean-flaherty.md",
+            "field_label": "Title",
+            "old_value": "Unknown",
+            "new_value": "IT Manager",
+            "confidence": "high",
+            "source_quote": "Sean Flaherty is the IT manager.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/jay-eichinger.md",
+            "field_label": "Priority interests",
+            "old_value": "Unknown",
+            "new_value": "Photorealistic AI renderings/walkthroughs of floor plans; AI in marketing; reducing wasted ad spend; automating SEO analytics and competitor research",
+            "confidence": "high",
+            "source_quote": "my biggest dream would be to, let's say we draw houseplants here, right? ... And then I want to be able to do renderings of them that look photorealistic, you know, actually walkthroughs with them with AI.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/jay-eichinger.md",
+            "field_label": "Sentiment",
+            "old_value": "Unknown",
+            "new_value": "Engaged and open; acknowledges weaknesses in analytics but receptive to AI solutions",
+            "confidence": "high",
+            "source_quote": "But I'm not opposed to if there is an easy way to figure this out.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/sean-flaherty.md",
+            "field_label": "Role in engagement",
+            "old_value": "Unknown",
+            "new_value": "Manages IT, writes website and code; interested in building AI bot agent for SEO/analytics automation",
+            "confidence": "high",
+            "source_quote": "one of the dreams that I had, I was thinking about possibly developing an open bot agent or something like that, that actually studies based off the keyword lists that we would give it, go do the analytics of our competitors' websites",
+            "_valid": true
+          },
+          {
+            "file_path": "people/sean-flaherty.md",
+            "field_label": "Sentiment",
+            "old_value": "Unknown",
+            "new_value": "Enthusiastic about AI potential for SEO and analytics automation",
+            "confidence": "high",
+            "source_quote": "I'm really, really excited to hear that there's something to make that job easier because it really, I think the power of AI really could do a lot here in that realm of things",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Stage",
+            "old_value": "Prospect",
+            "new_value": "Discovery",
+            "confidence": "high",
+            "source_quote": "we'd love to just kick off with a conversation about what AI enablement has looked like for your team",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Next action",
+            "old_value": "Schedule discovery call",
+            "new_value": "Follow up on discovery call held 2026-03-27; assess scope for AI rendering, marketing/SEO automation, and sales response time improvements",
+            "confidence": "high",
+            "source_quote": "we'd love to just kick off with a conversation about what AI enablement has looked like for your team, what processes are kind of highest leverage to bring AI into",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Pain Points",
+            "old_value": "(none identified yet)",
+            "new_value": "- Paid search yielding almost no customer calls; YouTube is primary lead source\n- Organic search traffic declining despite paying for SEO\n- Website rebuild ~2 years ago caused loss of search performance\n- AI search diverting traffic away from their site\n- Rendering process for floor plans is too slow and not photorealistic enough\n- Lead response time may lag hours or up to 24 hours\n- Analytics tracking is weak and no one has time to dedicate to it\n- Spending ~$600K/year on marketing with significant perceived waste\n- Team wears multiple hats; repetitive research tasks consume time",
+            "confidence": "high",
+            "source_quote": "for the last year, we don't get any response hardly from paid search. No customers ever call and say, hey, I saw your ad on Google, right?",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Marketing Situation",
+            "old_value": "(none identified yet)",
+            "new_value": "- Uses JumpFly for paid search (~5,500 keywords) and SEO\n- YouTube home tour videos are the #1 lead driver; spending ~$15-18K/month promoting them\n- Jay's son Luke produces video content and manages social media\n- Facebook followers grew by 100K in the last year through boosted posts\n- Also active on Instagram, TikTok, LinkedIn, X, Pinterest, and Houzz\n- Lucas's wife does part-time work expanding social/platform presence (~6-7 months)\n- Previously relied on trade shows and log home magazines, both now ineffective\n- Total marketing spend approximately $600K/year including labor\n- Website was completely rebuilt ~2 years ago; lost prior search performance\n- Facebook ad targeting limited by housing discrimination rules (age/price)\n- No keyword listening or social monitoring in place\n- Customers are top 10% earners; sales cycle is 1-8+ years",
+            "confidence": "high",
+            "source_quote": "we use a company called JumpFly to help Sean and I with advertising paid keywords, okay? And maybe we've got 5,500 paid keywords we're going after on search.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/jay-eichinger.md",
+            "field_label": "Notes",
+            "old_value": "(none yet)",
+            "new_value": "Has a son named Luke (not Lucas) who is a videographer and produces all video content and manages social media. Lucas is Jay's stepson.",
+            "confidence": "high",
+            "source_quote": "Jay's son, Luke. Not to be confused with Lucas, who's stepson. But Jay's son, Luke, is a brilliant videographer and does all of our video content.",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Champion",
+            "old_value": "Unknown",
+            "new_value": "Jay Eichinger (Owner), supported by Sean Flaherty (IT Manager)",
+            "confidence": "medium",
+            "source_quote": "Oh, boy, there's a lot there. Let's say my biggest dream would be to...",
+            "_valid": true
+          }
+        ],
+        "token_count": 5156,
+        "error": null
+      },
+      {
+        "transcript": "transcript-02-internal-planning.txt",
+        "edits": [
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Stage",
+            "old_value": "Prospect",
+            "new_value": "Discovery & Training Phase (Sprint 1 - Sales team interviews)",
+            "confidence": "high",
+            "source_quote": "we kick off with a discovery and training phase, right, which they did say they wanted, right, which is, let's do like the calls to do the discovery",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Champion",
+            "old_value": "Unknown",
+            "new_value": "Tammy",
+            "confidence": "medium",
+            "source_quote": "We also want to have a meeting with like Tammy individually since she's like our like confident.",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Next action",
+            "old_value": "Schedule discovery call",
+            "new_value": "Schedule 6 interviews with sales reps and ad hoc interviews with Jay, Sean, Tammy; prepare conversation guides; prepare Friday debrief presentation",
+            "confidence": "high",
+            "source_quote": "We're doing six interviews with the sales team and we'll probably have a couple of other just like ad hoc interviews that come up. Like I'd like to talk to Jay.",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Proposed Scope",
+            "old_value": "(TBD)",
+            "new_value": "Phase 1: Discovery & training (~$3,000 invoice discussed). Phase 2 proposal: ~$15,000 for implementation. Includes: diarized call transcription (using Whisper + Teams), post-call asset generation (action items, follow-up emails, key decisions), pre-meeting briefs, CRM integration. Also covers AI training and team enablement. Aspirational scope includes marketing (AEO, YouTube), floor plan data visualizations, self-updating website (~$50,000 contract potential).",
+            "confidence": "medium",
+            "source_quote": "Now if we nail this with these guys, then that lets the proposal where it's more like $15,000 back in, it sort of sells itself",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Interview Status",
+            "old_value": "(none scheduled)",
+            "new_value": "6 sales rep interviews to be scheduled (target completion by mid-day Thursday); ad hoc interviews with Jay, Sean, Tammy planned; Friday debrief session planned",
+            "confidence": "high",
+            "source_quote": "We're doing six interviews with the sales team... We also are going to do a debrief with them on Friday... ideally we can talk to everyone before mid-day Thursday.",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Pain Points",
+            "old_value": "(none identified yet)",
+            "new_value": "Sales team needs: CRM not yet in place (being built by Juan/Ana's dad), no automated call transcription or follow-up generation, no structured pre-meeting briefs, some reps may be taking notes by hand, need for AI training and enablement",
+            "confidence": "high",
+            "source_quote": "while we don't have the CRM in place yet, because that's what my dad is building... if some of their sales reps are taking everything on hand and notes, we have to know that.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Role in engagement",
+            "old_value": "Unknown",
+            "new_value": "Primary point of contact / internal champion (\"our confident\")",
+            "confidence": "high",
+            "source_quote": "We also want to have a meeting with like Tammy individually since she's like our like confident.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Confirmed interest",
+            "old_value": "Unknown",
+            "new_value": "Yes — confirmed interest in starting with sales group; agreed to set up meetings with sales reps",
+            "confidence": "high",
+            "source_quote": "She message me like independently to just be like, yeah, sounds good. Let's set up the calls.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Sentiment",
+            "old_value": "Unknown",
+            "new_value": "Positive — proactively confirmed interest and wants to move forward",
+            "confidence": "high",
+            "source_quote": "She message me like independently to just be like, yeah, sounds good. Let's set up the calls.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Notes",
+            "old_value": "(none yet)",
+            "new_value": "Confirmed the group wants to start with the sales group. Stated: \"the first step is to set up the meetings with the sales reps.\" Primarily interested in the tech/tools. May lump our engagement with Juan's CRM work into one big project.",
+            "confidence": "high",
+            "source_quote": "she said, sure, it sounds like the first step is to set up the meetings with the sales reps... they really just want the tech... I think they're going to lump us into one big project, too. I think Tammy already kind of does.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/jay-eichinger.md",
+            "field_label": "Priority interests",
+            "old_value": "Unknown",
+            "new_value": "Will likely have final say on engagement decisions",
+            "confidence": "high",
+            "source_quote": "And I think Jay is going to have basically final set.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/jay-eichinger.md",
+            "field_label": "Notes",
+            "old_value": "(none yet)",
+            "new_value": "Ad hoc interview planned during discovery week. Decision-maker with final say. Company is family-run (\"they're family... There's like six of them\"). Committee decision process but Jay has final authority.",
+            "confidence": "high",
+            "source_quote": "And I think Jay is going to have basically final set.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/sean-flaherty.md",
+            "field_label": "Role in engagement",
+            "old_value": "Unknown",
+            "new_value": "Key stakeholder — ad hoc interview planned during discovery week",
+            "confidence": "high",
+            "source_quote": "Jay, Sean. And then in parallel, what are kind of template for the Friday presentation is going to be",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Notes",
+            "old_value": "(none)",
+            "new_value": "Client uses Microsoft Teams for meetings. Family-run business (~6 family members involved). Decision will be committee-based with Jay having final say. Juan (Ana's dad) is building their CRM via his company 'The Automatic Office'. Invoicing may go through Juan's entity. Discovery interviews target completion by mid-day Thursday; Friday debrief presentation planned. Two trainings planned for following week.",
+            "confidence": "high",
+            "source_quote": "Yeah, they're using teams... it's basically like, they're, they're family. Yeah. There's like six of them... What's this company called? The holding corpus called the automatic office.",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Marketing Situation",
+            "old_value": "(none identified yet)",
+            "new_value": "Marketing identified as potential Phase 2 scope — not being touched in current phase. Exploring AI marketing partnership with a YC company for services businesses (AEO optimization). Tools to evaluate: YouTube, AEO.",
+            "confidence": "medium",
+            "source_quote": "the marketing one is like not being touched right now, but this could be touched, like in phase two or something... YC Company is doing like AI marketing and they help you like for services businesses to do a optimization",
+            "_valid": true
+          }
+        ],
+        "token_count": 11979,
+        "error": null
+      },
+      {
+        "transcript": "transcript-03-mockup-demo.txt",
+        "edits": [
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Stage",
+            "old_value": "Prospect",
+            "new_value": "Discovery / Design Phase",
+            "confidence": "medium",
+            "source_quote": "yo todavía no estoy listo para decirte esto va aquí esto va aquí esto va aquí... todavía estoy en fase de entender y de diseñar",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Pain Points",
+            "old_value": "(none identified yet)",
+            "new_value": "- When design changes are made (e.g., from two-story to multilevel), updates don't propagate across the many documents that reference them, causing engineering, pricing, and accounting to work off outdated specs\n- They have a world of Excels, Words, and PDFs that need to be consolidated into a single repository\n- Departments struggle with capturing transcripts from different meeting tools",
+            "confidence": "high",
+            "source_quote": "si un vendedor está hablando con la persona y cambia de dos pisos a multilevel eso quedó en una charla pero hay 10 documentos que decían dos pisos y nadie actualiza a multilevel entonces ingeniería trabaja sobre dos pisos precios trabaja sobre dos pisos accounting trabaja sobre dos pisos",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Proposed Scope",
+            "old_value": "(TBD)",
+            "new_value": "- Sales meeting recording/transcript tool with dashboard (action items, summaries, key moments, project files, contact profiles)\n- Centralized design system built around the \"211D\" form — the core entity tracking all parts of a home design\n- System design for unified data repository replacing scattered Excels, Words, and PDFs\n- Integration of sales conversations with design specifications (package type, home style, multilevel, etc.) to keep all documents in sync",
+            "confidence": "high",
+            "source_quote": "can we start with the sales piece of the meetings recorded and so making sure that everyone has the necessary context and the action items, the transcript, etc.",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Next action",
+            "old_value": "Schedule discovery call",
+            "new_value": "Coordinate on database/file storage design (Postgres, AWS) by end of week; 9 meetings this week (6 with sales leaders, plus Jay, Tammy, and Sean)",
+            "confidence": "high",
+            "source_quote": "cuando estés en ese punto tengamos una discusión que probablemente para el final de la semana ya vamos a estar más cerca y más maduros en el diálogo",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Interview Status",
+            "old_value": "(none scheduled)",
+            "new_value": "9 calls scheduled this week — 6 with sales leaders, plus Jay, Tammy, and Sean",
+            "confidence": "high",
+            "source_quote": "tenemos nueve llamadas seis con sales leaders una con... seis sales leaders Jay Tammy y Sean",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Role in engagement",
+            "old_value": "Unknown",
+            "new_value": "Providing documents (forms, screenshots, Excels) about current processes and systems; participated in a 2-hour video meeting detailing company workflows",
+            "confidence": "high",
+            "source_quote": "Tammy sigue mandándome documentos y documentos de distintas áreas... me ha mandado formas y me ha mandado más formas o screenshots y excels",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Notes",
+            "old_value": "(none yet)",
+            "new_value": "Has been sending many documents from different areas of the business. Participated in a 2-hour recorded video meeting that covered detailed process and system information. Interview scheduled this week.",
+            "confidence": "high",
+            "source_quote": "Tammy sigue mandándome documentos y documentos de distintas áreas es muy muy complicado lo que ellos hacen finalmente... este es el video de la reunión son dos horas de reunión que tuve con ellos",
+            "_valid": true
+          },
+          {
+            "file_path": "people/sean-flaherty.md",
+            "field_label": "Notes",
+            "old_value": "(none yet)",
+            "new_value": "Interview scheduled this week.",
+            "confidence": "high",
+            "source_quote": "seis sales leaders Jay Tammy y Sean",
+            "_valid": true
+          },
+          {
+            "file_path": "people/jay-eichinger.md",
+            "field_label": "Notes",
+            "old_value": "(none yet)",
+            "new_value": "Interview scheduled this week.",
+            "confidence": "high",
+            "source_quote": "seis sales leaders Jay Tammy y Sean",
+            "_valid": true
+          }
+        ],
+        "token_count": 8577,
+        "error": null
+      },
+      {
+        "transcript": "transcript-04-feature-planning.txt",
+        "edits": [
+          {
+            "file_path": "people/chris-stitcher.md",
+            "field_label": "Title",
+            "old_value": "Unknown",
+            "new_value": "General Manager",
+            "confidence": "high",
+            "source_quote": "chris is the general manager yeah tammy said hey chris see what's his name uh chris stitcher reached out to everyone so whoever is chris oh general manager",
+            "_valid": true
+          },
+          {
+            "file_path": "people/chris-stitcher.md",
+            "field_label": "Role in engagement",
+            "old_value": "Unknown",
+            "new_value": "Reached out to team to coordinate interview scheduling",
+            "confidence": "high",
+            "source_quote": "chris stitcher reached out to everyone so whoever is chris oh general manager",
+            "_valid": true
+          }
+        ],
+        "token_count": 4616,
+        "error": null
+      },
+      {
+        "transcript": "transcript-05-coordination.txt",
+        "edits": [
+          {
+            "file_path": "people/chris-stitcher.md",
+            "field_label": "Role in engagement",
+            "old_value": "Unknown",
+            "new_value": "GM; manages the sales reps",
+            "confidence": "high",
+            "source_quote": "Chris is the GM. Um, I guess he manages the sales guys, right?",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Role in engagement",
+            "old_value": "Unknown",
+            "new_value": "Internal ally / key insider contact",
+            "confidence": "high",
+            "source_quote": "I would love to do Tammy first, because she's, like, our inside girl.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Sentiment",
+            "old_value": "Unknown",
+            "new_value": "Very trusting and candid; shares a lot of information",
+            "confidence": "high",
+            "source_quote": "not only is she, like, super, like, trusting of us, but also she... It seems like she just, like, gives inordinate amounts of data.",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Champion",
+            "old_value": "Unknown",
+            "new_value": "Tammy",
+            "confidence": "high",
+            "source_quote": "I would love to do Tammy first, because she's, like, our inside girl.",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Stage",
+            "old_value": "Prospect",
+            "new_value": "Discovery",
+            "confidence": "high",
+            "source_quote": "So, um, I guess discovery interviews are going to, like, spill into next week, it sounds like.",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Next action",
+            "old_value": "Schedule discovery call",
+            "new_value": "Complete discovery interviews with reps, Tammy, Sean, Chris, and Jay; prepare end-to-end demo for Friday proposal meeting; plan 101 AI training for next week",
+            "confidence": "high",
+            "source_quote": "I think we should, like, make it happen. Um, I'll trust that you're on it.",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Interview Status",
+            "old_value": "(none scheduled)",
+            "new_value": "Emails sent to Tammy and Sean; planning to schedule Chris (after rep interviews) and Jay (later in week, e.g. Thursday afternoon); aiming to complete interviews by Thursday/Friday",
+            "confidence": "high",
+            "source_quote": "we have an email out to Tammy, and we have an email out to Sean.",
+            "_valid": true
+          }
+        ],
+        "token_count": 4441,
+        "error": null
+      }
+    ]
+  },
+  {
+    "run_id": 3,
+    "timestamp": "2026-04-01T14:59:40.537Z",
+    "prompt_version": "extraction-v1",
+    "results": [
+      {
+        "transcript": "transcript-01-golden-eagle-discovery.txt",
+        "edits": [
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Engagement Overview",
+            "old_value": "# Golden Eagle Log Homes — Engagement Overview\n\n(no notes yet)",
+            "new_value": "# Golden Eagle Log Homes — Engagement Overview\n\nGolden Eagle Log Homes designs and sells log homes. Their customers are typically in the top 10% of earners. The product is very expensive, with sales cycles of 1–3+ years (some prospects watch for up to 8 years before engaging). The company culture is \"multiple hats\" — everyone wears several roles.\n\n## Key Discovery Call — 2026-03-27\n\nAttendees: Jay Eichinger (owner), Tammy, Lucas Eichinger (sales staff), Andy Eichinger (pricing), Sean Flaherty (IT manager), Chris Stitcher (general manager), Sarah Tarnutter. Consulting side: Anna, Michael Hunter Daniel. Juan (Anna's father) made the introduction.\n\n## Priority Areas of Interest\n\n### 1. Photorealistic AI Renderings / Walkthroughs\nJay's \"biggest dream\" — take floor plans and produce photorealistic AI-rendered video walkthroughs indistinguishable from real home tours, for use on the website. They currently have a couple of people doing renderings, but Jay says they're \"not realistic enough\" and it \"takes too long.\"\n\n### 2. AI in Marketing\nJay wants help figuring out how to use AI in marketing. Currently spending ~$600,000/year total on marketing (including labor, video production by Jay's son Luke, search advertising, etc.).\n\n- **YouTube is the #1 channel.** 99% of inbound customers say they found Golden Eagle via YouTube home tour videos. Jay's son Luke (not to be confused with stepson Lucas) is a videographer who produces all video content. Spending ~$15,000–$18,000/month promoting YouTube videos. Recently YouTube clicks have been down.\n- **Paid search via JumpFly.** ~5,500 paid keywords. Almost no customers attribute their call to Google ads. Jay feels paid search is largely ineffective currently.\n- **SEO via JumpFly.** Paying JumpFly's SEO division for organic search optimization — they have 2–3 women working on it for ~1.5 years. About 2 years ago they completely rebuilt the website; it looks better but they lost all prior SEO performance. Organic search keeps declining despite investment. Jay suspects AI search is bypassing them.\n- **Facebook.** Sean and Jay boost Facebook posts (not formal ads). Followers grew by 100,000 in the last year. Leads from Facebook are lower quality. Housing ad restrictions (age/income discrimination rules) make targeting difficult.\n- **Instagram.** Luke's team handles posting. Audience may not yet be buyers but Jay is \"not down on it.\"\n- **TikTok.** Also present on TikTok.\n- **LinkedIn, X, Pinterest, Houzz.** Lucas's wife does part-time work expanding presence on these platforms for ~6–7 months, to improve discoverability by AI search.\n- **Legacy channels (trade shows, log home magazines):** Virtually no response anymore; largely discontinued.\n\n### 3. SEO/Analytics Automation (Sean's idea)\nSean wants to build an AI bot/agent that could: study keyword lists, analyze competitors' websites, compare to their own site, generate daily reports — potentially replacing the need for an SEO firm. He's been \"dipping his toe into the OpenAI world\" but hasn't gotten far yet. Also interested in AI monitoring social media comments across YouTube, Facebook, Instagram and generating consensus sentiment reports, plus helping draft responses.\n\n### 4. Analytics\nCurrently weak on analytics — rely on JumpFly's Google Analytics reports. Jay and Sean are skeptical of analytics value but open to an easier approach. JumpFly does some phone number tracking for certain ads. Long sales cycles make attribution very difficult.\n\n### 5. Sales Lead Response Time\nJuan flagged that lead response time may lag by hours, possibly up to 24 hours. He noted it should be near-immediate.\n\n### 6. Meeting Recording with Customers\nJuan mentioned meeting recording as a topic to discuss (not yet elaborated in this call).\n\n### 7. General AI Enablement\nJuan shared that at his own company he made Claude usage mandatory for all employees 3 months ago, purchased licenses for everyone, and requires it for every job function. He encouraged Golden Eagle to consider similar company-wide AI adoption.\n\n## No Social Listening Currently\nNo keyword listening on social sites (Twitter, Reddit, etc.) — Sean noted he doesn't even know what that means. Opportunity area identified.",
+            "confidence": "high",
+            "source_quote": "Let's say my biggest dream would be to, let's say we draw houseplants here, right? ... I want to be able to do renderings of them that look photorealistic",
+            "_valid": true
+          },
+          {
+            "file_path": "people/jay-eichinger.md",
+            "field_label": "Jay Eichinger notes",
+            "old_value": "(no notes yet)",
+            "new_value": "Owner of Golden Eagle Log Homes. Tammy is his wife (\"Jay is my owner\" / \"I'm your owner\"). His son Luke is the company's videographer and produces all video content and manages social media content. Lucas Eichinger is his stepson and is on sales staff. Andy Eichinger handles pricing.\n\nJay personally responds to YouTube comments. Passionate about getting photorealistic AI renderings of floor plans. Skeptical of analytics but open-minded. Acknowledges they're spending ~$600K/year on marketing and knows a lot is wasted, but wants to clean it up. Suspects AI search is disrupting their organic traffic.\n\nWas introduced to the consulting team by Juan (Anna's father). Jay had been telling Juan about interest in AI for marketing and expressed concern about declining search performance.",
+            "confidence": "high",
+            "source_quote": "Jay is my owner. I'm your owner. ... So, yeah, I think that could be a pretty good picture of what we're doing on that.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/sean-flaherty.md",
+            "field_label": "Sean Flaherty notes",
+            "old_value": "(no notes yet)",
+            "new_value": "IT manager at Golden Eagle Log Homes. Also writes the website, writes code, and wears multiple hats. Works with Jay on advertising and boosting Facebook posts. Collaborates with JumpFly on paid search and SEO.\n\nHas a vision for building an AI bot/agent to automate SEO analysis — studying keyword lists, analyzing competitors' websites, comparing to their own site, and generating daily reports. Currently \"dipping his toe into the OpenAI world.\" Also interested in AI for monitoring and summarizing social media comments and helping draft responses.\n\nSkeptical of analytics but acknowledges they're \"sorely deficient\" in that area. Notes Google Analytics is a full-time job to maintain and nobody at Golden Eagle has time dedicated to it.",
+            "confidence": "high",
+            "source_quote": "Sean Flaherty is the IT manager. ... I'm the IT manager, but I also write the website, but I also write the code",
+            "_valid": true
+          },
+          {
+            "file_path": "people/lucas-eichinger.md",
+            "field_label": "Lucas Eichinger notes",
+            "old_value": "(no notes yet)",
+            "new_value": "Sales staff at Golden Eagle Log Homes. Jay's stepson. Sometimes appears on camera in video content. His wife also does part-time work for the company, expanding the brand's presence on LinkedIn, X, Pinterest, and Houzz — effort has been underway for about 6–7 months to improve AI search discoverability.",
+            "confidence": "high",
+            "source_quote": "This is Lucas Eichinger, one of the sales staff. ... Lucas's wife also does some part-time work for us, and I told her, I said, let's get going with, have you on LinkedIn and have you on, what else, X and a few other things. Pinterest and Houzz",
+            "_valid": true
+          },
+          {
+            "file_path": "people/andy-eichinger.md",
+            "field_label": "Andy Eichinger notes",
+            "old_value": "(no notes yet)",
+            "new_value": "Handles pricing at Golden Eagle Log Homes. (Described as doing \"lip pricing\" in introductions — likely a transcription artifact for pricing role.)",
+            "confidence": "medium",
+            "source_quote": "Andy Eichinger, he is lip pricing.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/chris-stitcher.md",
+            "field_label": "Chris Stitcher notes",
+            "old_value": "(no notes yet)",
+            "new_value": "General manager at Golden Eagle Log Homes. Wears multiple hats like everyone else at the company.",
+            "confidence": "high",
+            "source_quote": "And Chris Stitcher is our general manager. ... Chris does multiple things, everybody does multiple things.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Tammy notes",
+            "old_value": "(no notes yet)",
+            "new_value": "At Golden Eagle Log Homes. Jay Eichinger's wife. Juan (Anna's father) had been in contact with Tammy prior to the call and shared ideas about company-wide AI adoption (e.g., mandatory Claude usage).",
+            "confidence": "high",
+            "source_quote": "Jay is my owner. I'm your owner. I'm Tammy. ... I was telling Tammy in my company, three months ago, I instituted as a rule, mandatory, everyone has to use Claude",
+            "_valid": true
+          }
+        ],
+        "token_count": 5044,
+        "error": null
+      },
+      {
+        "transcript": "transcript-02-internal-planning.txt",
+        "edits": [
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Engagement overview",
+            "old_value": "# Golden Eagle Log Homes — Engagement Overview\n\n(no notes yet)",
+            "new_value": "# Golden Eagle Log Homes — Engagement Overview\n\n## Current Phase: Discovery & Training (Sprint 2)\n\nKicking off with a discovery and training phase. Conducting six interviews with the sales team, plus ad hoc interviews with key stakeholders (Jay, Sean, Tammy, and others). Estimated ~10-12 hours of interview work.\n\nDebrief presentation scheduled for Friday. Prep work planned for Thursday (roughly a half day). Friday debrief expected to be about an hour.\n\nGoal: deeply understand what needs to be built, deliver AI training, and produce a proposal informed by discovery findings.\n\n## Client Context\n\n- The client is a family business — roughly six family members involved. Decision-making will likely be a committee decision, with Jay having final say.\n- They are using Microsoft Teams for meetings.\n- Tammy is the primary point of contact / \"confident\" on the client side. She confirmed interest in starting with the sales group.\n- Client's father is building the CRM separately; the client expects to integrate with that work. Tammy already lumps both efforts into one big project.\n- The client wants the tech (AI tooling for sales), but the engagement is broader: organizational and AI initiative covering tech, training, enablement, adoption, and techniques.\n\n## What We're Building (Planned)\n\nThree-phase AI sales tool around call intelligence:\n\n1. **During the call** — Diarized transcription (using OpenAI Whisper + Pyannote for diarization), running on own servers. Need to check if Teams' native transcription capabilities are sufficient before building custom.\n2. **Post-call** — Automated generation of assets: key decisions, action items, follow-up emails, summaries.\n3. **Pre-next-call** — Pre-meeting briefs: recent signals, customer overview, conversation history, rapport hooks. Designed as a doc to glance at five minutes before a call.\n4. **CRM integration** — Connecting all outputs to the CRM.\n\n### Technical Decisions & Considerations\n\n- Evaluate Teams' native transcription/recording before building custom pipeline (Teams provides raw video file + transcript file that can feed a data pipeline).\n- For round one, transcription can run on own server racks.\n- Not building yet — need to validate with users first. Plan is to build clickable prototypes / mockups showing what the output would look like.\n- Output format matters more than speed: PDF? Email? Slack message? Teams message? Need to discover this in interviews.\n- Follow-up delivery speed: doesn't need to be instant (5 seconds vs 10 minutes doesn't matter much), but 4+ hours is too long.\n- Need to ask in conversation guides: what formats do reps want? What data sources are most useful? Is the prep doc useful?\n\n## Pricing\n\n- Current engagement: discovery and training phase (price discussed with client, no invoice sent yet but pricing was communicated).\n- If this phase goes well, a follow-on proposal around ~$15,000 should sell itself.\n- Aspirational: $50,000 contract for expanded scope including marketing tools, visualizations of houses, self-updating website, etc.\n\n## This Week's Plan\n\n1. Schedule and conduct all sales rep interviews (target: complete by mid-day Thursday).\n2. Build conversation guides — one for sales reps, one for key stakeholders (Jay, Sean, Tammy).\n3. Have individual meeting with Tammy.\n4. Prep for Friday debrief/presentation (Thursday).\n5. Deliver Friday debrief presentation.\n6. Consider building a demo for Friday showing the system in action (Teams call → real-time transcription → action items → follow-up generation). Budget: ~1-1.5 days max.\n7. Begin developing training to deliver the following week.\n\n## Proposal Structure\n\nOrganized into three areas:\n- **Sales** — primary focus for now (wish list, needs, proposed deliverables)\n- **Marketing** — not being touched in current phase; potential phase two. Exploring partnership with a YC company doing AI marketing optimization for services businesses (could resell if software-heavy, or competitive if services-heavy).\n- **Team Enablement**\n\n## Invoicing\n\nDiscussing whether to invoice via father's company (The Automatic Office — possibly Delaware or Florida entity) or via Accelerate Holdings LLC (Texas LLC). Need to sort out payment flow to avoid unnecessary tax accounting complexity.",
+            "confidence": "high",
+            "source_quote": "We kick off with a discovery and training phase... We're doing six interviews with the sales team... we'll probably have a couple of other just like ad hoc interviews... we also are going to do a debrief with them on Friday... they're using teams... Jay is going to have basically final say... The holding corpus called the automatic office... Accelerate holding LLC... it's a Texas LLC",
+            "_valid": true
+          },
+          {
+            "file_path": "people/jay-eichinger.md",
+            "field_label": "Jay's role and authority",
+            "old_value": "# Jay Eichinger\n\nGolden Eagle Log Homes — Owner\n\n(no notes yet)",
+            "new_value": "# Jay Eichinger\n\nGolden Eagle Log Homes — Owner\n\n- Likely has final say on engagement decisions (committee decision, but Jay is the ultimate decision-maker).\n- Want to have an ad hoc interview with Jay during discovery phase to get his take on the AI/sales initiative.",
+            "confidence": "high",
+            "source_quote": "I think Jay is going to have basically final say... I'd like to talk to Jay.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Tammy's role and engagement",
+            "old_value": "# Tammy\n\nGolden Eagle Log Homes\n\n(no notes yet)",
+            "new_value": "# Tammy\n\nGolden Eagle Log Homes\n\n- Primary point of contact for the engagement (described as \"our confident\").\n- Confirmed the group wants to start with the sales group.\n- Requested setup of meetings with sales reps.\n- Tends to lump the consulting engagement and the father's CRM work into one big project.\n- Her latest email confirmed interest: \"the group is interested in starting with the sales group that is also the area and forms we are reviewing and developing with your dad.\"\n- Plan to have an individual meeting with Tammy during discovery.",
+            "confidence": "high",
+            "source_quote": "Tammy, are kind of like the big ones... she's like our like confident... She message me like independently to just be like, yeah, sounds good. Let's set up the calls... I think Tammy already kind of does [lump us into one big project].",
+            "_valid": true
+          },
+          {
+            "file_path": "people/sean-flaherty.md",
+            "field_label": "Sean's involvement",
+            "old_value": "# Sean Flaherty\n\nGolden Eagle Log Homes\n\n(no notes yet)",
+            "new_value": "# Sean Flaherty\n\nGolden Eagle Log Homes\n\n- Key stakeholder to interview during discovery phase (alongside Jay and Tammy).",
+            "confidence": "high",
+            "source_quote": "Jay, Sean, Tammy, are kind of like the big ones, like, on our radar.",
+            "_valid": true
+          }
+        ],
+        "token_count": 11867,
+        "error": null
+      },
+      {
+        "transcript": "transcript-03-mockup-demo.txt",
+        "edits": [
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Engagement Overview",
+            "old_value": "# Golden Eagle Log Homes — Engagement Overview\n\n(no notes yet)",
+            "new_value": "# Golden Eagle Log Homes — Engagement Overview\n\n## Current Focus\nStarting with the **sales piece** of meetings — recording meetings and ensuring everyone has the necessary context, action items, and transcripts.\n\n## Product / Dashboard Concept\nA meeting intelligence dashboard that includes:\n- **Call history**: List of all past calls with dates, transcripts, summaries, and key moments\n- **What changed per call**: Updates generated from each meeting (e.g., tasks like \"send post-call email\" with ready-to-send drafts)\n- **Project files (left panel)**: Per-person notes (e.g., about each client — their profession, preferences, etc.) and a project overview that updates across time as calls happen. Version history is available, and everything is editable.\n- **Upcoming meetings (right panel)**: Meeting objective, recent signals, open items, and prep material\n- **AI assistant**: Integrated chat that has full context\n\n## Architecture & Hosting\n- Can initially live on our servers (data center) or be mounted on the client's own servers\n- Main requirements: audio storage (audios can be deleted over time), APIs for generated assets\n- Possible integration with **Microsoft Graph API** for email, calendar, or other Microsoft ecosystem features\n\n## Audio / Transcript Capture\nThree options discussed for obtaining audio and transcripts:\n1. **Meeting bot** — e.g., a bot that joins calls (like Fireflies), but would be reinventing the wheel\n2. **Microsoft Graph API** — client records all meetings in Teams; use the API to retrieve recordings (provides free transcription and diarization)\n3. **System audio capture** — capture audio entering and leaving the computer regardless of platform\n\nFor **Teams and Zoom** calls, the native transcript from those tools should suffice. For **phone calls and in-person meetings**, the solution is still TBD.\n\n**Recall.ai** was discussed as a comprehensive API for transcripts and recordings across platforms. Decision: **not including Recall in the stack** — agreed not to add a third-party dependency here.\n\n## Dad's System Design Work\nDad is working on the broader CRM and the design/engineering/accounting process. He is currently in **system design phase** — understanding the major entities, how they interact, and the process flows. He is not yet at the implementation/storage stage.\n\nThe **central entity** of the whole system is the house design, captured in a form called the **211D**, which contains every part of the house. Everything flows from this:\n- From the first sales call, a workspace opens around this entity\n- Client works with design and sales teams to shape the house (floors, rooms, materials, style, wall heights, etc.)\n- From the 211D, **engineering, pricing, payment plans, proposals, selections, contracts, and delivery** all derive\n- Each field has **change history tracking** with timestamps and reasons (e.g., \"customer change\"), solving the problem where changes discussed in sales calls weren't propagated to the 10+ documents referencing old values\n\nPhases in the system: Project overview → Design (211D) → Ballpark pricing → Agreements & documents → Design & specifications (package type, home style) → Proposal → Selections → Engineering → Contract → Delivery\n\n## Data & Storage\n- Dad plans to store files in **AWS**\n- Database: working with **Postgres**\n- Tammy continues sending documents (forms, screenshots, excels) that inform the system design; waiting for ~90% of information before finalizing\n\n## Video/Meeting Analysis Tool\nDad built a **Jupyter notebook tool** that programmatically extracts insights from recorded meetings:\n- Takes a meeting video and its transcript (which has speaker-change timestamps)\n- For each timestamp segment, goes to that point in the video and captures screenshots\n- Detects screen changes within a segment and captures all distinct screenshots\n- Each screenshot is analyzed by Claude to describe its content (saved as JSON)\n- Associates screenshots + JSON descriptions + transcript segments together\n- Then Claude cross-references what is being said with what is shown on screen to extract process details and data structures\n\nThis replaces hours of manual note-taking (3 hours for 1 hour of video manually vs. minutes programmatically).\n\nPlan: **dogfood our own product** using this tool — use it on our upcoming meetings to automatically create documents about each topic discussed, with screenshots and version history.\n\n## Upcoming Meetings\nNine calls scheduled this week:\n- Six with **sales leaders**\n- One with **Jay**\n- One with **Tammy**\n- One with **Sean**\n\n## Security / Privacy\nNo HIPAA-level concerns. Standard approach: inform participants that the meeting is being recorded; consent is sufficient.",
+            "confidence": "high",
+            "source_quote": "can we start with the sales piece of the meetings recorded and so making sure that everyone has the necessary context and the action items, the transcript, etc.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Notes about Tammy",
+            "old_value": "(no notes yet)",
+            "new_value": "Tammy has been sending documents continuously — forms, screenshots, excels, and PDFs — covering various areas of the business. These documents are being used to inform the system design. A two-hour video meeting was held with her (and others), from which detailed process and system information was extracted. She is a key source of domain knowledge for understanding how the company currently operates.",
+            "confidence": "high",
+            "source_quote": "Tammy sigue mandándome documentos y documentos de distintas áreas... esta es una reunión que tuve con ella... este es el video de la reunión son dos horas de reunión que tuve con ellos",
+            "_valid": true
+          }
+        ],
+        "token_count": 8465,
+        "error": null
+      },
+      {
+        "transcript": "transcript-04-feature-planning.txt",
+        "edits": [
+          {
+            "file_path": "people/chris-stitcher.md",
+            "field_label": "Role",
+            "old_value": "# Chris Stitcher\n\nGolden Eagle Log Homes\n\n(no notes yet)",
+            "new_value": "# Chris Stitcher\n\nGolden Eagle Log Homes — General Manager\n\n- Chris reached out to everyone to coordinate interview scheduling. As of 2026-03-30, no one has responded yet.",
+            "confidence": "high",
+            "source_quote": "chris is the general manager yeah tammy said hey chris see what's his name uh chris stitcher reached out to everyone so whoever is chris oh general manager",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Notes on Tammy",
+            "old_value": "(no notes yet)",
+            "new_value": "- Tammy provided a Gantt chart that is expected to be important for the project.\n- She coordinated with Chris Stitcher to reach out to the team for interview scheduling.",
+            "confidence": "high",
+            "source_quote": "he had said that um he got a gantt chart from tammy and i think that's gonna be really important because they mentioned that on the on the friday call they were like oh what if we do something that can't chart",
+            "_valid": true
+          },
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Engagement overview details",
+            "old_value": "(no notes yet)",
+            "new_value": "## Sales Process & CRM Vision\n\n- The engagement is focused on building a sales-focused tool for Golden Eagle's salespeople. The most basic version: pre-call prep documents, post-call follow-ups, action items, and data repository/tracking.\n- A separate effort (led by a team member's father) is already underway to build a broader CRM / internal system revamp — the sales tool should slot into that larger system over time.\n- Want to avoid rebuilding the company from scratch technologically for $15,000. Start narrow on sales, potentially phase into ops and design team integration later.\n\n## Key Discovery Questions (still open)\n- How many buyers finance? How much of the sales process involves working with lenders/banks?\n- What does the floor plan back-and-forth process look like (architects, design team, interior design, specs, renderings)? Could be a months-long manual process.\n- What communication channels do salespeople use with clients? (phone, text, email, LinkedIn?) Do they issue corporate phones?\n- Do they have a support email vs. sales email? Is inbound triaged or round-robin?\n- Are sales reps on quota?\n- How do they take payments?\n- Do they have an understanding of what makes a good deal (deal length, budget, lead source, etc.) or is back-end data messy?\n- Where do they currently track tasks / project management?\n\n## Product Concepts Discussed (2026-03-30)\n- **Sequences / Playbooks**: Enroll prospects into multi-step outreach sequences (email drip campaigns, follow-up cadences). Different playbook types (e.g., \"difficult customers\" sequence where CEO calls top leads).\n- **Prospect lifecycle management**: Each prospect has their own record but also fits into company-wide pipeline stages. Need to see all people in the same stage.\n- **AI-assisted workflow**: Salesperson can speak or message naturally (e.g., \"just had a great call with Jim\") and the system auto-updates records, suggests next steps, generates follow-up actions.\n- **Gantt chart integration**: Tammy provided a Gantt chart; this could be embedded in the tool with suggested next steps and action items.\n- **Financing as a tracked detail**: Financing status would be a field within project/prospect details.\n- **Centralized system**: Avoid multiple disconnected systems sending conflicting outreach. One unified platform.\n- **Operational excellence angle**: System helps coach reps, surfaces contacts to reach out to, enforces best practices — \"you basically cannot be a low performer because the system will help pull you up.\"\n- **Simple data analysis**: e.g., top 10 historical tactics that closed deals, applied to current pipeline.\n\n## Phasing Ideas\n- Phase 1: Sales-specific features (pre-call prep, follow-ups, sequences)\n- Phase 2: Integrate ops\n- Phase 3: Integrate design team\n- Long-term: Entire company trained on unified CRM\n\n## Logistics\n- As of 2026-03-30, waiting on interview responses from Golden Eagle team members. Chris Stitcher reached out to coordinate but no one has responded yet.\n- Planning to email Chris tonight to push for completing interviews this week.\n- A previous Friday call took place with Golden Eagle where Gantt chart functionality was discussed.",
+            "confidence": "high",
+            "source_quote": "the most basic thing here is like okay what does a salesperson need to get through the day notes follow-ups data repository tracking enrolling enrolling um prospects into a future state",
+            "_valid": true
+          }
+        ],
+        "token_count": 4504,
+        "error": null
+      },
+      {
+        "transcript": "transcript-05-coordination.txt",
+        "edits": [
+          {
+            "file_path": "project-overview.md",
+            "field_label": "Engagement Overview",
+            "old_value": "(no notes yet)",
+            "new_value": "## Status (as of 2026-03-31)\n- Discovery interviews are in progress — emails sent to Tammy, Sean, and sales reps, but still awaiting responses.\n- If responses aren't received by midday, plan is to call Tammy directly (they have her number).\n- May need to flag to Tammy that the Friday presentation/proposal could be pushed back if interviews aren't completed in time.\n- Goal is to complete discovery calls by end of week (ideally today, tomorrow, Thursday), but timeline may slip into early next week (e.g., Tuesday).\n\n## Upcoming Meetings / Milestones\n- **Tammy call**: targeting tomorrow (2026-04-01) for a candid download on the org\n- **Chris Stitcher call**: tentatively Thursday (2026-04-03), after speaking with a couple of reps first so they can come with findings/data\n- **Jay Eichinger call**: later in the week (Thursday afternoon suggested) — want to be well-prepared before talking to him\n- **Sean Flaherty**: email already out, waiting on response\n- **Friday group meeting / proposal presentation**: same time as last week (9 AM); at risk if discovery interviews aren't completed\n- **Next week**: AI training session planned for sales reps (101-level); need to assess reps' current knowledge level first via discovery calls\n\n## Prototype / Demo\n- Prioritizing one feature that goes fully end-to-end for the demo: meeting → transcripts → takeaways → email sequence → tracking\n- Strategy is to sell one thing well rather than three things; plan to upsell later\n- Exploring additions discussed the night before (sales excellence, playbooks) but keeping scope near MVP\n- Need to coordinate with Jay's father (Andy Eichinger) to ensure their deliverables are complementary and not duplicative\n\n## Training (Next Week)\n- Planning a 101-level AI/LLM training for sales reps\n- Before designing curriculum, want to talk to the reps to assess what level they're at\n- Concern about making training defensibly strong — not just things reps could find online",
+            "confidence": "high",
+            "source_quote": "Multiple quotes including: 'I think it'll be very much, like, a 101 training', 'do we have at least one feature that goes fully end-to-end', 'I'd rather just upsell them later', 'the biggest flag that, like, he and I got yesterday was, like, let's make sure that we're not, like, both making the same thing'",
+            "_valid": true
+          },
+          {
+            "file_path": "people/tammy.md",
+            "field_label": "Tammy notes",
+            "old_value": "(no notes yet)",
+            "new_value": "- Described as \"our inside girl\" — very trusting of the consulting team and extremely candid\n- Expected to give the most direct, honest feedback of anyone at the org\n- Reportedly shares large amounts of information / data\n- Plan to use her as a sounding board before presenting to Jay — show her prototype ideas and get input\n- Email sent to her; if no response by noon on 2026-03-31, team will call her directly (they have her number)\n- Targeting a call tomorrow (2026-04-01) or Thursday (2026-04-03) for a full candid download on the org",
+            "confidence": "high",
+            "source_quote": "I would love to do Tammy first, because she's, like, our inside girl... She's, like, gonna be extremely candid with us... she just, like, gives inordinate amounts of data.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/chris-stitcher.md",
+            "field_label": "Chris Stitcher notes",
+            "old_value": "(no notes yet)",
+            "new_value": "- GM (General Manager) at Golden Eagle; manages the sales reps\n- Was on the Friday call\n- Plan to talk to sales reps first, then bring findings/data to Chris\n- Tentatively scheduling a call for Thursday (2026-04-03)\n- May ask Tammy whether it's worthwhile to talk to him beforehand",
+            "confidence": "high",
+            "source_quote": "Chris is the GM. Um, I guess he manages the sales guys, right?... he was on our Friday call, right?... maybe we preemptively schedule him for Thursday when we've talked to a couple reps?",
+            "_valid": true
+          },
+          {
+            "file_path": "people/jay-eichinger.md",
+            "field_label": "Jay Eichinger notes",
+            "old_value": "(no notes yet)",
+            "new_value": "- Owner of Golden Eagle Log Homes\n- Team wants to be well-prepared before speaking with him — scheduling him later in the week intentionally\n- Considering emailing him for a Thursday afternoon call\n- May prefer that every meeting be highly valuable / efficient (team plans to ask Andy Eichinger for a read on his style)\n- Friday proposal/presentation is key touchpoint with him",
+            "confidence": "high",
+            "source_quote": "that's why I intentionally, like, wanted him, like, later in the week, if anything, because we, like, definitely want to be smart before talking to him... some people are, like, really anal about, like, hey, every minute, every, every meeting's got to be, like, super valuable.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/sean-flaherty.md",
+            "field_label": "Sean Flaherty notes",
+            "old_value": "(no notes yet)",
+            "new_value": "- Email sent to schedule a discovery interview; awaiting response as of 2026-03-31",
+            "confidence": "high",
+            "source_quote": "I already have the email out to Sean.",
+            "_valid": true
+          },
+          {
+            "file_path": "people/andy-eichinger.md",
+            "field_label": "Andy Eichinger notes",
+            "old_value": "(no notes yet)",
+            "new_value": "- Father of one of the consultants on the team\n- Has met Jay Eichinger; can provide background on Jay's communication style\n- Working on a related deliverable — team needs to coordinate with him to ensure their work is complementary, not duplicative\n- He and his son flagged the risk of overlap and are actively aligning",
+            "confidence": "high",
+            "source_quote": "Has your dad met him ever? Yeah, certainly... him and I, like, will be talking about that. Like, that was, like, the biggest flag that, like, he and I got yesterday was, like, let's make sure that we're not, like, both making the same thing",
+            "_valid": true
+          }
+        ],
+        "token_count": 4329,
+        "error": null
+      }
+    ]
+  }
+]

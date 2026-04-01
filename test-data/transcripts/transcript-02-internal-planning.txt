@@ -1,0 +1,941 @@
+Date: 2026-03-30
+
+2////
+
+
+
+So right now what I'm doing is a few things.
+I'm doing diorized, well let me know when you're ready there.
+So the first thing we're working on is the diorized transcription.
+So this is going to use like whisper, which is open at open source, and pine note, which
+gives us diorization.
+And this can all run.
+Okay.
+Zoom out.
+What's.
+Okay.
+So we said that we'd give them basically this, right?
+Where we have like, okay, you have a call, you have a call, and everything is transcribed
+as you're talking about it.
+Can I refer to that?
+Everything is transcribed, and then you have a post call breakdown of all the key decisions,
+everything that was said, any action items automatically creates like the assets,
+like the emails to send, et cetera.
+And then finally it also helps you do any pre-meeting briefs for the next call that
+happens, right?
+And so right now I'm breaking that into what has to happen during the call, what has
+to happen after the call, what has to happen before the next call.
+So during the call is just the transcription process, right?
+And so I'm working on the diorized transcription in a way that can live like on our own servers.
+And so decision to be made is I think for around one, it can just live in like our like
+server racks, and then if they want to implement it on from like we can talk about that.
+So that's one segment, then the post call is like generating all those assets, right,
+that we talked about.
+So here's a transcript, here are like the key decisions, here are the action items,
+like here, here's like the pre-email thing, like do you want to send that?
+And then based on that, whatever is also the pre-meeting brief, right, which is like these
+are the calls that have happened, these are the decision points that haven't been made.
+This is the world of the person, here's like rapport hooks, like to that level of granularity.
+And then the final piece will be connecting all that to the CRM.
+So that's what I'm cooking, yeah, so I'm cooking.
+Okay, so to me the meeting reporting stuff is basically like the middle 80% and so like
+the pre prep doc, we can figure that out, that's just like, is this a new contact?
+Yes, okay, cool.
+If it's not a new contact, it pulls from the existing database.
+But the middle stuff is like, it matters what they're using to do meetings with.
+Yeah, they're using teams.
+Okay, they're all on teams.
+Yeah, which makes it easy.
+Yeah, this is a bit much, but like a pre-call brief can have like so much.
+I think you have like recent signals, you can have like the overview of like the customer.
+They probably already have all this for so long to integrate.
+Like kind of based on all of their conversations, like tell me about Sarah, tell me about Mike,
+like the fake customers, tell me about other people in their world that they've mentioned.
+Yeah, a lot can be done here for pre-ref which is kind of cool.
+Yeah, I think the point of the pre-ref is like a doc they can glance at five minutes before the call.
+Yeah, exactly.
+The actual call itself, what have you considered for technically doing that?
+We're going to use OpenAI's Whisper, which is really good.
+We're using teams, whatever teams are native.
+Well, we could use like recall.ai, which is like the API for like all bots that listen to like other meetings.
+But we want to, I mean, Whisper is like really good and really fast and the outcome is going to be the same, you know?
+So why would we like have a dependency on a third party is my thinking?
+But they're already on teams, right?
+So like why wouldn't we just use what's in the teams ecosystem?
+Yeah, so I mean, I've done this with teams that I've done this with Google Meet Zoom.
+Yeah, so both of those give you a raw file, video file, they give you a transcript file,
+and then you can put it into a data pipeline that just configures in formats and spits out the keytapers again.
+And so I want to make sure that we're not like building trash stuff that exists.
+Let me add that here in check for teams.
+Okay, fair point.
+Looking into it.
+In general, those are things that like I want to look at before we build anything.
+And we're also not even really there to build yet.
+I think I think we want to do conversations first with people in parallel.
+And we can ask them stuff that we show them, like for example,
+is this prep doc something that you would find useful or not?
+Right, no, of course, all that has to be added in which of these do you think is the most useful?
+If you only have one data source, what would it be?
+Like we can test all that stuff.
+Totally.
+But I think overall, like we also don't have to build it yet.
+We can build what it would look like or how it would work and you click through stuff.
+Because we're not really there yet to build.
+Yeah, most of this is coming like in terms of like what the output would look like.
+So that's fine.
+Okay.
+And then I think most of it's going to be like it's not like the it's to be the speed quality
+right up here is like if the follow ups are good, that beats,
+they come five seconds after the call, they can come 10 minutes after the call.
+Who really cares?
+Four hours after call is probably too long.
+But it doesn't have to be something where like we like innovate speed by seconds.
+Like it can be, you know, process, update, whatever.
+Yeah, I think that's probably fun.
+Okay, but that sounds good.
+There's a lot to get to.
+Anything else you want to show me now or no, I just wanted to show you this,
+but let's dive into what we're going to do.
+This desk is a whiteboard so we can write there.
+You want to get some water?
+Yeah.
+Yeah, go for it.
+Let me get some water too.
+Okay, so in terms of like operations of this, so it can be like confirmed something.
+Yeah, did you see her latest email?
+I saw that one.
+Okay, yeah.
+She message me like independently to just be like, yeah, sounds good.
+Let's set up the calls.
+Okay, let's see, like this is after the invoice basically.
+No invoice has been set, no, but I mean, after like the where we said, this is what it
+costs.
+Yeah.
+Okay.
+Can you just make sure I'm like CC it forward and everything?
+Yeah, for sure.
+It was in like a big deal like the one that you sent me, but I'll make sure of that going
+for like.
+Yeah.
+They're all just big deals.
+It's a combination.
+Sure.
+Okay, so, so this is going to be pretty busy, I think, like all things considered.
+We're doing six interviews with the sales team and we'll probably have a couple of other
+just like ad hoc interviews that come up.
+Like I'd like to talk to Jay.
+I'd like to talk to some of these people like in more detail.
+That's probably like about 10 hours of work just on the interviews, maybe 12.
+We also are going to do a debrief with them on Friday, which will be probably about
+an hour and then we'll need to prep for that on Thursday.
+So that's probably like a good few hours, maybe a half day on Thursday.
+Now if we nail this with these guys, then that lets the proposal where it's more like
+$15,000 back in, it sort of sells itself, I think we need that pretty easily.
+And I also think like looking over all of the other elements of what they need and want,
+like, I think we have a lot of stuff.
+So like this is like a document that is sitting on a markdown for us, it basically has like
+the areas, so this is just like a debrief from the call.
+So it's like problems we heard, sale, I'm kind of bumping everything to sales marketing
+and then like team enablement.
+So the sales opt is just like, here's their wish list, here's what they need, here's
+like what we're proposing, roughly the deliverables and then for each of these.
+And so these two are just like, well, really the marketing one is like not being touched
+right now, but this could be touched, like in phase two or something.
+And so I have a couple conversations out with like, I talked to hire yesterday, he knows
+close the tab, but like basically it's like YC Company is doing like AI marketing and
+they help you like for services businesses to do a optimization, yeah, and so to get
+partnered with them, we could resell, I'm not exactly sure what their platform is, how
+services heavy is, it's software heavy, we can just put it in our stack and resell it
+or something.
+If it's very services heavy, then you know, probably competitive tasks and business relevant.
+And so for me, it's like, do this engagement well, hook them on it and then we can go
+over there.
+And then overall, like I think that's kind of what the week looks like for gold and
+you.
+Yes.
+Now, what Tammy confirmed, right, is, and let me find it.
+The group is interested in starting with the sales group that is also the area and forms
+we are reviewing and developing with your dad.
+I'm assuming we can start, so while we don't have the CRM in place yet, because that's
+what my dad is building, I'm assuming we can start as that is defined and create the features
+of automatic uploading of nodes, et cetera.
+And then how to use the program, recording meetings and calls, developing a follow-up, et
+cetera.
+And so that's what she said, we want this.
+Then what we responded was, we kick off with a discovery and training phase, right, which
+they did say they wanted, right, which is, let's do like the calls to do the discovery and
+make sure that we deeply understand what it is we need that we're building and we're
+going to do AI training because that was mentioned, right.
+And she said, sure, it sounds like the first step is to set up the meetings with the sales
+reps.
+So what I'm getting is we sold them on the like, hey, you also want this training and you
+also want, like, and so it's like, we're going to give you that as well.
+But like, from what she's saying, like, they really just want the tech, you know, and so
+that's why I feel like we can get a jump on like developing this.
+That's like what they want.
+So they don't really know what they want and tech is this very small piece of what it actually
+is.
+So it's a organizational and AI initiative.
+So there's tech, there's training, there's enablement, there's adoption, there's techniques,
+there's going to be bunches that we get to figure out what we're using now.
+And like, if some of their sales reps are taking everything on hand and notes, we have to
+know that.
+We're going to like learn about the organization.
+And so like, you know, week one is we talked to everyone, which is I think what we're doing
+and we're going to.
+Yeah.
+Okay.
+Cool.
+So if you want to just like start getting into the tactical, it sounds like we're just kind
+of like, let's set calls with all the reps.
+Let's make the conversation guides to figure out like what pieces of information that we need
+from the sales reps, what piece of information we need from the key people like Jay, et
+cetera.
+We also want to have a meeting with like Tammy individually since she's like our like
+confident.
+Jay, Sean.
+And then in parallel, what are kind of template for the Friday presentation is going to be, right?
+So again, inside calls, let's make the conversation guide for the sales reps conversation guys
+for the key people, figure out what Friday is going to look like.
+And Palo started developing whatever training we're going to deliver next week.
+I think that's kind of what we have to do.
+Yeah, training for next week.
+I think we can do that next week.
+Yeah.
+Everything else.
+Yeah.
+Okay.
+So I'm happy to send out an email and coordinate all this stuff that probably will be just like
+the next hour, I think.
+Cool.
+And then ideally we can talk to everyone before mid-day Thursday.
+Cool.
+Yeah.
+Totally.
+Awesome.
+I think that's perfect.
+Sweet.
+It's perfect.
+Okay.
+Anything else you want to add on this?
+No, I think that's good.
+Okay.
+I'll keep you looked into my building process.
+You have good callouts.
+You know, hadn't thought about the team thing.
+So.
+Yeah.
+I think like when we demo things, they can be like very much skeleton Frankenstein builds.
+They don't have really work.
+They just have to look like they work in the actual building of it.
+But we said that's going to take like two weeks in the middle.
+Right.
+So.
+Like you might should spend like 20% of your time building.
+Like building.
+I'm not even sure if building really means honestly, like it needs to mean things.
+So.
+It needs to be tied to like what outcome are we driving for?
+And like what is it?
+Was it going to look like?
+Like is it a thing that takes.
+A MP4 file and transcribes it.
+And then does things with the transcription.
+And like a lot of that's going to be like prompting.
+And it's not.
+It's going to be less about it.
+The day five points are very easy.
+This is like three APIs with the actual hard part is going to be like.
+Is it in the format they want?
+Is it a PDF?
+Is an email?
+Is it a Slack message?
+Is it a team's message?
+Like all those.
+That's the real set up here.
+Sure.
+And so that's what we need to be driving toward.
+I think.
+Yeah.
+So we'll ask that in the conversation.
+Guides.
+Yeah.
+I'm not super worried about that.
+I think these are pretty easy going through type.
+Technically challenging problems.
+There are pretty good sign off and actually.
+Building a real thing.
+But I think we're pretty good on building.
+I think today we'll do a lot of scaffolding and then.
+A lot of the conversation guide.
+Yeah.
+So these are the others are easy track sprint one follow ups.
+Accelerate update.
+Mm-hmm.
+Okay.
+Let's do it.
+On easy track.
+The pipeline is done.
+It looks great.
+Do you want to see it real quick?
+Sure.
+Okay.
+Okay.
+Give me a sec.
+I just added some middleware to this.
+So malware.
+Middleware.
+The opposite of malware.
+Yeah.
+I gave it like password protection because I deployed on fly.
+Let me see.
+We can start talking about it.
+If you want.
+Oh, there we go.
+Hmm.
+Yes.
+But seems the level host doesn't have the user in pass.
+I switched the hunter instead of Apollo.
+Apollo.
+Apollo's free tier doesn't let you programmatically search.
+Yeah.
+So we, I mean, we should just pay for things, right?
+Hunter is just as good.
+Is it?
+Yeah.
+It gets you the people and the emails.
+Is it as good?
+Like, have you researched it?
+Do we know if it's as good?
+My understanding is Apollo is like number two under zoom info.
+And hunters like a tier solution.
+We can switch it out to Apollo whenever we're ready to start doing the thing.
+Okay.
+Yeah.
+I mean, I'm just asking why you're doing things like I'm not trying to buy you.
+Yeah, for sure.
+Yeah.
+I mean, it's because at least for development, Apollo costs $60 a month.
+Like, while we're not actively like using it, like hunter is fine for whatever demo,
+for seeing if the thing works like we wanted to, seeing if it delivers like business value, etc.
+Yeah.
+Did you try next up?
+Yeah.
+We were using it.
+So.
+No, you can try extra.
+Okay.
+So it's pretty cool.
+So I already ran the three here.
+So I won't like necessarily rerun them again.
+But you click run.
+Well, you enter the query name.
+So smart tracking in Illinois, you want 25 results, whatever.
+You run the access search.
+And it's like here are all the companies.
+Here are the domains.
+And then the next step is that it scripts the phone from all their websites.
+So the ones that are found, it gives us this.
+And then you click here for hunter.
+And it's going to give you the people and the title and the emails.
+And so this is credit based.
+This is like the bottle like in the funnel.
+And then you do high, like high coup to like look at the profiles of these people,
+at least like the name and the title.
+And figure out if they're like worth targeting in whatever email sequence we want to put them in.
+And then based on that, we put them into basically a sequencer like the one you have for accelerate.
+We could tell it like, hey, like here is the sequence we want on day once.
+And the email on day three, send this follow up if this is not cool.
+So on easy track, if we want to start running in parallel,
+we could probably like test one of those like place, right?
+And and see like see if that like gives anything this week.
+Yeah.
+So the things about this type of data work is what's going to be important is are these phone numbers working
+and are these emails working and then basically other types of ways to get in contact with them.
+And so that's where the data providers matter a lot.
+Like 100 might be 80% accuracy in emails.
+Sure. We can like 60%.
+For sure. So we can switch to Apollo whenever we're like, I'm saying like these are the considerations.
+Like it's like how many emails are you sending that bounce back?
+And that's going to be huge for us.
+I mean, before we go into production, we would have like a verifying layer.
+For sure.
+Which is like one of the API calls verifying emails.
+Yeah, totally.
+And then I mean, this looks good.
+What I wanted from here on easy to add is basically it's like the more essential question
+I'd like should be to work on that this week.
+And I don't know.
+I mean, that's sort of like an open question for me.
+I want to like talk about it.
+So like if we're going to do things for them, like I do you know,
+obviously like number one priority is going to be golden eagle and that's going to take up like a lot of time.
+So like for me, the client's work is, you know, like when we get an emailing,
+we're like the me that you're trying to.
+Yeah, to be honest, I like had not thought about working on easy track for the next like few weeks.
+I think like the priority should be golden eagle.
+Okay. I mean, if you just want a table easy track, we can.
+Yeah, I think that's probably what I call just focus on one thing.
+Yeah.
+Okay.
+Yeah.
+Okay.
+On a sprint one follow ups, I need like probably two hours max to like close all those out.
+And so those are like responding to all of our old folks.
+Cool.
+I have some stuff there.
+I'm just like almost there.
+And some of those might actually end up becoming clients.
+Cool.
+Because I think like, I'm basically right up like, hey, we're currently embedding up two companies.
+We're doing like this three feature implementation for each of them.
+You know, by the way, we're also doing the other stuff and here's a deck.
+Nice.
+And then I think that'll be I think that leads it open for them to be like, oh, that sounds really interesting.
+I actually want to talk about that for my business.
+Perfect.
+See that goes.
+See.
+And then overall like, I think I think like we focus on gold eagle.
+Like this week's going to be like a hard week, I think in terms of just like, we need to be like deep in that.
+And then other side stuff on accelerate.
+We have this reporter coming out of the first for a week.
+And I'm basically setting up his life for a week in terms of like interviews and people we should meet.
+And so I have a few lines out right now.
+I have more time tomorrow to like plant with you believe that like, I wanted to talk to Tibo.
+I wanted to like come through her here.
+The European folks from Friday removed them.
+And so that will take like some amount of time.
+Yeah, I'm not.
+So I raised it with Tibo.
+And interestingly, he was a little bit like, you know, like I hear the opportunity.
+But like we don't really have a like reason or an end goal to something.
+Like being featured.
+And I think like if I'm talking about myself, like I don't really have any immediate investment I can think of in terms of like making a portrait of the muse.
+So yeah, be curious like what kind of what you hope you're hoping for or what.
+Yeah.
+I mean, it's like a major media article.
+So I mean, it's pretty immediate.
+It's like a pretty clear benefit to being in it.
+I mean, if you don't want to be in it, that's fine.
+Yeah.
+I'll just go to someone else.
+But like, it's pretty obvious, I think.
+Like he runs a startup.
+Yeah, I mean, I guess like publicity for the startup.
+For himself, his own brand, the muse, whatever he wants it to be.
+It's like a free interview.
+Yeah, true.
+Yeah.
+if his, if his is a value of like being in an article
+in a major publication, like that I don't care,
+like he doesn't have to be in it.
+Yeah, okay.
+There's eight people who want to be in it.
+So it's like a favor.
+Yeah, totally.
+But like that's happening.
+He'll be there.
+He'll be at the house for a week.
+Cool.
+That makes our Sunday demo night pretty important
+because that's going to be the one that he's like at.
+Mm-hmm.
+And there's like other demo days that we're going to take him to.
+I'm still trying to hire Victoria.
+We'll see how that goes.
+She's supposed to do the night.
+Mm-hmm.
+So just kind of like closing all that.
+Cool.
+And then I'm working, I probably have a few hours of stuff
+with Matt this week, particularly like really
+between like now and tomorrow afternoon.
+He's asking for help looking at a couple deals.
+And so doing some Excel work.
+And so to me, it's like the vast majority of times
+going to be golden eagle, all the interviews,
+all the kind of blocking tackling,
+getting as much information as possible
+to pitch them on this thing.
+Probably what happens on Fridays,
+we send this thing over, we talk to them,
+we probably, the next week, it's probably going to be a lull
+because I think we're going to be doing these two trainings.
+But that's not like a ton of stuff.
+And then I think they're going to probably want to think about it.
+Well, they might sign immediately,
+but I probably not.
+Like, they're going to have to think about like,
+OK, we're going to make these investments now.
+Like, we're going to go with these two kids.
+Like, is that the right move?
+And so that might take a while.
+Could take a week, could take a month, which I have to see.
+We have the benefit of your dad being in there and has some work.
+Yeah, I think they're going to all,
+they're going to lump us into one big project, too.
+I think Tammy already kind of does.
+So just that's something to be aware of.
+Are you going to stick to our benefit, yeah?
+Yeah, it's fine.
+And we can tell, like, we can do that, and that's fine, too.
+Like, it's fine to be seen as a unit.
+It's already going to happen.
+You're related to him.
+He brought us the deal.
+Yeah.
+Corporate entity stuff.
+I don't think it's a big deal.
+We can even just do invoicing like via my dad's thing.
+He's already invoicing via that.
+What's this company called?
+The holding corpus called the automatic office.
+OK.
+Yeah.
+Yeah, I mean, like, I have a LLC, too.
+Doesn't make any difference, is it called an accelerator?
+Accelerate holding LLC.
+OK, that's fine.
+It's a Texas LLC.
+Yeah, I mean, yeah, if you want to just like run that,
+I mean, I think his Delaware, like,
+is that those different things?
+They're in the States, yeah.
+Right.
+I know they're in the States.
+But like, you know, when you people say, like, LLC,
+it's basically just like, oh, I'm not sure.
+He might be in Florida, whichever is more advantageous.
+If they're about the same, it doesn't matter
+if you want to run the invoice when the invoice.
+Yeah, it basically just matters, like, if they pay him
+and he pays us, that's, like, income he has to account for.
+We do the years.
+Do the writers?
+Yeah, it's just like something to think.
+Like, if they pay my LLC, then I have to pay you.
+It's just like, we just have to figure it out, basically.
+Yeah.
+It's not even supposed to just, like, we
+tend to actually get it sorted.
+Yeah.
+Is that done for I believe?
+No.
+What?
+Fuck.
+Oh well.
+There you go.
+I'm going to be back in one of those, shit.
+Okay, gone.
+Cool, so I think like, um,
+Dave, I didn't even figure out all this stuff,
+but it makes sense tactically, anything?
+Totally, I think probably the first thing that we can start cracking out is like the conversation gun.
+Yeah, yeah, I mean, I'll kind of run all that.
+Okay, cool.
+Like, I'll send you emails, prep.
+Cool.
+Like, you can talk a little bit, but like, I can do 80% of all that.
+Okay, amazing.
+You don't have to worry about that.
+Sprint one.
+Sprint two.
+I mean, like, we should, like, set time,
+which was supposed to be this time to go over all this stuff.
+What work we didn't work, wouldn't like,
+what areas we make our interesting vision, all that kind of stuff.
+Um, why I want to do this stuff over the weekend is because we have time over the weekend.
+Because now we're like in this shit, right?
+So whatever you have time, it's been four hours, like,
+two hours of prep, two hours of, like, debriefing, you know, like,
+we have to kind of wait for a little for that kind of stuff.
+Next time you can, let me know that that's like your preference.
+I was like, hey, like, I'd run it after this, like,
+I'm pretty good.
+And then you could have told me, like, hey, like, you know,
+if we do it now, then we have like time over the weekend.
+I'd be like, oh, that listed it.
+Yeah, I mean, I thought I was saying that.
+So it was like, as a flag, I do want to call up that, like,
+communication has just been like off pretty significantly.
+And like, I would put it that's like poor, honestly,
+in the past four days, and then also last weekend,
+and just like, at times throughout the week,
+and at times in general.
+Yeah, same.
+Yeah, we just like, in general, like,
+like, a lot of this stuff, I would like to do like on Saturday.
+And we like said we're going to do it on Saturday,
+and also Friday, like, also Sunday,
+and also this morning.
+And it's just like, things getting like pushed.
+No, no, no.
+So on Friday, on Friday, like,
+we finished the call.
+And it was like, hey, it was like,
+my recollection of it is basically like,
+like, I'm like, hey, like, how about we, like,
+meet at two?
+Like, I need to go by four.
+And you said, at this point, it doesn't really matter to me
+if we do, like, did your mom.
+Like, okay, cool.
+Let's do tomorrow.
+And then Saturday will be around.
+And then we talked, and then at some point,
+I was like, hey, like, I'd rather,
+like, just like, do tomorrow.
+Does that work for you?
+And you sent me this joke, like, do as you will.
+And I was like, yeah, I thought we had committed on Friday
+to meeting up on Saturday, especially in the morning.
+And then we, like, kept pushing that,
+and I was like, okay, I'm going to go sit in the park
+for like five hours.
+I was like, I always want you to pick any hour to come sit
+and talk.
+And then you just like to sit on that again.
+So that wasn't clear.
+In my view.
+So, like, again, like,
+if you, if you want to be, so, so look,
+I like to operate.
+I just want to know, like, what's going on?
+Is the good role.
+So I like to operate, like,
+without the need for, like, assumptions.
+Right?
+And so if you could just like, really explicitly say,
+like, hey, like, this is what I want.
+Like, awesome.
+Like, but that was not kind of explicitly said.
+Right?
+And like, I know we had a commitment for Saturday.
+And then I asked, because I say what I want.
+And I said, hey, I'd rather do this on Sunday.
+Like, you said, you said, yes.
+To me, it's basically that pushing.
+And I was like, I'm fine.
+I'm fine with doing that on Sunday.
+But we need to do that on Sunday.
+But I offered to do that on Sunday.
+And then you said, unfortunately, I'm busy.
+Yeah, because I had like two hours on Sunday.
+So like, well, he didn't tell me what those two hours were.
+He could have said, like, okay, yeah.
+We can push it to Sunday.
+But the hours that have available are 9 to 11.
+They'll be like, okay, cool.
+You know, it's just like, really clear,
+really explicit communication.
+I ask for what I want, like, at all times.
+You know?
+Um.
+And just saying it from my perspective,
+it's like, it's like, there's a lot of unreliability
+in terms of, like, meeting times.
+And when we're going to show up and, like,
+when we're talking about certain things,
+and, like, things keep getting, like,
+moving around and pushed.
+And it just feels like, like, unclear
+that this is no more hurry.
+Okay, so it's interesting, too,
+because that, like, was over the weekend, right?
+And over the week, like, when you said, hey,
+like, let's meet up at 12.
+My immediate reaction was like,
+is that going to be, like, the standard?
+Because I prefer if we meet it up,
+if we meet up, like, early every day.
+Like, that's my preference.
+Um.
+And so, like, over the week,
+I can't think of a single time where I have it,
+like, shown up, like, at the time that I said,
+I was going to show up.
+You know?
+Um.
+So, I do myself as extremely reliable.
+Um, I think this is a communication problem.
+Like, next time, like,
+if you could be, like, explicit?
+I, I feel am being explicit.
+So, like, last weekend, too, like,
+we also were like, hey, let's go do it.
+Like, let's go do this this time.
+Didn't happen that we can either.
+Like, I mean, like, Sundays, like,
+you know, I have, like, stuff in the evening.
+Yeah.
+I also sort of, like, don't necessarily view it great.
+Like, is you not, when you don't go to a demo night,
+or even communicate that you want to,
+or have any, like, desire to,
+because to me, that's a lot of very valuable part of the weekly process.
+And so.
+That's right.
+Oh, I mean, that was like,
+not on my radar at all.
+Like, that you think I should do this.
+I view it as part of,
+accelerate, and I'm not part of accelerate.
+Well, in my view,
+you are at least in the ecosystem.
+And it's a valuable thing to do anyway.
+Okay.
+Well, I guess.
+Like, point is, like,
+point is, like, a lot of this stuff,
+which I think we should have done earlier days ago.
+Okay.
+And to the point where, like, today,
+I feel like we're behind,
+because we already should be responding to these things.
+We already should have a game plan.
+We already should be ahead of the curve on all this client stuff.
+And so, again, my perspective, like,
+isn't seen, like, you might think you're doing super-responsive and clear,
+but in my view, it's like,
+like, why didn't we meet up on Saturday, like?
+And so, in your view,
+you might think you're being extremely explicit,
+but from my perspective,
+all you said was like,
+yeah, sure, yeah, sure, yeah, sure.
+And at no point did you say, like,
+hey, you know what?
+Like, on Saturday, like,
+I thought, I wasn't a walk,
+you were one of the GM, or maybe a backwards.
+And then I just, like, didn't,
+I was just like,
+wasn't sure what I didn't have.
+You said I'm going to, like,
+be here at the park.
+And I said,
+okay, here, I mean, let's,
+let's figure out what went wrong in the communication.
+And then make a plan for, like,
+how it can be better next time.
+Tuesday, Wednesday, Thursday.
+Friday.
+Friday, Saturday.
+All right.
+I said, I'm good to work out,
+like, after the gym, whatever.
+And then you said, I'm on a walk.
+And then I'm like, okay,
+so not right now.
+Cool.
+Let me know in your background.
+You look headed back.
+And then you said,
+I'm going to spend a few hours here.
+And then I said,
+do you want to play tennis?
+Or do you think we should prioritize work?
+Those are genuine questions.
+And then you said,
+the only work I want to do today
+is about an hour or so,
+respect you on the sprint,
+plus vision setting.
+And then you said,
+I'm going to spend a few hours here.
+And then I said,
+do you want to play tennis?
+Or do you think we should prioritize work?
+and then at some point I said,
+I'm thinking maybe I just want to grind here
+and meet up with you tomorrow for Spring sensoring planning.
+What do you think?
+And you sent me a meme?
+And I'm like, okay.
+Yeah.
+This is like five ours.
+Okay.
+So my perspective on Friday.
+We said, hey, we're going to meet up Saturday morning.
+I think you said,
+like let's work.
+Okay.
+That's like excited.
+Let's go work.
+You just didn't happen at all.
+Okay.
+So like to me that's like,
+four drop balls.
+It's like we said we're going to meet on Saturday
+and didn't happen to have night on Friday.
+didn't happen. I kept like making myself available. I brought the tennis rack
+it's over the fucking part. Okay, you like push back again. Like sunday didn't
+happen. Like it was like three days. Okay, it's like Friday afternoon, Saturday,
+sunday, not Friday. Friday like you literally said like it's the same to me.
+I'm just saying like that's the only time it took us to like get done with this
+stuff. Like that we're planning right now on this. For this track also like we
+also we also had planned the retrospective like three years last
+week too. We'd like been pushing it. So like we were like this one retrospective
+we wanted to do on Friday. Yeah, sorry sprint two. Okay, yeah. The two
+week and the two weeks of Friday, right? And we had all this other stuff with
+Groeningle that you know took precedence but like in my view it's like okay well
+if we're gonna push on it you should have an immediately as fast as you can
+be possible to get it done. Okay, so look this really feels like a huge
+communication issue because it was not super clear to me what you wanted.
+The weekend so okay a couple things. Number one, I'm gonna take it on myself to get
+extreme clarity of what you want. I'm gonna do that. Number two is weekends
+in my heart and soul are flexible you know and like you were walking you were at
+the park. I was at the gym. We talked about tennis, right? It was like
+flowy you know like weekdays I'm like let's meet up as soon as the day starts
+and like get out the thing. So action out of there or like no to do whatever is
+like I'm gonna recategorize weekends and you treat them you want to treat them
+the same as the weekdays. Look, I think you're right. I'm just saying if we say we're
+gonna meet up we should do it. Okay. And like if you ever set something and then
+push it just like by nature that's just like a push like it's
+why you know like why did that happen and I'm just curious like I don't
+understand why all of these things are getting pushed. Yeah, I mean I think just like
+I realized over the weekend that I like didn't want to work over the weekend and so
+I in my view I asked you is it okay to just not do this is it okay to do it
+tomorrow you said yes and so I followed up on Sunday
+and then you were busy you know so like like you know I thought I was doing
+I thought I was doing good fine you know and it was not according to your norms so I'm
+updating based on how you actually think so it'll be fixed for next time. Sorry that
+happened that sucks. Okay again it's like one weekend right and I'm just like
+calling out the like in maybe two weeks I've just noticed like like I think we
+should be like very responsive with each other. I've responded soon as you
+message. I'm just like to me like a value of mine is like being the
+responsive and feeling like we are like completely aligned and it just
+hasn't felt that way and so like we can dress it but just so you know like that's
+how I actually feel. I actually feel frustrated with a lot of the conversations you've had
+in the past like five days over text and setting meetings all these things because I'm like
+where the hell are you like why are we getting this up done like that's how it's felt.
+What have we not been the sprint outro yeah yeah like like this is this is one drop fall that
+you're like treating as many but well it's like the end of a sprint I mean like that's like part of
+the biggest milestone of the sprint is the like what are we doing next so that needs to be like
+a sitting down you're thinking we're prepped we're going to do like you have a point of view
+we map it out we go okay here's the game plan and we go execute it because like like today like
+walking in you go hey those ships sit you had built I'm like what are you talking about what you
+built like we're not building anything we need to like figure out exactly what we're doing before
+we build because otherwise we're gonna be in building stuff and it's gonna be like this and we're
+wasting a lot of time on stuff that's like useless and so if we're not expected we need to like
+get aligned on the same page and then execute on it and like there needs to be no daylight at all
+okay and like you need to know what I'm doing and know what you're doing if we need to do things like
+put calendar holds on each other's calendar like we can do that I don't want to do that really because
+there's two of us like we're not like a big team we're not like a consulting project like if we need
+to do things like that just for organizational perspective or to do this or we go back to our excel
+sheet like update that again I would think we need that kind of stuff just philosophically because
+there's two of us yeah I mean now I understand how you think about this stuff so that's fine we're
+gonna update our understanding of each other that's good okay yeah and though that that sounds
+I agree I agree with what you're saying like heard I think the sprint retro would have been good
+good to do I thought it was gonna happen on Sunday I didn't realize I didn't you didn't share
+that your Sunday actually would not be viable um I dropped it by blaming me I dropped it no I dropped it
+off in a park for five hours waiting you like hey I'm done from the gym because I thought you
+would literally say you're gonna go from the gym out of your house or there or whatever or my house
+wherever it was gonna be but you just didn't happen and so like that straight up to me is like you
+just not like that's the straight you just disappeared it's like it could be fine for you to be like oh
+I don't want to do anything today that's why I said hey I'm going for one hour it's all I want one
+hour you can tell when the hour is gonna be but like okay yeah I'm sorry it's not like a little
+minor that's like a kind of I'm at least almost time on Saturday and we can see because we only
+have so much time like three times and relax and all that like it kind of sound like you yeah big
+miscommunication um I'm sorry for I'm sorry I didn't register sure so like point is like
+why don't we get up I think we can figure out tactics to make it easier and put time holds and
+stuff like that um especially I appreciate bringing it up to especially as we get more like we
+see
+So, I mean, yeah, this, this week is really just about, like, that discovery, right?
+Um, so, like, the sales reps, um, Jay, Sean, Tammy, are kind of like the big ones, like,
+on our radar.
+Um, if you, are you going to, like, go through the corner, like, figure out what other big
+stakeholder we should be, um, um, I mean, we basically are, we're just like, Tammy,
+it's, I look at their LinkedIn.
+I mean, like, it's basically like, they're, they're family.
+Yeah.
+There's like six of them.
+Okay.
+Cool.
+So, we could do a stakeholder map.
+Probably we'll recover now.
+Yeah.
+We're, we're sort of already in.
+Like, we're working with all of them.
+We don't need to like, go figure out what the champion is and invest the money because
+it's, I think it's just going to be all of them.
+It's going to be a committee decision.
+And I think Jay is going to have basically final set.
+Uh-huh.
+And then, like, we decided I could really meet the young, the kid.
+The one who's been groomed.
+Yeah.
+The one with a different house name.
+Um, and just get his take on all this stuff.
+And so, I think we'll be a lot smarter.
+Like, what's it?
+Cool.
+Birds.
+So, it really feels like the only, like, big pieces.
+Or making sure all the calls are scheduled on time.
+The commerce, like the call guide.
+And then the Friday.
+Like deliver.
+Yeah.
+Especially.
+We're going to get so much of info from the schools calls.
+We're going to feed that into a big proposal.
+We're going to present it on Friday.
+If we had a day, like if you wanted to say, hey, we're going to make a sick demo for Friday.
+I think that's fine.
+Cool.
+Um, I would, I would want it like, I wouldn't want that to be more than like a day and a half of.
+Because like, ideally, it would be like.
+And now we'll walk you through how it works in systems.
+You open up a team's call.
+Here's what it looks like.
+Here's this thing coming up.
+Here's the real time transcription.
+Here's the action items.
+Here's like it configuring the search for the four points.
+Um, and then like, if you wanted to spend like two or three hours on.
+Because like in my perspective, all this stuff is like kind of like there's a triangle of value and work sort of in this bottom piece of it.
+And in the top of it is the wish list.
+And the wish list is what's like six stuff we can do with our four plan data.
+And visualizations of houses and a website that updates itself.
+And you.
+Um, if you're a rich person buying a log house, you can talk about it at your cocktail parties over the year being built.
+Like that's the stuff that's like really aspirational.
+I think we earn the right to do that kind of stuff once we do the first day as well.
+And get in there.
+But I think like if we show that on a flashy demo or take J this side and say, hey, what do you think about this?
+Like that gets us the $50,000 contract.
+Which is like, you know, for all the extra cool flashy.
+And so like, I think it's worthwhile thinking about.
+Hey, I'm marketing.
+What are the tools out there for YouTube?
+What are the tools for AEO?
+How do we?
+What do we buy?
+What do we build?
+Like your job is to tell me, what do we buy?
+What are we building?
+Why?
+What's the rationale?
+Because that's what I have to trust you about.
+I have to trust you that like these solutions are going to work.
+They're going to be enterprise ready.
+They're going to be secure.
+Like all those things.
+And just like, did we think about these questions?
+Like, what are we actually building?
+Would it be like stealing and using other open-source and why?
+Like all those kind of things?
+You'll confident in doing that.
+All right.
+Well, you'll see you must go out.
+And I'm going to go get something.
+Okay.
+Perfect.
+I appreciate you.
+I appreciate you kind of like saying how you felt about that.
+I think it's important.
+
+=============================
+

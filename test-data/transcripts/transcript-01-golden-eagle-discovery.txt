@@ -1,0 +1,251 @@
+Date: 2026-03-27
+
+1 ///
+
+Good morning.
+It's so nice to meet everyone.
+Wait, is this one of your very own log cabins, by any chance?
+It's just a room.
+Oh, okay.
+It looks amazing.
+That's amazing, though.
+I'm Anna.
+This is Michael Hunter Daniel.
+Nice to meet you, everyone.
+Yeah.
+I can go around and introduce everybody.
+That would be wonderful.
+To you there is Sarah Tarnutter.
+Me.
+Jay is white.
+Jay is my owner.
+I'm your owner.
+I'm Tammy.
+This is Lucas Eichinger, one of the sales staff.
+Andy Eichinger, he is lip pricing.
+Sean Flaherty is the IT manager.
+And Chris Stitcher is our general manager.
+Awesome.
+Thank you.
+Thank you for the intros.
+Yeah, so my name is Anna.
+A quick intro.
+My background is in computer science.
+I've been working in AI for several years now with my dad, who introduced us.
+I also have a background in marketing.
+I worked at McKinsey for a while and now just doing my own startups.
+I also was in media for a while, so that's me, and I'll hand it over to Daniel real quick.
+Awesome.
+Hey, everyone.
+I never went that far south in Wisconsin.
+I was up in Duluth for a while, but I loved seeing all of the manufacturing up there.
+And so personally, I'm from Texas.
+I spent a few years at IBM doing IT implementations for Fortune 500 companies.
+And Anna and I met in San Francisco, and we're currently working with various businesses across
+a number of more people-oriented industries to help them implement AI into their day-to-day
+workflows.
+And so what's really top of mind for us are helping businesses and owners and management
+teams understand what's really critical from a business process perspective, and then helping
+bridge the gap from what's very hyped right now to what can actually make a real difference
+in the day-to-day.
+And so, again, we're both in San Francisco, and so we are excited to kind of kick off here.
+So, yeah, if you guys have anything you want to say before jumping in, we'd love to hear.
+And what we would really like to do today is my dad, Juan, has given me a little bit of
+context about the areas you guys are interested in exploring.
+And kind of before that, though, we'd love to just kick off with a conversation about what
+AI enablement has looked like for your team, what processes are kind of highest leverage to
+bring AI into, and what that looks like now, and what you hope it will look like afterwards.
+So just to get into the weeds of what the day-to-day looks like for you guys, what's priority,
+would love to start there and do some digging to really understand how we can help.
+Oh, boy, there's a lot there.
+Let's say my biggest dream would be to, let's say we draw houseplants here, right?
+And they have, we draw, you know, one-dimensional, dimensional, whatever the hell you call it.
+And then I want to be able to do renderings of them that look photorealistic, you know,
+actually walkthroughs with them with AI.
+I have a couple people that work here that are doing renderings right now, and they look pretty
+good, but they're not realistic enough in my mind, and it takes too long.
+And so in a perfect world, we could take a brand new floor plan for a customer or for us to put
+on our website, and then we do a walkthrough with AI rendering, and then we put it up on the website,
+and people can't tell the difference if it's a real home tour or not, you know?
+Does that kind of sum that up, I think?
+That's really important.
+We really want to do that, and I know that's coming, you know, I mean, as far as the computer
+power and everything, so that would be nice.
+Your dad was talking about how to use AI in marketing, and that I don't know what to do,
+I don't think.
+Obviously, I don't know what to do with it, but I'd like to do something with it.
+And I could give you a little background on our marketing, what we do now.
+Today, we use a company called JumpFly to help Sean and I with advertising paid keywords, okay?
+And maybe we've got 5,500 paid keywords we're going after on search.
+And then what I've noticed lately, for the last year, we don't get any response hardly from paid search.
+No customers ever call and say, hey, I saw your ad on Google, right?
+What 99% of the customers call and tell us is, hey, I've seen your home tours on YouTube, okay?
+So, everybody calls us, because I've seen the home tours on YouTube.
+So, we haven't, I don't know if you looked at any of our videos, but we've got some very nice quality videos.
+My son, our son Luke does the videos, and then sometimes Lucas is, he's on camera sometimes, just depends.
+But the videos are very successful.
+That's the only thing that's really working right now, as far as I can tell.
+And we're spending maybe 18,000 a month or whatever it is, 15,000 a month on promoting those YouTube videos.
+But even with those, even promoting them lately, the YouTube clicks are down.
+And now we're getting into our season now, where we're going to create more new videos.
+So, hopefully, the clicks go back up organically and paid.
+But that's our number one thing.
+Back in the old days, we used to go to actual trade shows for lock homes around the country.
+And the amount of people that go to those nowadays is virtually zero.
+And then we used to do a ton of money in lock home magazines.
+And we're pretty well done with that.
+And there's virtually no response when you do that, too.
+So, we used to do a lot of magazines, a lot of trade shows.
+What else?
+And then, luckily, we found the YouTube.
+And that's the best thing.
+Am I missing anything?
+Instagram and other social media.
+Jay's son, Luke.
+Not to be confused with Lucas, who's stepson.
+But Jay's son, Luke, is a brilliant videographer and does all of our video content.
+And he also is a pretty savvy social media guy.
+So, he and his team do the Instagram posting, the Facebook posting, and stuff like that, a lot of stuff, as well as boosting things through paid search, what Jay was just talking about.
+So, Sean and I, we boost the Facebook reels, let's call them whatever.
+They're not ads.
+We just boost the posts.
+We've been doing that for about a year and a half now, compared to doing zero a year and a half before that.
+So, our Facebook followers went up 100,000 in the last year.
+Again, not that many people do call on Facebook, but maybe they're not as good of leads.
+It's hard to do.
+On Facebook, it's hard to, because it's a host that we're selling.
+There's rules.
+You got to, you know, you can't discriminate against any young people or poor people.
+So, and we, again, our top, our customers are the top 10% earners.
+So, that's where we need to be.
+And a lot of times, our ads will get kicked off because of the age and price discrimination.
+So, let's say YouTube is big, Facebook, Instagram.
+Instagram is probably bigger, but maybe the crowd isn't quite there yet as far as buying from us too much.
+But I'm not down on it.
+And then we're also on TikTok, and then what I was, I think I was telling Wong the other day that, because search was down, I was wondering, you know, because I've been hearing search is dead and all this stuff.
+I was like, well, yeah, it's dead and the words are going, right?
+So, you know, a few months ago, I figured out what else is going to AI search.
+So, Lucas's wife also does some part-time work for us, and I told her, I said, let's get going with, have you on LinkedIn and have you on, what else, X and a few other things.
+Pinterest and Houzz and stuff, so we have a more united front, so AI can find us better.
+And, yeah, so we've been working on that for, what, about six, seven months maybe.
+So, what else am I missing as far as in our picture?
+I think, that pretty well does it, I think.
+So, we spend around, you know, with people's labor, like my son Luke's labor, I would think his labor to make the videos and then to put the videos up and all this, we're probably spending, to search advertising and everything, it's probably about a $600,000 a year deal, you know, with all the marketing money, let's say.
+So, yeah, I think that could be a pretty good picture of what we're doing on that.
+Yeah, yeah, great, great picture there.
+And, do you guys do any sort of tracking on your website just to get a full picture of the, of the funnel?
+Any analytics there?
+Yeah.
+Sean, tell them what you got.
+Yeah, some of the analytics, I used to do a lot more analytics in the old days, but it's, right now, we've been sorely deficient in that area, too, in terms of, JumpFly, their crew, they go through our Google Analytics and stuff like that and give us reports in terms of success of what they're doing.
+And that's kind of what we've, we've kind of put that in their, their ballpark.
+I guess I'm not a real big believer in the analytics, I'm kind of, I'm just, you know, and they have, they do some phone number tracking and stuff, too, you know, for certain ads and stuff, because we have different phone numbers for them guys for whatever they're doing.
+But the, the reality of it is, if the phone's, okay, so our, our product is so expensive that it takes, it takes a year or two or three before somebody buys it, you know, I mean, it's like, or maybe, or maybe they've been watching us for eight years and they haven't told us, you know, and then they finally come out of the woodwork, like, maybe two years before they're ready, but they've already been watching us for eight years.
+So it's a, it's not a normal sales process, because it's such a huge purchase, you know, again, we do everything we can to try to get the right customers to call us, you know, that, that have a budget.
+No matter what you do, you still, you know, still, you're still get some people that can't afford us, but obviously, but yeah, the analytics were weak on, maybe we, maybe Sean and I just need to be sold better on them.
+Yeah, you know, the challenge with analytics is the fact that obviously the Google platform changes, it becomes very difficult to maintain and keep up with all, it's a full-time job if you want to sit there and study your analytics, right?
+And nobody's got the time within this company just to dedicate, just do that one thing, you know?
+So we trust Gemfly's opinion on what the Google Analytics are telling us, and Gemfly has two divisions, they have paid search, and they also have SEO, which we're paying for also.
+And so they give us SEO reports and give us context recommendations and text to add to the site.
+And that's been doing okay, but we're paying for it.
+We've been working on the SEO organic with these two gals, three gals for a year and a half, right?
+Back about two years ago, we disrupted the website.
+We completely gutted it and made it new.
+It looks better, but we lost all of our performance, really.
+And then now we're back to not even normal, but normal is not normal anymore.
+I think maybe Sean says a lot of the bots are gone, you know, that were clicking on us, but they're probably still there.
+But I mean, it's like, even though we're paying money for organic search, our search keeps going down, okay?
+But like we had a meeting with those two gals a couple weeks ago, and I said, well, I think it's just, you know, I think it's part of this AI search.
+It doesn't even come by us anymore.
+So, I mean, okay, our business is doing good.
+The phones are ringing.
+That's the most important thing.
+So, yeah, we are definitely weak at caring about analytics.
+Let's put it that way.
+We more care about reality.
+But I'm not opposed to if there is an easy way to figure this out.
+And I told your dad the other day, I said, we're spending, you know, all these hundreds of thousands of dollars, and I know we're wasting a lot of it, right?
+Because that's just the nature of the beast with advertising.
+You just, you know, a lot of it's wasted, and I know that.
+But I wish we had cleaned it up, right?
+Okay.
+So, if I could interject, one of the dreams that I had, I was thinking about possibly developing an open bot agent or something like that,
+that actually studies based off the keyword lists that we would give it, go do the analytics of our competitors' websites,
+compare our site, and try to, you know, have it do a little automation for us so that we're not really paying an SEO firm to do that stuff for us.
+They could just hand us a report every day and tell us what's going on.
+That would kind of be my dream, you know, and I haven't gotten there yet, you know,
+so I'm just dipping my toe into the open claw world, you know, but, and if there's a better platform or something like that,
+I'm really, really excited to hear that there's something to make that job easier because it really,
+I think the power of AI really could do a lot here in that realm of things, you know.
+So, I'm curious maybe to quickly dig into that a little more where you're saying it would really be great if we could automate this, right?
+I'm also hearing, you know, paying jump play a lot of money, like all of this takes a lot of time and manual labor.
+So, yeah, could you just say a little bit more on that, on that point?
+Like, the idea you have around AI and why this would be helpful?
+Yeah, because realistically, like, let's take jump line to two pieces, you know,
+the paid search side of things, I really don't have a lot of comment on that yet, you know,
+but the SEO side, obviously, there's so many things where it could actually study your Google Analytics,
+see where your successes and failures are, could actually look at the context of the website,
+compare that and find out if we're doing the right thing and make recommendations along those lines.
+And then it could also study and actually find out who our competitors on those keywords are
+and find out what they're doing and why it's so right and why we should, you know, respond to that, you know.
+Yeah, that makes sense.
+Any time I can take care of some of those repetitive and research type things, that alleviates a lot of time.
+One of the things about the culture here at Golden Eagle, we tend to wear multiple hats,
+like I'm the IT manager, but I also write the website, but I also write the code, and I also do, you know,
+and Chris does multiple things, everybody does multiple things.
+And any time we can save that time and deliver better, faster, that's a good thing, you know.
+Yep.
+Any keyword listening on social sites, just out of curiosity?
+No, I don't even know what that means, hardly.
+Okay, yeah, just like kind of having a, seeing what people are saying about these topics
+and just like being able to quickly react to like new things on Twitter or Reddit.
+So, okay, just curious there.
+Yeah, you could possibly use an AI to read at least the comments that, you know,
+Jay will go to the YouTube comments and respond to them,
+and other people will dive into that stuff too.
+But it would be nice if it monitored all that, developed a consensus report of what people are actually excited
+and talking about and positive about, so on and so forth,
+and then possibly help with the responses too, you know, those kinds of things.
+The YouTube responses aren't very many.
+You know, per day maybe there's five to ten nowadays.
+When things go viral, then there's a lot of them.
+But on Facebook, I don't know.
+There's a lot of comments every day that mostly are nice.
+90% of everything is always nice.
+We don't respond to hardly any of those comments unless there's a,
+somebody finds a really important one there.
+But so that's, we don't, and the same with Instagram.
+We don't really, we do look, you know, people look for winners,
+but we don't disseminate all that stuff like you're thinking maybe.
+So, yeah.
+Got it.
+So, the, we, we kind of have a really broad spectrum in what we can help with.
+Our specialty areas really is like go to market in terms of marketing and sales.
+And so this gives us a really good view of like marketing.
+Would love to also ask a bit of questions on the sales side.
+I see my dad lifted his hand though.
+Any, yeah.
+Yeah, I know.
+And I think you were going there.
+So, this whole marketing process is one important aspect.
+Maybe mentioned to you too that I asked them about the sales part that you're going to.
+For instance, how long does it take for the company to react to a new lead?
+And I was telling them that nowadays it should be almost immediate,
+but it seems there may be a lag of hours and maybe 24 hours could happen.
+So, that's something to pay attention to.
+The other thing that I mentioned to you too was the meeting recording with customers.
+That's something that I think you will talk about.
+And one thing that I was mentioning to Tammy,
+and this is around AI in general for the company.
+I don't know if Tammy was had the opportunity to share this with the team,
+but I was telling Tammy in my company,
+three months ago, I instituted as a rule, mandatory,
+everyone has to use Claude for their work at every level.
+So, I purchased licenses for everyone,
+and everyone has to use it in their job.
+Number one.
+Number two, for every meeting where I am going to be,
+the team is going to be going to be
+
+==============================
+

@@ -1,0 +1,10 @@
+[
+  {
+    "file_path": "fixture-02-before.md",
+    "field_label": "Engagement overview",
+    "old_value": "Discovery call completed on 2026-03-27.",
+    "new_value": "Discovery call completed on 2026-03-27. Proposal value: $15,000. Next step: 6 sales rep interviews before Friday debrief.",
+    "confidence": "high",
+    "source_quote": "if we nail this the $15,000 proposal sells itself"
+  }
+]

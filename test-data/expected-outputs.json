@@ -1,0 +1,69 @@
+{
+  "transcripts": [
+    {
+      "id": "T1",
+      "name": "Golden Eagle Discovery Meeting",
+      "date": "2026-03-27",
+      "file": "transcript-01-golden-eagle-discovery.txt",
+      "note": "First meeting with GE team. Should produce many updates.",
+      "expected_edits": [
+        { "file_path": "project-overview.md", "field_label": "Stage", "new_value_contains": "Discovery", "confidence": "high", "description": "Stage → Discovery (first meeting happened)" },
+        { "file_path": "project-overview.md", "field_label": "Champion", "new_value_contains": "Tammy", "confidence": "high", "description": "Champion → Tammy (she's the internal contact, supplemented Jay's answers)" },
+        { "file_path": "project-overview.md", "field_label": "Pain Points", "new_value_contains": "paid search", "confidence": "high", "description": "Pain Points → paid search declining; SEO regressed after site rebuild; lead response lag up to 24hrs; no analytics discipline" },
+        { "file_path": "project-overview.md", "field_label": "Marketing Situation", "new_value_contains": "YouTube", "confidence": "high", "description": "Marketing Situation → YouTube is #1 lead source; JumpFly manages paid search + SEO; Facebook boosted posts; Luke (Jay's son) does video" },
+        { "file_path": "project-overview.md", "field_label": "Marketing Situation", "new_value_contains": "600", "confidence": "high", "description": "Marketing budget → ~$600k/year total including labor" },
+        { "file_path": "people/jay-eichinger.md", "field_label": "Priority interests", "new_value_contains": "rendering", "confidence": "high", "description": "Priority interests → photorealistic AI renderings of floor plans; AI competitor analysis / SEO automation" },
+        { "file_path": "people/jay-eichinger.md", "field_label": "Notes", "new_value_contains": "YouTube", "confidence": "high", "description": "Notes → customers are top 10% earners; sales cycle 1–3 years; YouTube home tours are #1 lead driver; frustrated by wasted ad spend" },
+        { "file_path": "people/sean-flaherty.md", "field_label": "Title", "new_value_contains": "IT Manager", "confidence": "high", "description": "Title → IT Manager" },
+        { "file_path": "people/lucas-eichinger.md", "field_label": "Title", "new_value_contains": "Sales", "confidence": "high", "description": "Title → Sales staff" },
+        { "file_path": "people/lucas-eichinger.md", "field_label": "Relationship to Jay", "new_value_contains": "stepson", "confidence": "high", "description": "Relationship to Jay → Stepson (Tammy said 'not to be confused with Lucas, who's stepson')" },
+        { "file_path": "people/chris-stitcher.md", "field_label": "Title", "new_value_contains": "General Manager", "confidence": "high", "description": "Title → General Manager" },
+        { "file_path": "people/andy-eichinger.md", "field_label": "Title", "new_value_contains": "pricing", "confidence": "high", "description": "Title → Pricing (intro: 'Andy Eichinger, he is lip pricing')" }
+      ]
+    },
+    {
+      "id": "T2",
+      "name": "Internal Planning (Ana + Daniel)",
+      "date": "2026-03-30",
+      "file": "transcript-02-internal-planning.txt",
+      "note": "Internal call. Updates: proposal value, interview plan, Tammy confirmed.",
+      "expected_edits": [
+        { "file_path": "project-overview.md", "field_label": "Value", "new_value_contains": "15,000", "confidence": "high", "description": "Value → $15,000 (proposal mentioned: 'if we nail this... the $15,000 proposal sells itself')" },
+        { "file_path": "project-overview.md", "field_label": "Next action", "new_value_contains": "interview", "confidence": "high", "description": "Next action → schedule 6 sales rep interviews + Friday debrief; prep conversation guides" },
+        { "file_path": "project-overview.md", "field_label": "Notes", "new_value_contains": "Teams", "confidence": "high", "description": "Notes → Golden Eagle uses Microsoft Teams for meetings" },
+        { "file_path": "people/tammy.md", "field_label": "Role in engagement", "new_value_contains": "champion", "confidence": "high", "description": "Role → internal champion; most candid contact; confirmed interest in sales piece" },
+        { "file_path": "people/tammy.md", "field_label": "Confirmed interest", "new_value_contains": "recording", "confidence": "high", "description": "Confirmed interest → recording meetings, transcripts, action items, follow-up automation ('that's what she said, we want this')" }
+      ]
+    },
+    {
+      "id": "T3",
+      "name": "CRM Mockup Demo to Dad",
+      "date": "2026-03-30",
+      "file": "transcript-03-mockup-demo.txt",
+      "note": "Internal product discussion with Ana's dad. Should return [] — no new GE engagement facts.",
+      "expected_edits": []
+    },
+    {
+      "id": "T4",
+      "name": "Feature Planning (Ana + Daniel)",
+      "date": "2026-03-30",
+      "file": "transcript-04-feature-planning.txt",
+      "note": "Scope discussion. Key: email Chris, $15k scope warning, financing as process area.",
+      "expected_edits": [
+        { "file_path": "project-overview.md", "field_label": "Next action", "new_value_contains": "Chris", "confidence": "high", "description": "Next action → send email to Chris Stitcher (GM) to follow up on rep interview scheduling ('send an email tonight to Chris')" },
+        { "file_path": "people/chris-stitcher.md", "field_label": "Role in engagement", "new_value_contains": "sales", "confidence": "high", "description": "Role → manages the sales reps; contact for scheduling interviews ('Chris reached out to everyone')" }
+      ]
+    },
+    {
+      "id": "T5",
+      "name": "Coordination (Ana + Daniel)",
+      "date": "2026-03-31",
+      "file": "transcript-05-coordination.txt",
+      "note": "Interview scheduling update. Reps not responding. Priority order established.",
+      "expected_edits": [
+        { "file_path": "project-overview.md", "field_label": "Interview Status", "new_value_contains": "not responding", "confidence": "high", "description": "Interview Status → emails sent to Tammy and Sean; reps not responding within 24hrs; considering escalating to Chris" },
+        { "file_path": "project-overview.md", "field_label": "Next action", "new_value_contains": "Tammy", "confidence": "high", "description": "Next action → talk to Tammy first (most candid); then Sean; Chris after reps; Jay last ('intentionally wanted him later in the week')" }
+      ]
+    }
+  ]
+}

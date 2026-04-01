@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sundial CRM — Extraction Test Report</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; padding: 24px; }
+    .page { max-width: 960px; margin: 0 auto; }
+
+    /* Header */
+    .page-header { margin-bottom: 32px; }
+    .page-title { font-size: 22px; font-weight: 700; color: #0f172a; }
+    .page-meta { font-size: 13px; color: #64748b; margin-top: 4px; }
+    .prompt-ver { display: inline-block; background: #e2e8f0; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; color: #475569; margin-left: 8px; }
+
+    /* Summary bar */
+    .summary-bar { display: flex; gap: 16px; background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px 24px; margin-bottom: 28px; align-items: center; flex-wrap: wrap; }
+    .summary-stat { text-align: center; min-width: 80px; }
+    .summary-stat .stat-num { font-size: 28px; font-weight: 700; }
+    .summary-stat .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+    .divider { width: 1px; height: 48px; background: #e2e8f0; }
+
+    /* Cards */
+    .transcript-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+    .card-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .card-good { background: #f0fdf4; border-bottom: 1px solid #bbf7d0; }
+    .card-warn { background: #fffbeb; border-bottom: 1px solid #fde68a; }
+    .card-bad  { background: #fef2f2; border-bottom: 1px solid #fecaca; }
+    .card-neutral { background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+    .card-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .transcript-id { font-weight: 700; font-size: 13px; background: #1e293b; color: white; border-radius: 4px; padding: 2px 8px; }
+    .transcript-name { font-weight: 600; font-size: 15px; }
+    .transcript-date { font-size: 12px; color: #64748b; }
+    .card-stats { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .hit-rate { font-size: 14px; font-weight: 600; color: #0f172a; }
+    .token-count { font-size: 11px; color: #94a3b8; }
+    .card-note { padding: 8px 20px; font-size: 12px; color: #64748b; font-style: italic; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+    .card-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+
+    /* Section labels */
+    .section-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 0; margin-top: 4px; }
+    .green-label { color: #16a34a; }
+    .red-label { color: #dc2626; }
+    .yellow-label { color: #b45309; }
+
+    /* Edit rows */
+    .edit-row { border-radius: 6px; padding: 10px 12px; font-size: 13px; display: flex; flex-direction: column; gap: 5px; }
+    .hit-row { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .miss-row { background: #fef2f2; border: 1px solid #fecaca; }
+    .hallucination-row { background: #fffbeb; border: 1px solid #fde68a; }
+    .edit-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .file-tag { background: #1e293b; color: white; font-size: 11px; border-radius: 3px; padding: 1px 6px; font-family: monospace; }
+    .field-tag { font-weight: 600; font-size: 12px; color: #334155; }
+    .edit-values { display: flex; flex-direction: column; gap: 4px; }
+    .edit-values .arrow { color: #94a3b8; font-size: 11px; padding-left: 2px; }
+    .old-val { color: #ef4444; font-size: 12px; font-family: monospace; word-break: break-word; white-space: pre-wrap; }
+    .new-val { color: #16a34a; font-size: 12px; font-family: monospace; word-break: break-word; white-space: pre-wrap; }
+    .arrow { color: #94a3b8; flex-shrink: 0; }
+    .source-quote { font-size: 11px; color: #64748b; font-style: italic; border-left: 2px solid #cbd5e1; padding-left: 8px; word-break: break-word; }
+    .expected-note { font-size: 12px; color: #7f1d1d; }
+    .empty-state { color: #94a3b8; font-size: 13px; font-style: italic; }
+
+    /* Badges */
+    .badge { font-size: 10px; font-weight: 600; border-radius: 4px; padding: 2px 6px; text-transform: uppercase; }
+    .badge-ok { background: #dcfce7; color: #16a34a; }
+    .badge-error { background: #fee2e2; color: #dc2626; }
+    .conf { font-size: 10px; border-radius: 3px; padding: 1px 5px; font-weight: 600; }
+    .conf-high { background: #dcfce7; color: #166534; }
+    .conf-med  { background: #fef3c7; color: #92400e; }
+    .conf-low  { background: #fee2e2; color: #991b1b; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="page-header">
+      <div class="page-title">Sundial CRM — Extraction Test Report</div>
+      <div class="page-meta">
+        Run #3 · 4/1/2026, 7:59:40 AM
+        <span class="prompt-ver">extraction-v1</span>
+      </div>
+    </div>
+
+    <div class="summary-bar">
+      <div class="summary-stat">
+        <div class="stat-num" style="color: #16a34a">81%</div>
+        <div class="stat-label">Hit Rate</div>
+      </div>
+      <div class="divider"></div>
+      <div class="summary-stat">
+        <div class="stat-num" style="color: #16a34a">17</div>
+        <div class="stat-label">Hits</div>
+      </div>
+      <div class="summary-stat">
+        <div class="stat-num" style="color: #dc2626">4</div>
+        <div class="stat-label">Misses</div>
+      </div>
+      <div class="summary-stat">
+        <div class="stat-num" style="color: #d97706">13</div>
+        <div class="stat-label">Unexpected</div>
+      </div>
+      <div class="summary-stat">
+        <div class="stat-num" style="color: #dc2626">0</div>
+        <div class="stat-label">Val. Failures</div>
+      </div>
+      <div class="divider"></div>
+      <div class="summary-stat">
+        <div class="stat-num" style="color: #64748b">21</div>
+        <div class="stat-label">Expected</div>
+      </div>
+    </div>
+
+    
+    <div class="transcript-card">
+      <div class="card-header card-good">
+        <div class="card-title">
+          <span class="transcript-id">T1</span>
+          <span class="transcript-name">Golden Eagle Discovery Meeting</span>
+          <span class="transcript-date">2026-03-27</span>
+        </div>
+        <div class="card-stats">
+          <span class="hit-rate">12/12 expected (100%)</span>
+          
+          <span class="token-count">5,044 tokens</span>
+        </div>
+      </div>
+      <div class="card-note">First meeting with GE team. Should produce many updates.</div>
+      <div class="card-body">
+        
+      <div class="section-label green-label">✅ Hits (12)</div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Engagement Overview</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Golden Eagle Log Homes — Engagement Overview
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Golden Eagle Log Homes — Engagement Overview
+
+Golden Eagle Log Homes designs and sells log homes. Their customers are typically in the top 10% of earners. The product is very expensive, with sales cycles of 1–3+ years (some prospects watch for up to 8 years before engaging). The company culture is &quot;multiple hats&quot; — everyone wears several roles.
+
+## Key Discovery Call — 2026-03-27
+
+Attendees: Jay Eichinger (owner), Tammy, Lucas Eichinger (sales staff), Andy Eichinger (pricing), Sean Flaherty (IT manager), Chris Stitcher (general manager), Sarah Tarnutter. Consulting side: Anna, Michael Hunter Daniel. Juan (Anna's father) made the introduction.
+
+## Priority Areas of Interest
+
+### 1. Photorealistic AI Renderings / Walkthroughs
+Jay's &quot;biggest dream&quot; — take floor plans and produce photorealistic AI-rendered video walkthroughs indistinguishable from real home tours, for use on the website. They currently have a couple of people doing renderings, but Jay says they're &quot;not realistic enough&quot; and it &quot;takes too long.&quot;
+
+### 2. AI in Marketing
+Jay wants help figuring out how to use AI in marketing. Currently spending ~$600,000/year total on marketing (including labor, video production by Jay's son Luke, search advertising, etc.).
+
+- **YouTube is the #1 channel.** 99% of inbound customers say they found Golden Eagle via YouTube home tour videos. Jay's son Luke (not to be confused with stepson Lucas) is a videographer who produces all video content. Spending ~$15,000–$18,000/month promoting YouTube videos. Recently YouTube clicks have been down.
+- **Paid search via JumpFly.** ~5,500 paid keywords. Almost no customers attribute their call to Google ads. Jay feels paid search is largely ineffective currently.
+- **SEO via JumpFly.** Paying JumpFly's SEO division for organic search optimization — they have 2–3 women working on it for ~1.5 years. About 2 years ago they completely rebuilt the website; it looks better but they lost all prior SEO performance. Organic search keeps declining despite investment. Jay suspects AI search is bypassing them.
+- **Facebook.** Sean and Jay boost Facebook posts (not formal ads). Followers grew by 100,000 in the last year. Leads from Facebook are lower quality. Housing ad restrictions (age/income discrimination rules) make targeting difficult.
+- **Instagram.** Luke's team handles posting. Audience may not yet be buyers but Jay is &quot;not down on it.&quot;
+- **TikTok.** Also present on TikTok.
+- **LinkedIn, X, Pinterest, Houzz.** Lucas's wife does part-time work expanding presence on these platforms for ~6–7 months, to improve discoverability by AI search.
+- **Legacy channels (trade shows, log home magazines):** Virtually no response anymore; largely discontinued.
+
+### 3. SEO/Analytics Automation (Sean's idea)
+Sean wants to build an AI bot/agent that could: study keyword lists, analyze competitors' websites, compare to their own site, generate daily reports — potentially replacing the need for an SEO firm. He's been &quot;dipping his toe into the OpenAI world&quot; but hasn't gotten far yet. Also interested in AI monitoring social media comments across YouTube, Facebook, Instagram and generating consensus sentiment reports, plus helping draft responses.
+
+### 4. Analytics
+Currently weak on analytics — rely on JumpFly's Google Analytics reports. Jay and Sean are skeptical of analytics value but open to an easier approach. JumpFly does some phone number tracking for certain ads. Long sales cycles make attribution very difficult.
+
+### 5. Sales Lead Response Time
+Juan flagged that lead response time may lag by hours, possibly up to 24 hours. He noted it should be near-immediate.
+
+### 6. Meeting Recording with Customers
+Juan mentioned meeting recording as a topic to discuss (not yet elaborated in this call).
+
+### 7. General AI Enablement
+Juan shared that at his own company he made Claude usage mandatory for all employees 3 months ago, purchased licenses for everyone, and requires it for every job function. He encouraged Golden Eagle to consider similar company-wide AI adoption.
+
+## No Social Listening Currently
+No keyword listening on social sites (Twitter, Reddit, etc.) — Sean noted he doesn't even know what that means. Opportunity area identified."</span>
+          </div>
+          <div class="source-quote">"Let's say my biggest dream would be to, let's say we draw houseplants here, right? ... I want to be able to do renderings of them that look photorealistic"</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Engagement Overview</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Golden Eagle Log Homes — Engagement Overview
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Golden Eagle Log Homes — Engagement Overview
+
+Golden Eagle Log Homes designs and sells log homes. Their customers are typically in the top 10% of earners. The product is very expensive, with sales cycles of 1–3+ years (some prospects watch for up to 8 years before engaging). The company culture is &quot;multiple hats&quot; — everyone wears several roles.
+
+## Key Discovery Call — 2026-03-27
+
+Attendees: Jay Eichinger (owner), Tammy, Lucas Eichinger (sales staff), Andy Eichinger (pricing), Sean Flaherty (IT manager), Chris Stitcher (general manager), Sarah Tarnutter. Consulting side: Anna, Michael Hunter Daniel. Juan (Anna's father) made the introduction.
+
+## Priority Areas of Interest
+
+### 1. Photorealistic AI Renderings / Walkthroughs
+Jay's &quot;biggest dream&quot; — take floor plans and produce photorealistic AI-rendered video walkthroughs indistinguishable from real home tours, for use on the website. They currently have a couple of people doing renderings, but Jay says they're &quot;not realistic enough&quot; and it &quot;takes too long.&quot;
+
+### 2. AI in Marketing
+Jay wants help figuring out how to use AI in marketing. Currently spending ~$600,000/year total on marketing (including labor, video production by Jay's son Luke, search advertising, etc.).
+
+- **YouTube is the #1 channel.** 99% of inbound customers say they found Golden Eagle via YouTube home tour videos. Jay's son Luke (not to be confused with stepson Lucas) is a videographer who produces all video content. Spending ~$15,000–$18,000/month promoting YouTube videos. Recently YouTube clicks have been down.
+- **Paid search via JumpFly.** ~5,500 paid keywords. Almost no customers attribute their call to Google ads. Jay feels paid search is largely ineffective currently.
+- **SEO via JumpFly.** Paying JumpFly's SEO division for organic search optimization — they have 2–3 women working on it for ~1.5 years. About 2 years ago they completely rebuilt the website; it looks better but they lost all prior SEO performance. Organic search keeps declining despite investment. Jay suspects AI search is bypassing them.
+- **Facebook.** Sean and Jay boost Facebook posts (not formal ads). Followers grew by 100,000 in the last year. Leads from Facebook are lower quality. Housing ad restrictions (age/income discrimination rules) make targeting difficult.
+- **Instagram.** Luke's team handles posting. Audience may not yet be buyers but Jay is &quot;not down on it.&quot;
+- **TikTok.** Also present on TikTok.
+- **LinkedIn, X, Pinterest, Houzz.** Lucas's wife does part-time work expanding presence on these platforms for ~6–7 months, to improve discoverability by AI search.
+- **Legacy channels (trade shows, log home magazines):** Virtually no response anymore; largely discontinued.
+
+### 3. SEO/Analytics Automation (Sean's idea)
+Sean wants to build an AI bot/agent that could: study keyword lists, analyze competitors' websites, compare to their own site, generate daily reports — potentially replacing the need for an SEO firm. He's been &quot;dipping his toe into the OpenAI world&quot; but hasn't gotten far yet. Also interested in AI monitoring social media comments across YouTube, Facebook, Instagram and generating consensus sentiment reports, plus helping draft responses.
+
+### 4. Analytics
+Currently weak on analytics — rely on JumpFly's Google Analytics reports. Jay and Sean are skeptical of analytics value but open to an easier approach. JumpFly does some phone number tracking for certain ads. Long sales cycles make attribution very difficult.
+
+### 5. Sales Lead Response Time
+Juan flagged that lead response time may lag by hours, possibly up to 24 hours. He noted it should be near-immediate.
+
+### 6. Meeting Recording with Customers
+Juan mentioned meeting recording as a topic to discuss (not yet elaborated in this call).
+
+### 7. General AI Enablement
+Juan shared that at his own company he made Claude usage mandatory for all employees 3 months ago, purchased licenses for everyone, and requires it for every job function. He encouraged Golden Eagle to consider similar company-wide AI adoption.
+
+## No Social Listening Currently
+No keyword listening on social sites (Twitter, Reddit, etc.) — Sean noted he doesn't even know what that means. Opportunity area identified."</span>
+          </div>
+          <div class="source-quote">"Let's say my biggest dream would be to, let's say we draw houseplants here, right? ... I want to be able to do renderings of them that look photorealistic"</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Engagement Overview</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Golden Eagle Log Homes — Engagement Overview
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Golden Eagle Log Homes — Engagement Overview
+
+Golden Eagle Log Homes designs and sells log homes. Their customers are typically in the top 10% of earners. The product is very expensive, with sales cycles of 1–3+ years (some prospects watch for up to 8 years before engaging). The company culture is &quot;multiple hats&quot; — everyone wears several roles.
+
+## Key Discovery Call — 2026-03-27
+
+Attendees: Jay Eichinger (owner), Tammy, Lucas Eichinger (sales staff), Andy Eichinger (pricing), Sean Flaherty (IT manager), Chris Stitcher (general manager), Sarah Tarnutter. Consulting side: Anna, Michael Hunter Daniel. Juan (Anna's father) made the introduction.
+
+## Priority Areas of Interest
+
+### 1. Photorealistic AI Renderings / Walkthroughs
+Jay's &quot;biggest dream&quot; — take floor plans and produce photorealistic AI-rendered video walkthroughs indistinguishable from real home tours, for use on the website. They currently have a couple of people doing renderings, but Jay says they're &quot;not realistic enough&quot; and it &quot;takes too long.&quot;
+
+### 2. AI in Marketing
+Jay wants help figuring out how to use AI in marketing. Currently spending ~$600,000/year total on marketing (including labor, video production by Jay's son Luke, search advertising, etc.).
+
+- **YouTube is the #1 channel.** 99% of inbound customers say they found Golden Eagle via YouTube home tour videos. Jay's son Luke (not to be confused with stepson Lucas) is a videographer who produces all video content. Spending ~$15,000–$18,000/month promoting YouTube videos. Recently YouTube clicks have been down.
+- **Paid search via JumpFly.** ~5,500 paid keywords. Almost no customers attribute their call to Google ads. Jay feels paid search is largely ineffective currently.
+- **SEO via JumpFly.** Paying JumpFly's SEO division for organic search optimization — they have 2–3 women working on it for ~1.5 years. About 2 years ago they completely rebuilt the website; it looks better but they lost all prior SEO performance. Organic search keeps declining despite investment. Jay suspects AI search is bypassing them.
+- **Facebook.** Sean and Jay boost Facebook posts (not formal ads). Followers grew by 100,000 in the last year. Leads from Facebook are lower quality. Housing ad restrictions (age/income discrimination rules) make targeting difficult.
+- **Instagram.** Luke's team handles posting. Audience may not yet be buyers but Jay is &quot;not down on it.&quot;
+- **TikTok.** Also present on TikTok.
+- **LinkedIn, X, Pinterest, Houzz.** Lucas's wife does part-time work expanding presence on these platforms for ~6–7 months, to improve discoverability by AI search.
+- **Legacy channels (trade shows, log home magazines):** Virtually no response anymore; largely discontinued.
+
+### 3. SEO/Analytics Automation (Sean's idea)
+Sean wants to build an AI bot/agent that could: study keyword lists, analyze competitors' websites, compare to their own site, generate daily reports — potentially replacing the need for an SEO firm. He's been &quot;dipping his toe into the OpenAI world&quot; but hasn't gotten far yet. Also interested in AI monitoring social media comments across YouTube, Facebook, Instagram and generating consensus sentiment reports, plus helping draft responses.
+
+### 4. Analytics
+Currently weak on analytics — rely on JumpFly's Google Analytics reports. Jay and Sean are skeptical of analytics value but open to an easier approach. JumpFly does some phone number tracking for certain ads. Long sales cycles make attribution very difficult.
+
+### 5. Sales Lead Response Time
+Juan flagged that lead response time may lag by hours, possibly up to 24 hours. He noted it should be near-immediate.
+
+### 6. Meeting Recording with Customers
+Juan mentioned meeting recording as a topic to discuss (not yet elaborated in this call).
+
+### 7. General AI Enablement
+Juan shared that at his own company he made Claude usage mandatory for all employees 3 months ago, purchased licenses for everyone, and requires it for every job function. He encouraged Golden Eagle to consider similar company-wide AI adoption.
+
+## No Social Listening Currently
+No keyword listening on social sites (Twitter, Reddit, etc.) — Sean noted he doesn't even know what that means. Opportunity area identified."</span>
+          </div>
+          <div class="source-quote">"Let's say my biggest dream would be to, let's say we draw houseplants here, right? ... I want to be able to do renderings of them that look photorealistic"</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Engagement Overview</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Golden Eagle Log Homes — Engagement Overview
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Golden Eagle Log Homes — Engagement Overview
+
+Golden Eagle Log Homes designs and sells log homes. Their customers are typically in the top 10% of earners. The product is very expensive, with sales cycles of 1–3+ years (some prospects watch for up to 8 years before engaging). The company culture is &quot;multiple hats&quot; — everyone wears several roles.
+
+## Key Discovery Call — 2026-03-27
+
+Attendees: Jay Eichinger (owner), Tammy, Lucas Eichinger (sales staff), Andy Eichinger (pricing), Sean Flaherty (IT manager), Chris Stitcher (general manager), Sarah Tarnutter. Consulting side: Anna, Michael Hunter Daniel. Juan (Anna's father) made the introduction.
+
+## Priority Areas of Interest
+
+### 1. Photorealistic AI Renderings / Walkthroughs
+Jay's &quot;biggest dream&quot; — take floor plans and produce photorealistic AI-rendered video walkthroughs indistinguishable from real home tours, for use on the website. They currently have a couple of people doing renderings, but Jay says they're &quot;not realistic enough&quot; and it &quot;takes too long.&quot;
+
+### 2. AI in Marketing
+Jay wants help figuring out how to use AI in marketing. Currently spending ~$600,000/year total on marketing (including labor, video production by Jay's son Luke, search advertising, etc.).
+
+- **YouTube is the #1 channel.** 99% of inbound customers say they found Golden Eagle via YouTube home tour videos. Jay's son Luke (not to be confused with stepson Lucas) is a videographer who produces all video content. Spending ~$15,000–$18,000/month promoting YouTube videos. Recently YouTube clicks have been down.
+- **Paid search via JumpFly.** ~5,500 paid keywords. Almost no customers attribute their call to Google ads. Jay feels paid search is largely ineffective currently.
+- **SEO via JumpFly.** Paying JumpFly's SEO division for organic search optimization — they have 2–3 women working on it for ~1.5 years. About 2 years ago they completely rebuilt the website; it looks better but they lost all prior SEO performance. Organic search keeps declining despite investment. Jay suspects AI search is bypassing them.
+- **Facebook.** Sean and Jay boost Facebook posts (not formal ads). Followers grew by 100,000 in the last year. Leads from Facebook are lower quality. Housing ad restrictions (age/income discrimination rules) make targeting difficult.
+- **Instagram.** Luke's team handles posting. Audience may not yet be buyers but Jay is &quot;not down on it.&quot;
+- **TikTok.** Also present on TikTok.
+- **LinkedIn, X, Pinterest, Houzz.** Lucas's wife does part-time work expanding presence on these platforms for ~6–7 months, to improve discoverability by AI search.
+- **Legacy channels (trade shows, log home magazines):** Virtually no response anymore; largely discontinued.
+
+### 3. SEO/Analytics Automation (Sean's idea)
+Sean wants to build an AI bot/agent that could: study keyword lists, analyze competitors' websites, compare to their own site, generate daily reports — potentially replacing the need for an SEO firm. He's been &quot;dipping his toe into the OpenAI world&quot; but hasn't gotten far yet. Also interested in AI monitoring social media comments across YouTube, Facebook, Instagram and generating consensus sentiment reports, plus helping draft responses.
+
+### 4. Analytics
+Currently weak on analytics — rely on JumpFly's Google Analytics reports. Jay and Sean are skeptical of analytics value but open to an easier approach. JumpFly does some phone number tracking for certain ads. Long sales cycles make attribution very difficult.
+
+### 5. Sales Lead Response Time
+Juan flagged that lead response time may lag by hours, possibly up to 24 hours. He noted it should be near-immediate.
+
+### 6. Meeting Recording with Customers
+Juan mentioned meeting recording as a topic to discuss (not yet elaborated in this call).
+
+### 7. General AI Enablement
+Juan shared that at his own company he made Claude usage mandatory for all employees 3 months ago, purchased licenses for everyone, and requires it for every job function. He encouraged Golden Eagle to consider similar company-wide AI adoption.
+
+## No Social Listening Currently
+No keyword listening on social sites (Twitter, Reddit, etc.) — Sean noted he doesn't even know what that means. Opportunity area identified."</span>
+          </div>
+          <div class="source-quote">"Let's say my biggest dream would be to, let's say we draw houseplants here, right? ... I want to be able to do renderings of them that look photorealistic"</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Engagement Overview</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Golden Eagle Log Homes — Engagement Overview
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Golden Eagle Log Homes — Engagement Overview
+
+Golden Eagle Log Homes designs and sells log homes. Their customers are typically in the top 10% of earners. The product is very expensive, with sales cycles of 1–3+ years (some prospects watch for up to 8 years before engaging). The company culture is &quot;multiple hats&quot; — everyone wears several roles.
+
+## Key Discovery Call — 2026-03-27
+
+Attendees: Jay Eichinger (owner), Tammy, Lucas Eichinger (sales staff), Andy Eichinger (pricing), Sean Flaherty (IT manager), Chris Stitcher (general manager), Sarah Tarnutter. Consulting side: Anna, Michael Hunter Daniel. Juan (Anna's father) made the introduction.
+
+## Priority Areas of Interest
+
+### 1. Photorealistic AI Renderings / Walkthroughs
+Jay's &quot;biggest dream&quot; — take floor plans and produce photorealistic AI-rendered video walkthroughs indistinguishable from real home tours, for use on the website. They currently have a couple of people doing renderings, but Jay says they're &quot;not realistic enough&quot; and it &quot;takes too long.&quot;
+
+### 2. AI in Marketing
+Jay wants help figuring out how to use AI in marketing. Currently spending ~$600,000/year total on marketing (including labor, video production by Jay's son Luke, search advertising, etc.).
+
+- **YouTube is the #1 channel.** 99% of inbound customers say they found Golden Eagle via YouTube home tour videos. Jay's son Luke (not to be confused with stepson Lucas) is a videographer who produces all video content. Spending ~$15,000–$18,000/month promoting YouTube videos. Recently YouTube clicks have been down.
+- **Paid search via JumpFly.** ~5,500 paid keywords. Almost no customers attribute their call to Google ads. Jay feels paid search is largely ineffective currently.
+- **SEO via JumpFly.** Paying JumpFly's SEO division for organic search optimization — they have 2–3 women working on it for ~1.5 years. About 2 years ago they completely rebuilt the website; it looks better but they lost all prior SEO performance. Organic search keeps declining despite investment. Jay suspects AI search is bypassing them.
+- **Facebook.** Sean and Jay boost Facebook posts (not formal ads). Followers grew by 100,000 in the last year. Leads from Facebook are lower quality. Housing ad restrictions (age/income discrimination rules) make targeting difficult.
+- **Instagram.** Luke's team handles posting. Audience may not yet be buyers but Jay is &quot;not down on it.&quot;
+- **TikTok.** Also present on TikTok.
+- **LinkedIn, X, Pinterest, Houzz.** Lucas's wife does part-time work expanding presence on these platforms for ~6–7 months, to improve discoverability by AI search.
+- **Legacy channels (trade shows, log home magazines):** Virtually no response anymore; largely discontinued.
+
+### 3. SEO/Analytics Automation (Sean's idea)
+Sean wants to build an AI bot/agent that could: study keyword lists, analyze competitors' websites, compare to their own site, generate daily reports — potentially replacing the need for an SEO firm. He's been &quot;dipping his toe into the OpenAI world&quot; but hasn't gotten far yet. Also interested in AI monitoring social media comments across YouTube, Facebook, Instagram and generating consensus sentiment reports, plus helping draft responses.
+
+### 4. Analytics
+Currently weak on analytics — rely on JumpFly's Google Analytics reports. Jay and Sean are skeptical of analytics value but open to an easier approach. JumpFly does some phone number tracking for certain ads. Long sales cycles make attribution very difficult.
+
+### 5. Sales Lead Response Time
+Juan flagged that lead response time may lag by hours, possibly up to 24 hours. He noted it should be near-immediate.
+
+### 6. Meeting Recording with Customers
+Juan mentioned meeting recording as a topic to discuss (not yet elaborated in this call).
+
+### 7. General AI Enablement
+Juan shared that at his own company he made Claude usage mandatory for all employees 3 months ago, purchased licenses for everyone, and requires it for every job function. He encouraged Golden Eagle to consider similar company-wide AI adoption.
+
+## No Social Listening Currently
+No keyword listening on social sites (Twitter, Reddit, etc.) — Sean noted he doesn't even know what that means. Opportunity area identified."</span>
+          </div>
+          <div class="source-quote">"Let's say my biggest dream would be to, let's say we draw houseplants here, right? ... I want to be able to do renderings of them that look photorealistic"</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/jay-eichinger.md</span>
+            <span class="field-tag">Jay Eichinger notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"Owner of Golden Eagle Log Homes. Tammy is his wife (&quot;Jay is my owner&quot; / &quot;I'm your owner&quot;). His son Luke is the company's videographer and produces all video content and manages social media content. Lucas Eichinger is his stepson and is on sales staff. Andy Eichinger handles pricing.
+
+Jay personally responds to YouTube comments. Passionate about getting photorealistic AI renderings of floor plans. Skeptical of analytics but open-minded. Acknowledges they're spending ~$600K/year on marketing and knows a lot is wasted, but wants to clean it up. Suspects AI search is disrupting their organic traffic.
+
+Was introduced to the consulting team by Juan (Anna's father). Jay had been telling Juan about interest in AI for marketing and expressed concern about declining search performance."</span>
+          </div>
+          <div class="source-quote">"Jay is my owner. I'm your owner. ... So, yeah, I think that could be a pretty good picture of what we're doing on that."</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/jay-eichinger.md</span>
+            <span class="field-tag">Jay Eichinger notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"Owner of Golden Eagle Log Homes. Tammy is his wife (&quot;Jay is my owner&quot; / &quot;I'm your owner&quot;). His son Luke is the company's videographer and produces all video content and manages social media content. Lucas Eichinger is his stepson and is on sales staff. Andy Eichinger handles pricing.
+
+Jay personally responds to YouTube comments. Passionate about getting photorealistic AI renderings of floor plans. Skeptical of analytics but open-minded. Acknowledges they're spending ~$600K/year on marketing and knows a lot is wasted, but wants to clean it up. Suspects AI search is disrupting their organic traffic.
+
+Was introduced to the consulting team by Juan (Anna's father). Jay had been telling Juan about interest in AI for marketing and expressed concern about declining search performance."</span>
+          </div>
+          <div class="source-quote">"Jay is my owner. I'm your owner. ... So, yeah, I think that could be a pretty good picture of what we're doing on that."</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/sean-flaherty.md</span>
+            <span class="field-tag">Sean Flaherty notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"IT manager at Golden Eagle Log Homes. Also writes the website, writes code, and wears multiple hats. Works with Jay on advertising and boosting Facebook posts. Collaborates with JumpFly on paid search and SEO.
+
+Has a vision for building an AI bot/agent to automate SEO analysis — studying keyword lists, analyzing competitors' websites, comparing to their own site, and generating daily reports. Currently &quot;dipping his toe into the OpenAI world.&quot; Also interested in AI for monitoring and summarizing social media comments and helping draft responses.
+
+Skeptical of analytics but acknowledges they're &quot;sorely deficient&quot; in that area. Notes Google Analytics is a full-time job to maintain and nobody at Golden Eagle has time dedicated to it."</span>
+          </div>
+          <div class="source-quote">"Sean Flaherty is the IT manager. ... I'm the IT manager, but I also write the website, but I also write the code"</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/lucas-eichinger.md</span>
+            <span class="field-tag">Lucas Eichinger notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"Sales staff at Golden Eagle Log Homes. Jay's stepson. Sometimes appears on camera in video content. His wife also does part-time work for the company, expanding the brand's presence on LinkedIn, X, Pinterest, and Houzz — effort has been underway for about 6–7 months to improve AI search discoverability."</span>
+          </div>
+          <div class="source-quote">"This is Lucas Eichinger, one of the sales staff. ... Lucas's wife also does some part-time work for us, and I told her, I said, let's get going with, have you on LinkedIn and have you on, what else, X and a few other things. Pinterest and Houzz"</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/lucas-eichinger.md</span>
+            <span class="field-tag">Lucas Eichinger notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"Sales staff at Golden Eagle Log Homes. Jay's stepson. Sometimes appears on camera in video content. His wife also does part-time work for the company, expanding the brand's presence on LinkedIn, X, Pinterest, and Houzz — effort has been underway for about 6–7 months to improve AI search discoverability."</span>
+          </div>
+          <div class="source-quote">"This is Lucas Eichinger, one of the sales staff. ... Lucas's wife also does some part-time work for us, and I told her, I said, let's get going with, have you on LinkedIn and have you on, what else, X and a few other things. Pinterest and Houzz"</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/chris-stitcher.md</span>
+            <span class="field-tag">Chris Stitcher notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"General manager at Golden Eagle Log Homes. Wears multiple hats like everyone else at the company."</span>
+          </div>
+          <div class="source-quote">"And Chris Stitcher is our general manager. ... Chris does multiple things, everybody does multiple things."</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/andy-eichinger.md</span>
+            <span class="field-tag">Andy Eichinger notes</span>
+            <span class="conf conf-med">medium</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"Handles pricing at Golden Eagle Log Homes. (Described as doing &quot;lip pricing&quot; in introductions — likely a transcription artifact for pricing role.)"</span>
+          </div>
+          <div class="source-quote">"Andy Eichinger, he is lip pricing."</div>
+        </div>
+      
+    
+        
+        
+      <div class="section-label yellow-label">⚠️ Not expected (1)</div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/tammy.md</span>
+            <span class="field-tag">Tammy notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"At Golden Eagle Log Homes. Jay Eichinger's wife. Juan (Anna's father) had been in contact with Tammy prior to the call and shared ideas about company-wide AI adoption (e.g., mandatory Claude usage)."</span>
+          </div>
+          <div class="source-quote">"Jay is my owner. I'm your owner. I'm Tammy. ... I was telling Tammy in my company, three months ago, I instituted as a rule, mandatory, everyone has to use Claude"</div>
+        </div>
+      
+    
+        
+      </div>
+    </div>
+  
+
+    <div class="transcript-card">
+      <div class="card-header card-warn">
+        <div class="card-title">
+          <span class="transcript-id">T2</span>
+          <span class="transcript-name">Internal Planning (Ana + Daniel)</span>
+          <span class="transcript-date">2026-03-30</span>
+        </div>
+        <div class="card-stats">
+          <span class="hit-rate">3/5 expected (60%)</span>
+          
+          <span class="token-count">11,867 tokens</span>
+        </div>
+      </div>
+      <div class="card-note">Internal call. Updates: proposal value, interview plan, Tammy confirmed.</div>
+      <div class="card-body">
+        
+      <div class="section-label green-label">✅ Hits (3)</div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Engagement overview</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Golden Eagle Log Homes — Engagement Overview
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Golden Eagle Log Homes — Engagement Overview
+
+## Current Phase: Discovery &amp; Training (Sprint 2)
+
+Kicking off with a discovery and training phase. Conducting six interviews with the sales team, plus ad hoc interviews with key stakeholders (Jay, Sean, Tammy, and others). Estimated ~10-12 hours of interview work.
+
+Debrief presentation scheduled for Friday. Prep work planned for Thursday (roughly a half day). Friday debrief expected to be about an hour.
+
+Goal: deeply understand what needs to be built, deliver AI training, and produce a proposal informed by discovery findings.
+
+## Client Context
+
+- The client is a family business — roughly six family members involved. Decision-making will likely be a committee decision, with Jay having final say.
+- They are using Microsoft Teams for meetings.
+- Tammy is the primary point of contact / &quot;confident&quot; on the client side. She confirmed interest in starting with the sales group.
+- Client's father is building the CRM separately; the client expects to integrate with that work. Tammy already lumps both efforts into one big project.
+- The client wants the tech (AI tooling for sales), but the engagement is broader: organizational and AI initiative covering tech, training, enablement, adoption, and techniques.
+
+## What We're Building (Planned)
+
+Three-phase AI sales tool around call intelligence:
+
+1. **During the call** — Diarized transcription (using OpenAI Whisper + Pyannote for diarization), running on own servers. Need to check if Teams' native transcription capabilities are sufficient before building custom.
+2. **Post-call** — Automated generation of assets: key decisions, action items, follow-up emails, summaries.
+3. **Pre-next-call** — Pre-meeting briefs: recent signals, customer overview, conversation history, rapport hooks. Designed as a doc to glance at five minutes before a call.
+4. **CRM integration** — Connecting all outputs to the CRM.
+
+### Technical Decisions &amp; Considerations
+
+- Evaluate Teams' native transcription/recording before building custom pipeline (Teams provides raw video file + transcript file that can feed a data pipeline).
+- For round one, transcription can run on own server racks.
+- Not building yet — need to validate with users first. Plan is to build clickable prototypes / mockups showing what the output would look like.
+- Output format matters more than speed: PDF? Email? Slack message? Teams message? Need to discover this in interviews.
+- Follow-up delivery speed: doesn't need to be instant (5 seconds vs 10 minutes doesn't matter much), but 4+ hours is too long.
+- Need to ask in conversation guides: what formats do reps want? What data sources are most useful? Is the prep doc useful?
+
+## Pricing
+
+- Current engagement: discovery and training phase (price discussed with client, no invoice sent yet but pricing was communicated).
+- If this phase goes well, a follow-on proposal around ~$15,000 should sell itself.
+- Aspirational: $50,000 contract for expanded scope including marketing tools, visualizations of houses, self-updating website, etc.
+
+## This Week's Plan
+
+1. Schedule and conduct all sales rep interviews (target: complete by mid-day Thursday).
+2. Build conversation guides — one for sales reps, one for key stakeholders (Jay, Sean, Tammy).
+3. Have individual meeting with Tammy.
+4. Prep for Friday debrief/presentation (Thursday).
+5. Deliver Friday debrief presentation.
+6. Consider building a demo for Friday showing the system in action (Teams call → real-time transcription → action items → follow-up generation). Budget: ~1-1.5 days max.
+7. Begin developing training to deliver the following week.
+
+## Proposal Structure
+
+Organized into three areas:
+- **Sales** — primary focus for now (wish list, needs, proposed deliverables)
+- **Marketing** — not being touched in current phase; potential phase two. Exploring partnership with a YC company doing AI marketing optimization for services businesses (could resell if software-heavy, or competitive if services-heavy).
+- **Team Enablement**
+
+## Invoicing
+
+Discussing whether to invoice via father's company (The Automatic Office — possibly Delaware or Florida entity) or via Accelerate Holdings LLC (Texas LLC). Need to sort out payment flow to avoid unnecessary tax accounting complexity."</span>
+          </div>
+          <div class="source-quote">"We kick off with a discovery and training phase... We're doing six interviews with the sales team... we'll probably have a couple of other just like ad hoc interviews... we also are going to do a debrief with them on Friday... they're using teams... Jay is going to have basically final say... The holding corpus called the automatic office... Accelerate holding LLC... it's a Texas LLC"</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Engagement overview</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Golden Eagle Log Homes — Engagement Overview
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Golden Eagle Log Homes — Engagement Overview
+
+## Current Phase: Discovery &amp; Training (Sprint 2)
+
+Kicking off with a discovery and training phase. Conducting six interviews with the sales team, plus ad hoc interviews with key stakeholders (Jay, Sean, Tammy, and others). Estimated ~10-12 hours of interview work.
+
+Debrief presentation scheduled for Friday. Prep work planned for Thursday (roughly a half day). Friday debrief expected to be about an hour.
+
+Goal: deeply understand what needs to be built, deliver AI training, and produce a proposal informed by discovery findings.
+
+## Client Context
+
+- The client is a family business — roughly six family members involved. Decision-making will likely be a committee decision, with Jay having final say.
+- They are using Microsoft Teams for meetings.
+- Tammy is the primary point of contact / &quot;confident&quot; on the client side. She confirmed interest in starting with the sales group.
+- Client's father is building the CRM separately; the client expects to integrate with that work. Tammy already lumps both efforts into one big project.
+- The client wants the tech (AI tooling for sales), but the engagement is broader: organizational and AI initiative covering tech, training, enablement, adoption, and techniques.
+
+## What We're Building (Planned)
+
+Three-phase AI sales tool around call intelligence:
+
+1. **During the call** — Diarized transcription (using OpenAI Whisper + Pyannote for diarization), running on own servers. Need to check if Teams' native transcription capabilities are sufficient before building custom.
+2. **Post-call** — Automated generation of assets: key decisions, action items, follow-up emails, summaries.
+3. **Pre-next-call** — Pre-meeting briefs: recent signals, customer overview, conversation history, rapport hooks. Designed as a doc to glance at five minutes before a call.
+4. **CRM integration** — Connecting all outputs to the CRM.
+
+### Technical Decisions &amp; Considerations
+
+- Evaluate Teams' native transcription/recording before building custom pipeline (Teams provides raw video file + transcript file that can feed a data pipeline).
+- For round one, transcription can run on own server racks.
+- Not building yet — need to validate with users first. Plan is to build clickable prototypes / mockups showing what the output would look like.
+- Output format matters more than speed: PDF? Email? Slack message? Teams message? Need to discover this in interviews.
+- Follow-up delivery speed: doesn't need to be instant (5 seconds vs 10 minutes doesn't matter much), but 4+ hours is too long.
+- Need to ask in conversation guides: what formats do reps want? What data sources are most useful? Is the prep doc useful?
+
+## Pricing
+
+- Current engagement: discovery and training phase (price discussed with client, no invoice sent yet but pricing was communicated).
+- If this phase goes well, a follow-on proposal around ~$15,000 should sell itself.
+- Aspirational: $50,000 contract for expanded scope including marketing tools, visualizations of houses, self-updating website, etc.
+
+## This Week's Plan
+
+1. Schedule and conduct all sales rep interviews (target: complete by mid-day Thursday).
+2. Build conversation guides — one for sales reps, one for key stakeholders (Jay, Sean, Tammy).
+3. Have individual meeting with Tammy.
+4. Prep for Friday debrief/presentation (Thursday).
+5. Deliver Friday debrief presentation.
+6. Consider building a demo for Friday showing the system in action (Teams call → real-time transcription → action items → follow-up generation). Budget: ~1-1.5 days max.
+7. Begin developing training to deliver the following week.
+
+## Proposal Structure
+
+Organized into three areas:
+- **Sales** — primary focus for now (wish list, needs, proposed deliverables)
+- **Marketing** — not being touched in current phase; potential phase two. Exploring partnership with a YC company doing AI marketing optimization for services businesses (could resell if software-heavy, or competitive if services-heavy).
+- **Team Enablement**
+
+## Invoicing
+
+Discussing whether to invoice via father's company (The Automatic Office — possibly Delaware or Florida entity) or via Accelerate Holdings LLC (Texas LLC). Need to sort out payment flow to avoid unnecessary tax accounting complexity."</span>
+          </div>
+          <div class="source-quote">"We kick off with a discovery and training phase... We're doing six interviews with the sales team... we'll probably have a couple of other just like ad hoc interviews... we also are going to do a debrief with them on Friday... they're using teams... Jay is going to have basically final say... The holding corpus called the automatic office... Accelerate holding LLC... it's a Texas LLC"</div>
+        </div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Engagement overview</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Golden Eagle Log Homes — Engagement Overview
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Golden Eagle Log Homes — Engagement Overview
+
+## Current Phase: Discovery &amp; Training (Sprint 2)
+
+Kicking off with a discovery and training phase. Conducting six interviews with the sales team, plus ad hoc interviews with key stakeholders (Jay, Sean, Tammy, and others). Estimated ~10-12 hours of interview work.
+
+Debrief presentation scheduled for Friday. Prep work planned for Thursday (roughly a half day). Friday debrief expected to be about an hour.
+
+Goal: deeply understand what needs to be built, deliver AI training, and produce a proposal informed by discovery findings.
+
+## Client Context
+
+- The client is a family business — roughly six family members involved. Decision-making will likely be a committee decision, with Jay having final say.
+- They are using Microsoft Teams for meetings.
+- Tammy is the primary point of contact / &quot;confident&quot; on the client side. She confirmed interest in starting with the sales group.
+- Client's father is building the CRM separately; the client expects to integrate with that work. Tammy already lumps both efforts into one big project.
+- The client wants the tech (AI tooling for sales), but the engagement is broader: organizational and AI initiative covering tech, training, enablement, adoption, and techniques.
+
+## What We're Building (Planned)
+
+Three-phase AI sales tool around call intelligence:
+
+1. **During the call** — Diarized transcription (using OpenAI Whisper + Pyannote for diarization), running on own servers. Need to check if Teams' native transcription capabilities are sufficient before building custom.
+2. **Post-call** — Automated generation of assets: key decisions, action items, follow-up emails, summaries.
+3. **Pre-next-call** — Pre-meeting briefs: recent signals, customer overview, conversation history, rapport hooks. Designed as a doc to glance at five minutes before a call.
+4. **CRM integration** — Connecting all outputs to the CRM.
+
+### Technical Decisions &amp; Considerations
+
+- Evaluate Teams' native transcription/recording before building custom pipeline (Teams provides raw video file + transcript file that can feed a data pipeline).
+- For round one, transcription can run on own server racks.
+- Not building yet — need to validate with users first. Plan is to build clickable prototypes / mockups showing what the output would look like.
+- Output format matters more than speed: PDF? Email? Slack message? Teams message? Need to discover this in interviews.
+- Follow-up delivery speed: doesn't need to be instant (5 seconds vs 10 minutes doesn't matter much), but 4+ hours is too long.
+- Need to ask in conversation guides: what formats do reps want? What data sources are most useful? Is the prep doc useful?
+
+## Pricing
+
+- Current engagement: discovery and training phase (price discussed with client, no invoice sent yet but pricing was communicated).
+- If this phase goes well, a follow-on proposal around ~$15,000 should sell itself.
+- Aspirational: $50,000 contract for expanded scope including marketing tools, visualizations of houses, self-updating website, etc.
+
+## This Week's Plan
+
+1. Schedule and conduct all sales rep interviews (target: complete by mid-day Thursday).
+2. Build conversation guides — one for sales reps, one for key stakeholders (Jay, Sean, Tammy).
+3. Have individual meeting with Tammy.
+4. Prep for Friday debrief/presentation (Thursday).
+5. Deliver Friday debrief presentation.
+6. Consider building a demo for Friday showing the system in action (Teams call → real-time transcription → action items → follow-up generation). Budget: ~1-1.5 days max.
+7. Begin developing training to deliver the following week.
+
+## Proposal Structure
+
+Organized into three areas:
+- **Sales** — primary focus for now (wish list, needs, proposed deliverables)
+- **Marketing** — not being touched in current phase; potential phase two. Exploring partnership with a YC company doing AI marketing optimization for services businesses (could resell if software-heavy, or competitive if services-heavy).
+- **Team Enablement**
+
+## Invoicing
+
+Discussing whether to invoice via father's company (The Automatic Office — possibly Delaware or Florida entity) or via Accelerate Holdings LLC (Texas LLC). Need to sort out payment flow to avoid unnecessary tax accounting complexity."</span>
+          </div>
+          <div class="source-quote">"We kick off with a discovery and training phase... We're doing six interviews with the sales team... we'll probably have a couple of other just like ad hoc interviews... we also are going to do a debrief with them on Friday... they're using teams... Jay is going to have basically final say... The holding corpus called the automatic office... Accelerate holding LLC... it's a Texas LLC"</div>
+        </div>
+      
+    
+        
+      <div class="section-label red-label">❌ Missed (2)</div>
+      
+        <div class="edit-row miss-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/tammy.md</span>
+            <span class="field-tag">Role in engagement</span>
+            <span class="conf conf-high">high</span>
+          </div>
+          <div class="expected-note">Role → internal champion; most candid contact; confirmed interest in sales piece</div>
+        </div>
+      
+        <div class="edit-row miss-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/tammy.md</span>
+            <span class="field-tag">Confirmed interest</span>
+            <span class="conf conf-high">high</span>
+          </div>
+          <div class="expected-note">Confirmed interest → recording meetings, transcripts, action items, follow-up automation ('that's what she said, we want this')</div>
+        </div>
+      
+    
+        
+      <div class="section-label yellow-label">⚠️ Not expected (3)</div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/jay-eichinger.md</span>
+            <span class="field-tag">Jay's role and authority</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Jay Eichinger
+
+Golden Eagle Log Homes — Owner
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Jay Eichinger
+
+Golden Eagle Log Homes — Owner
+
+- Likely has final say on engagement decisions (committee decision, but Jay is the ultimate decision-maker).
+- Want to have an ad hoc interview with Jay during discovery phase to get his take on the AI/sales initiative."</span>
+          </div>
+          <div class="source-quote">"I think Jay is going to have basically final say... I'd like to talk to Jay."</div>
+        </div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/tammy.md</span>
+            <span class="field-tag">Tammy's role and engagement</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Tammy
+
+Golden Eagle Log Homes
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Tammy
+
+Golden Eagle Log Homes
+
+- Primary point of contact for the engagement (described as &quot;our confident&quot;).
+- Confirmed the group wants to start with the sales group.
+- Requested setup of meetings with sales reps.
+- Tends to lump the consulting engagement and the father's CRM work into one big project.
+- Her latest email confirmed interest: &quot;the group is interested in starting with the sales group that is also the area and forms we are reviewing and developing with your dad.&quot;
+- Plan to have an individual meeting with Tammy during discovery."</span>
+          </div>
+          <div class="source-quote">"Tammy, are kind of like the big ones... she's like our like confident... She message me like independently to just be like, yeah, sounds good. Let's set up the calls... I think Tammy already kind of does [lump us into one big project]."</div>
+        </div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/sean-flaherty.md</span>
+            <span class="field-tag">Sean's involvement</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Sean Flaherty
+
+Golden Eagle Log Homes
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Sean Flaherty
+
+Golden Eagle Log Homes
+
+- Key stakeholder to interview during discovery phase (alongside Jay and Tammy)."</span>
+          </div>
+          <div class="source-quote">"Jay, Sean, Tammy, are kind of like the big ones, like, on our radar."</div>
+        </div>
+      
+    
+        
+      </div>
+    </div>
+  
+
+    <div class="transcript-card">
+      <div class="card-header card-warn">
+        <div class="card-title">
+          <span class="transcript-id">T3</span>
+          <span class="transcript-name">CRM Mockup Demo to Dad</span>
+          <span class="transcript-date">2026-03-30</span>
+        </div>
+        <div class="card-stats">
+          <span class="hit-rate">⚠ 2 unexpected edits</span>
+          
+          <span class="token-count">8,465 tokens</span>
+        </div>
+      </div>
+      <div class="card-note">Internal product discussion with Ana's dad. Should return [] — no new GE engagement facts.</div>
+      <div class="card-body">
+        
+        
+        
+      <div class="section-label yellow-label">⚠️ Not expected (2)</div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Engagement Overview</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Golden Eagle Log Homes — Engagement Overview
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Golden Eagle Log Homes — Engagement Overview
+
+## Current Focus
+Starting with the **sales piece** of meetings — recording meetings and ensuring everyone has the necessary context, action items, and transcripts.
+
+## Product / Dashboard Concept
+A meeting intelligence dashboard that includes:
+- **Call history**: List of all past calls with dates, transcripts, summaries, and key moments
+- **What changed per call**: Updates generated from each meeting (e.g., tasks like &quot;send post-call email&quot; with ready-to-send drafts)
+- **Project files (left panel)**: Per-person notes (e.g., about each client — their profession, preferences, etc.) and a project overview that updates across time as calls happen. Version history is available, and everything is editable.
+- **Upcoming meetings (right panel)**: Meeting objective, recent signals, open items, and prep material
+- **AI assistant**: Integrated chat that has full context
+
+## Architecture &amp; Hosting
+- Can initially live on our servers (data center) or be mounted on the client's own servers
+- Main requirements: audio storage (audios can be deleted over time), APIs for generated assets
+- Possible integration with **Microsoft Graph API** for email, calendar, or other Microsoft ecosystem features
+
+## Audio / Transcript Capture
+Three options discussed for obtaining audio and transcripts:
+1. **Meeting bot** — e.g., a bot that joins calls (like Fireflies), but would be reinventing the wheel
+2. **Microsoft Graph API** — client records all meetings in Teams; use the API to retrieve recordings (provides free transcription and diarization)
+3. **System audio capture** — capture audio entering and leaving the computer regardless of platform
+
+For **Teams and Zoom** calls, the native transcript from those tools should suffice. For **phone calls and in-person meetings**, the solution is still TBD.
+
+**Recall.ai** was discussed as a comprehensive API for transcripts and recordings across platforms. Decision: **not including Recall in the stack** — agreed not to add a third-party dependency here.
+
+## Dad's System Design Work
+Dad is working on the broader CRM and the design/engineering/accounting process. He is currently in **system design phase** — understanding the major entities, how they interact, and the process flows. He is not yet at the implementation/storage stage.
+
+The **central entity** of the whole system is the house design, captured in a form called the **211D**, which contains every part of the house. Everything flows from this:
+- From the first sales call, a workspace opens around this entity
+- Client works with design and sales teams to shape the house (floors, rooms, materials, style, wall heights, etc.)
+- From the 211D, **engineering, pricing, payment plans, proposals, selections, contracts, and delivery** all derive
+- Each field has **change history tracking** with timestamps and reasons (e.g., &quot;customer change&quot;), solving the problem where changes discussed in sales calls weren't propagated to the 10+ documents referencing old values
+
+Phases in the system: Project overview → Design (211D) → Ballpark pricing → Agreements &amp; documents → Design &amp; specifications (package type, home style) → Proposal → Selections → Engineering → Contract → Delivery
+
+## Data &amp; Storage
+- Dad plans to store files in **AWS**
+- Database: working with **Postgres**
+- Tammy continues sending documents (forms, screenshots, excels) that inform the system design; waiting for ~90% of information before finalizing
+
+## Video/Meeting Analysis Tool
+Dad built a **Jupyter notebook tool** that programmatically extracts insights from recorded meetings:
+- Takes a meeting video and its transcript (which has speaker-change timestamps)
+- For each timestamp segment, goes to that point in the video and captures screenshots
+- Detects screen changes within a segment and captures all distinct screenshots
+- Each screenshot is analyzed by Claude to describe its content (saved as JSON)
+- Associates screenshots + JSON descriptions + transcript segments together
+- Then Claude cross-references what is being said with what is shown on screen to extract process details and data structures
+
+This replaces hours of manual note-taking (3 hours for 1 hour of video manually vs. minutes programmatically).
+
+Plan: **dogfood our own product** using this tool — use it on our upcoming meetings to automatically create documents about each topic discussed, with screenshots and version history.
+
+## Upcoming Meetings
+Nine calls scheduled this week:
+- Six with **sales leaders**
+- One with **Jay**
+- One with **Tammy**
+- One with **Sean**
+
+## Security / Privacy
+No HIPAA-level concerns. Standard approach: inform participants that the meeting is being recorded; consent is sufficient."</span>
+          </div>
+          <div class="source-quote">"can we start with the sales piece of the meetings recorded and so making sure that everyone has the necessary context and the action items, the transcript, etc."</div>
+        </div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/tammy.md</span>
+            <span class="field-tag">Notes about Tammy</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"Tammy has been sending documents continuously — forms, screenshots, excels, and PDFs — covering various areas of the business. These documents are being used to inform the system design. A two-hour video meeting was held with her (and others), from which detailed process and system information was extracted. She is a key source of domain knowledge for understanding how the company currently operates."</span>
+          </div>
+          <div class="source-quote">"Tammy sigue mandándome documentos y documentos de distintas áreas... esta es una reunión que tuve con ella... este es el video de la reunión son dos horas de reunión que tuve con ellos"</div>
+        </div>
+      
+    
+        
+      </div>
+    </div>
+  
+
+    <div class="transcript-card">
+      <div class="card-header card-warn">
+        <div class="card-title">
+          <span class="transcript-id">T4</span>
+          <span class="transcript-name">Feature Planning (Ana + Daniel)</span>
+          <span class="transcript-date">2026-03-30</span>
+        </div>
+        <div class="card-stats">
+          <span class="hit-rate">1/2 expected (50%)</span>
+          
+          <span class="token-count">4,504 tokens</span>
+        </div>
+      </div>
+      <div class="card-note">Scope discussion. Key: email Chris, $15k scope warning, financing as process area.</div>
+      <div class="card-body">
+        
+      <div class="section-label green-label">✅ Hits (1)</div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Engagement overview details</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"## Sales Process &amp; CRM Vision
+
+- The engagement is focused on building a sales-focused tool for Golden Eagle's salespeople. The most basic version: pre-call prep documents, post-call follow-ups, action items, and data repository/tracking.
+- A separate effort (led by a team member's father) is already underway to build a broader CRM / internal system revamp — the sales tool should slot into that larger system over time.
+- Want to avoid rebuilding the company from scratch technologically for $15,000. Start narrow on sales, potentially phase into ops and design team integration later.
+
+## Key Discovery Questions (still open)
+- How many buyers finance? How much of the sales process involves working with lenders/banks?
+- What does the floor plan back-and-forth process look like (architects, design team, interior design, specs, renderings)? Could be a months-long manual process.
+- What communication channels do salespeople use with clients? (phone, text, email, LinkedIn?) Do they issue corporate phones?
+- Do they have a support email vs. sales email? Is inbound triaged or round-robin?
+- Are sales reps on quota?
+- How do they take payments?
+- Do they have an understanding of what makes a good deal (deal length, budget, lead source, etc.) or is back-end data messy?
+- Where do they currently track tasks / project management?
+
+## Product Concepts Discussed (2026-03-30)
+- **Sequences / Playbooks**: Enroll prospects into multi-step outreach sequences (email drip campaigns, follow-up cadences). Different playbook types (e.g., &quot;difficult customers&quot; sequence where CEO calls top leads).
+- **Prospect lifecycle management**: Each prospect has their own record but also fits into company-wide pipeline stages. Need to see all people in the same stage.
+- **AI-assisted workflow**: Salesperson can speak or message naturally (e.g., &quot;just had a great call with Jim&quot;) and the system auto-updates records, suggests next steps, generates follow-up actions.
+- **Gantt chart integration**: Tammy provided a Gantt chart; this could be embedded in the tool with suggested next steps and action items.
+- **Financing as a tracked detail**: Financing status would be a field within project/prospect details.
+- **Centralized system**: Avoid multiple disconnected systems sending conflicting outreach. One unified platform.
+- **Operational excellence angle**: System helps coach reps, surfaces contacts to reach out to, enforces best practices — &quot;you basically cannot be a low performer because the system will help pull you up.&quot;
+- **Simple data analysis**: e.g., top 10 historical tactics that closed deals, applied to current pipeline.
+
+## Phasing Ideas
+- Phase 1: Sales-specific features (pre-call prep, follow-ups, sequences)
+- Phase 2: Integrate ops
+- Phase 3: Integrate design team
+- Long-term: Entire company trained on unified CRM
+
+## Logistics
+- As of 2026-03-30, waiting on interview responses from Golden Eagle team members. Chris Stitcher reached out to coordinate but no one has responded yet.
+- Planning to email Chris tonight to push for completing interviews this week.
+- A previous Friday call took place with Golden Eagle where Gantt chart functionality was discussed."</span>
+          </div>
+          <div class="source-quote">"the most basic thing here is like okay what does a salesperson need to get through the day notes follow-ups data repository tracking enrolling enrolling um prospects into a future state"</div>
+        </div>
+      
+    
+        
+      <div class="section-label red-label">❌ Missed (1)</div>
+      
+        <div class="edit-row miss-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/chris-stitcher.md</span>
+            <span class="field-tag">Role in engagement</span>
+            <span class="conf conf-high">high</span>
+          </div>
+          <div class="expected-note">Role → manages the sales reps; contact for scheduling interviews ('Chris reached out to everyone')</div>
+        </div>
+      
+    
+        
+      <div class="section-label yellow-label">⚠️ Not expected (2)</div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/chris-stitcher.md</span>
+            <span class="field-tag">Role</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"# Chris Stitcher
+
+Golden Eagle Log Homes
+
+(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"# Chris Stitcher
+
+Golden Eagle Log Homes — General Manager
+
+- Chris reached out to everyone to coordinate interview scheduling. As of 2026-03-30, no one has responded yet."</span>
+          </div>
+          <div class="source-quote">"chris is the general manager yeah tammy said hey chris see what's his name uh chris stitcher reached out to everyone so whoever is chris oh general manager"</div>
+        </div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/tammy.md</span>
+            <span class="field-tag">Notes on Tammy</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"- Tammy provided a Gantt chart that is expected to be important for the project.
+- She coordinated with Chris Stitcher to reach out to the team for interview scheduling."</span>
+          </div>
+          <div class="source-quote">"he had said that um he got a gantt chart from tammy and i think that's gonna be really important because they mentioned that on the on the friday call they were like oh what if we do something that can't chart"</div>
+        </div>
+      
+    
+        
+      </div>
+    </div>
+  
+
+    <div class="transcript-card">
+      <div class="card-header card-warn">
+        <div class="card-title">
+          <span class="transcript-id">T5</span>
+          <span class="transcript-name">Coordination (Ana + Daniel)</span>
+          <span class="transcript-date">2026-03-31</span>
+        </div>
+        <div class="card-stats">
+          <span class="hit-rate">1/2 expected (50%)</span>
+          
+          <span class="token-count">4,329 tokens</span>
+        </div>
+      </div>
+      <div class="card-note">Interview scheduling update. Reps not responding. Priority order established.</div>
+      <div class="card-body">
+        
+      <div class="section-label green-label">✅ Hits (1)</div>
+      
+        <div class="edit-row hit-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Engagement Overview</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"## Status (as of 2026-03-31)
+- Discovery interviews are in progress — emails sent to Tammy, Sean, and sales reps, but still awaiting responses.
+- If responses aren't received by midday, plan is to call Tammy directly (they have her number).
+- May need to flag to Tammy that the Friday presentation/proposal could be pushed back if interviews aren't completed in time.
+- Goal is to complete discovery calls by end of week (ideally today, tomorrow, Thursday), but timeline may slip into early next week (e.g., Tuesday).
+
+## Upcoming Meetings / Milestones
+- **Tammy call**: targeting tomorrow (2026-04-01) for a candid download on the org
+- **Chris Stitcher call**: tentatively Thursday (2026-04-03), after speaking with a couple of reps first so they can come with findings/data
+- **Jay Eichinger call**: later in the week (Thursday afternoon suggested) — want to be well-prepared before talking to him
+- **Sean Flaherty**: email already out, waiting on response
+- **Friday group meeting / proposal presentation**: same time as last week (9 AM); at risk if discovery interviews aren't completed
+- **Next week**: AI training session planned for sales reps (101-level); need to assess reps' current knowledge level first via discovery calls
+
+## Prototype / Demo
+- Prioritizing one feature that goes fully end-to-end for the demo: meeting → transcripts → takeaways → email sequence → tracking
+- Strategy is to sell one thing well rather than three things; plan to upsell later
+- Exploring additions discussed the night before (sales excellence, playbooks) but keeping scope near MVP
+- Need to coordinate with Jay's father (Andy Eichinger) to ensure their deliverables are complementary and not duplicative
+
+## Training (Next Week)
+- Planning a 101-level AI/LLM training for sales reps
+- Before designing curriculum, want to talk to the reps to assess what level they're at
+- Concern about making training defensibly strong — not just things reps could find online"</span>
+          </div>
+          <div class="source-quote">"Multiple quotes including: 'I think it'll be very much, like, a 101 training', 'do we have at least one feature that goes fully end-to-end', 'I'd rather just upsell them later', 'the biggest flag that, like, he and I got yesterday was, like, let's make sure that we're not, like, both making the same thing'"</div>
+        </div>
+      
+    
+        
+      <div class="section-label red-label">❌ Missed (1)</div>
+      
+        <div class="edit-row miss-row">
+          <div class="edit-meta">
+            <span class="file-tag">project-overview.md</span>
+            <span class="field-tag">Interview Status</span>
+            <span class="conf conf-high">high</span>
+          </div>
+          <div class="expected-note">Interview Status → emails sent to Tammy and Sean; reps not responding within 24hrs; considering escalating to Chris</div>
+        </div>
+      
+    
+        
+      <div class="section-label yellow-label">⚠️ Not expected (5)</div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/tammy.md</span>
+            <span class="field-tag">Tammy notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"- Described as &quot;our inside girl&quot; — very trusting of the consulting team and extremely candid
+- Expected to give the most direct, honest feedback of anyone at the org
+- Reportedly shares large amounts of information / data
+- Plan to use her as a sounding board before presenting to Jay — show her prototype ideas and get input
+- Email sent to her; if no response by noon on 2026-03-31, team will call her directly (they have her number)
+- Targeting a call tomorrow (2026-04-01) or Thursday (2026-04-03) for a full candid download on the org"</span>
+          </div>
+          <div class="source-quote">"I would love to do Tammy first, because she's, like, our inside girl... She's, like, gonna be extremely candid with us... she just, like, gives inordinate amounts of data."</div>
+        </div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/chris-stitcher.md</span>
+            <span class="field-tag">Chris Stitcher notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"- GM (General Manager) at Golden Eagle; manages the sales reps
+- Was on the Friday call
+- Plan to talk to sales reps first, then bring findings/data to Chris
+- Tentatively scheduling a call for Thursday (2026-04-03)
+- May ask Tammy whether it's worthwhile to talk to him beforehand"</span>
+          </div>
+          <div class="source-quote">"Chris is the GM. Um, I guess he manages the sales guys, right?... he was on our Friday call, right?... maybe we preemptively schedule him for Thursday when we've talked to a couple reps?"</div>
+        </div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/jay-eichinger.md</span>
+            <span class="field-tag">Jay Eichinger notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"- Owner of Golden Eagle Log Homes
+- Team wants to be well-prepared before speaking with him — scheduling him later in the week intentionally
+- Considering emailing him for a Thursday afternoon call
+- May prefer that every meeting be highly valuable / efficient (team plans to ask Andy Eichinger for a read on his style)
+- Friday proposal/presentation is key touchpoint with him"</span>
+          </div>
+          <div class="source-quote">"that's why I intentionally, like, wanted him, like, later in the week, if anything, because we, like, definitely want to be smart before talking to him... some people are, like, really anal about, like, hey, every minute, every, every meeting's got to be, like, super valuable."</div>
+        </div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/sean-flaherty.md</span>
+            <span class="field-tag">Sean Flaherty notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"- Email sent to schedule a discovery interview; awaiting response as of 2026-03-31"</span>
+          </div>
+          <div class="source-quote">"I already have the email out to Sean."</div>
+        </div>
+      
+        <div class="edit-row hallucination-row">
+          <div class="edit-meta">
+            <span class="file-tag">people/andy-eichinger.md</span>
+            <span class="field-tag">Andy Eichinger notes</span>
+            <span class="conf conf-high">high</span>
+            <span class="badge badge-ok">✓ valid</span>
+          </div>
+          <div class="edit-values">
+            <span class="old-val">"(no notes yet)"</span>
+            <span class="arrow">→</span>
+            <span class="new-val">"- Father of one of the consultants on the team
+- Has met Jay Eichinger; can provide background on Jay's communication style
+- Working on a related deliverable — team needs to coordinate with him to ensure their work is complementary, not duplicative
+- He and his son flagged the risk of overlap and are actively aligning"</span>
+          </div>
+          <div class="source-quote">"Has your dad met him ever? Yeah, certainly... him and I, like, will be talking about that. Like, that was, like, the biggest flag that, like, he and I got yesterday was, like, let's make sure that we're not, like, both making the same thing"</div>
+        </div>
+      
+    
+        
+      </div>
+    </div>
+  
+  </div>
+</body>
+</html>

@@ -1,0 +1,187 @@
+Date: 2026-03-30
+
+4///
+
+okay go for it
+what this makes you think about is like
+this or something like this should be the front end that they're interacting with and and to me
+that's like the crm right and and so like we should probably just talk to your dad and be like
+what are you building yeah and so that's i i had a conversation with him to be like what what are
+you building and i showed him this and so um he hasn't given me the project files um but when he
+does like i'll show you right now they're just like in my head but it's kind of like there are so many
+like forms and so many details right like yeah like i said the how many stories and like what
+material and like what size and all these things and so and there's like phases of building and so
+it's just like master interface for all that stuff and i think this could probably fit we should we
+should add an item nicely he had said that um he got a gantt chart from tammy and i think that's
+gonna be really important because they mentioned that on the on the friday call they were like
+oh what if we do something that can't chart and like i think that's gonna be really important
+because what what i suspect and and going through this actually made me think about a few different
+things um one is like okay so like the salesperson has a relationship with with with the customer and
+like this stuff is really important for the salesperson to have top of mind but the salesperson
+is also probably managing a bunch of processes like for example the financing like i want to ask how many
+basically how many buyers finance and like how much is that a process for the sales process like
+like like like you have to work with lenders and banks like that could be a whole thing in and of
+itself because like for example the parallel would be like a car dealership has a salesperson but also
+like the financing department is like almost equally as important for for that kind of sale yeah and so
+like that's just one area the other big area is a little the floor plan back and forth because i think
+when we talked to them on friday sounded like all that back and forth is like they go over it with
+like architects and they go over it with their own design team and their interior design team and they
+have to like spec it all out and so you know like if you want like an extra room they have to like
+figure out like how much timber that's going to be and what it all looks like and how it all fits
+together and that that might be a really long manual process that like the salesperson is probably
+like quarterbacking that and because like they have to figure out how to actually like get the
+deal done so they're like okay when's this drawing going to be done when is this video rendering going
+to finish so um yeah yeah yeah so this this is all making a lot of sense do you have a vision
+or like some rough idea of like what that means for like for this like what yeah yeah so so like you
+you could imagine um this is why a lot of crms become project management tools because it's like
+you click into the deal and actually there's like a bunch of other shit and and like that you know
+like that's why like um what do you call it like salesforce has a whole like pm tracking tool
+um you can do ticketing and stuff and then also uh like atlassian i think bought trello but like
+what i want to avoid is like rebuilding this company from scratch technologically for fifteen
+thousand dollars like
+they're gonna have really big hard problems that are thorny and process oriented and like all these
+things and like they're definitely gonna be worth solving they're like definitely they should
+definitely revamp things but it's one of these things where like
+it might be like a year-long project to do some of these things because like the really deep stuff
+like the like the back and forth with architects for six months like that could be like a whole
+endeavor and like i think it would be really valuable to solve i just like i want to be like
+careful about biting off like a ton because like yeah yeah but so like is there
+yes but is there something in what you're saying that like fits really naturally here like
+as you were talking to me like what became evident is like for example financing is like a detail that
+they think a lot about and that would be under here in project details like you'd have a new one
+called financing another thing is like tasks right over here yeah this would become a little bit
+like a we don't want this to become the project management place um this would probably like
+like that you know export export into wherever they're tracking their tasks that's something i
+want to ask in our yeah that's a good that's a good point yeah yeah because like i guess the way
+i think about it is on the far left hand side like what is the most basic version of the thing
+which is probably like you get an email after the call with action items like that's probably the
+most basic thing this this like like in terms of like complexity this right here is probably like
+a two out of ten right because you definitely make this a lot more complex or you could definitely
+ramp this up um and you could integrate a bunch of other things into this to make it sort of like a
+whole a whole operating system but yeah like what i'd be super curious well like like the gantt chart
+itself could be in here and you could go click in there and you could like have it suggest next steps
+and action items um where i think i would want to like double click on the sales specific part because
+like you could also sell them something where it starts with one um set of tasks and then it like
+phase one is like we do all the sales stuff and then phase two is like then we integrate the ops
+phase three then we integrate the design team then like the whole company is trained on like
+sundial crm which we are basically selling them as like a mission critical piece of software
+the crm is what my dad is making so i and i think like i think he kind of is remaking like their
+entire internal brain and like my my new understanding so the thing is he had already
+been working with them for like like several weeks at this point yeah he just today like showed me
+like the magnitude of like what he's taking on and it really is like a revamp of a lot of stuff you're
+saying and it's kind of like ours is gonna more than anything like slot into that um so just as an
+fyi that yeah crm is probably i know like i just yeah the more that you build features for sales the
+more you build a crm yeah you get you get because like you're just going to be building the same
+stuff they're going to want the same thing they're going to want like a central system that manages
+all the tasks manages all the stuff and like they don't want to have separate systems so might as well
+do it all in one go right because like why would you want to have separate systems you then have to
+go migrate in four months um based on like what your dad's building so honestly like
+i think okay like the most basic thing that like we could do that maybe is the easiest thing to port
+into a crm would be going deep on the sales process and and so specifically like is the pre-call
+prep document like really good really good yeah are they able to say you know enter gym into long-term
+prospect management sequence and then it like creates like a 14-step email that like you can
+see and track and it puts them into like a thing that they can manage oh wait can you can you say
+that part again that's interesting yeah so so like this is where like i would just go into lemlist and
+just like steal their ui but basically like just like put gym into an email sequence into a drip campaign
+yeah like if we're like ai appealing these people we basically like like have you seen how pat uses
+the telegram chat with danbot no he's like less and less updating the actual like cards in the crm and
+more and more just going like just had a call with gym good you know good call solid next steps or this
+send him a thing oh yeah that's definitely how assistance should work yeah yeah and and like it
+increasingly becomes yeah yeah exactly like something where you don't even have to like
+know what buttons to click because all you really want to do is just you probably want to speak into
+it and say you had an awesome call with jimmy i mean like honestly and then like the the step
+the version ahead of that is actually like you get the message that says great call daniel you just had
+a really good sales call like here's what i recommend do you have any changes and you're
+probably just gonna say no and you just click go but that's kind of what what this like the idea
+here is right like great call daniel here's your thing yeah and and like like here what i would want
+it so like each individual prospect needs to have their own life but it also needs to exist in like
+the life of the company meaning like what kind of prospect is this is this someone who's like
+buying right now like like like like basically like what stage are they in um and then you need
+to be able to see all the people in all the same stage and then you need to be able to like
+um usually this is done in kanban i don't love kanban because it becomes like imagine if you have 10 000
+contacts like yeah it's just really difficult to organize in a kanban um but so then what people
+will do is they'll put maybe a few hundred contacts into a sequence and then that sequence will be in
+the kanban and then you'll have a bunch of you'll have a kanban of sequences and and a sequence is
+just a set of steps which could be phone email linkedin whatever they use to contact clients
+um that's like another thing that's going to be important is like are they ever calling people or
+texting them or are all the all the touch points going to be able to be managed in this system like
+that's going to be an issue like do they do they issue a corporate phone for instance like
+because if like for instance you could build logic that says peeing a client if they've gone three
+days without being touched but if they are not like if if they're being texted and something captured
+then it'll still send an email and you shouldn't have because you've already been talking to them
+somewhere else you kind of get you know what i'm saying so like
+that's why part of our discovery needs to be like clamping down the surface area that a client can
+actually talk to you with um also like did like do they have a support email or a sales email like
+is it all being triaged with one email or like is it like round robin like things like that are
+important for like the managers uh because they want to like give the reps i don't even know if these
+guys are on quota to be honest like they might have a quota they might not um because like one
+feature you might want is to do the forecast like how many homes are going to be closing in q2 and
+like what like one just revenue what does that look like but then also all of the subsequent like
+how much lumber do you need like all that kind of stuff like the the slice you know imagine like
+aggregating all that data and like using it to negotiate with your suppliers um yeah i'm curious how
+they take payments even like there's just like a bunch of things where
+i think like the most basic thing here is like okay what does a salesperson need to get through
+the day notes follow-ups data repository tracking enrolling enrolling um prospects into a future
+state which is basically like sort of setting up future action items for yourself but then it's like
+okay how does sales fit into these say more about enrolling into a future state yeah yeah like like
+like basically um what should you do with the lead so what's the next step what's the sequence of
+steps where do they fit into like the broader like uh customer journey um okay like okay for example i
+don't know like again i don't know how detailed these guys do it but like you might have a sequence
+called like difficult customers and somebody's sort of on the edge and you've been talking for six
+months and you might want to have like the ceo call them and so you might want to enroll them in
+like the difficult sequence where uh like jay gets a dm every two weeks of like the 10 leads he needs to
+call and like that's like a process that needs to be managed um that's fun so there's like playbook
+types basically exactly exactly yes because like what we want to be able to do is say okay here's
+what your best people do and here's what the the team does and you're also going to onboard people
+and you're also going to be training people and you want you basically want to have like operational
+excellence and we're going to make it to where you basically cannot be a low performer because the
+system will help pull you up it'll give you the contacts to reach out to it'll help you coach on the
+calls it'll help you do the follow-ups and it'll it'll do so in a way that like is congruent with
+your overall like brand and positioning and messaging and also just how you've done it
+previously like we'll want to just understand like how good like how do they do they have an
+understanding of what makes a good deal like it's three weeks long the customer had budget like they
+found you on instagram they've been watching your videos for eight years like all those kind of things
+um or is it just messy on the back end like it's most sales data is messy but if we can if we can
+pull out like even it's very simple data analysis like the top 10 historical eagle log or golden eagle
+i told you we should have named this correctly because now it's in my head for eagle log um like the top 10
+historic tactics to close a deal and you just apply those to each deal in the future like each current
+deal like that just goes a long way yeah cool hmm this makes a lot of sense yeah i'm thinking of a
+couple of the like changes i can can be made here um based on what you've said things like
+like sequences that are kind of like company-wide like playbooks yeah okay yeah it's it's it's also
+pretty useful here because they don't have um like sometimes what you'll do in in these like
+there's difficulty here sometimes where there's a cmo and a sales guy and it's chief revenue officer
+because the cmo might want to send a bunch of outreach to somebody that's like marketing slop
+and the sales team doesn't want to have that happen and so like this is why you want to have
+like a unified system so that so that like like remember when we're talking we're talking to those
+franchise people and they had like four crms or something six crms like customers get the same
+message from different people it's not integrated like terrible it looks really bad um i don't think
+we're gonna have that here because it doesn't sound like they have a lot of systems setting outreach but
+uh you would want to create something where you basically couldn't do that central super centralized
+cool yeah like this this is really good like and then the other piece that we haven't talked
+about like which i don't know enough about is just like the floor plans like that might blow up
+everything like those might be a gigabyte i don't know i don't know no that that'll be that'll be
+fine um i mean this is just gonna have like notes on it right and like links out to other
+like documents so it's fine yeah and like like you could always click on financing it could always just
+link into link into everything whatever other app they're using it doesn't have to be like
+integrated in it yeah there's more so like notes you know yeah okay and then and then like a lot
+of this is going to be like how do you make it so brain dead easy to use this stuff that they use it
+for sure and like can it what can it do it itself yeah most of this is going to be self-updating
+which is the coolest part um yeah cool but yeah i mean like what like again i don't know if we're
+gonna have any demos tomorrow or not demos uh interviews yeah we'll see i'm like a little i'm
+just unsure yeah tomorrow like why don't we yeah send an email tonight to chris and be like hey like
+we're looking to do these were you thinking about doing that
+uh chris is the general manager yeah tammy said hey chris see what's his name uh chris stitcher
+reached out to everyone so whoever is chris oh general manager yep let's be like hey like no one's
+responded we want to get these done this week we can send that like now ish yeah it's like 10 o'clock
+they're nine o'clock third time they're not these are family people in wisconsin yeah like they'll
+wake up to it but yeah i mean however you want to handle it i'm no problem also okay i'm gonna
+run to get some dinner um yeah but any any last things uh i think i'm all set i mean this this is
+this is like this is the kind of thing where if you showed somebody they could like we could really
+dig in with them exactly okay it's gonna be great thank you for sending the uh the guide um i'll
+let you know if i want to add things based on what i see in anything cool all right um i also
+went on a walk so i'm sore and tired so i'm probably not gonna go to the gym okay sounds good
+all right talk soon bye
+
+======================================
+
+

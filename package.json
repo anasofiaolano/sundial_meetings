@@ -1,0 +1,12 @@
+{
+  "name": "sundial-meetings",
+  "version": "1.0.0",
+  "description": "Sundial Meetings CRM — AI extraction test scripts",
+  "type": "commonjs",
+  "scripts": {
+    "test-extraction": "node scripts/test-extraction.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0"
+  }
+}

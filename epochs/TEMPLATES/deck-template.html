@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[DECK TITLE]</title>
+<!--
+  DECK TEMPLATE — Epoch Methodology v2
+
+  HOW TO USE:
+  1. Copy this file and rename it (e.g., epoch-1-deck.html, scope-deck.html)
+  2. Replace [DECK TITLE] in the <title> tag
+  3. Fill in slide content using the slide types below
+  4. DO NOT modify the CSS — fill content only
+
+  WHEN TO CREATE A DECK:
+  Every document presented at a ⏸ checkpoint must have an accompanying deck.
+  The human reads decks, not markdown walls.
+
+  REQUIRED SECTIONS BY DECK TYPE:
+
+  Epoch deck:
+  - Title slide (epoch number, name, date, status)
+  - Critical Risks (if any — always first after title)
+  - What Changed table (epoch 2+)
+  - Happy Path / Architecture overview
+  - Flow Explosion highlights
+  - Convergence Check + Next Steps
+
+  Evaluation deck:
+  - Title slide
+  - Executive Summary (priority changes)
+  - Deep Dives (one slide per major area)
+  - Staff Engineer Verdict
+
+  Scope deck:
+  - Title slide
+  - Key Risk callout
+  - Deliverables
+  - Technical Decisions
+  - Workstreams + Dependencies
+  - Success Criteria
+  - Confirmation (approve/change)
+
+  Presentation deck:
+  - Title slide
+  - The Problem
+  - The Solution
+  - Key Decisions
+  - Limitations + Future
+-->
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --surface: #ffffff;
+    --text: #1a1a2e;
+    --text-secondary: #555;
+    --accent: #4a6fa5;
+    --accent-light: #e8eef6;
+    --border: #e0e0e0;
+    --tag-bg: #f0f4f8;
+    --green: #2d6a4f; --green-bg: #d8f3dc;
+    --amber: #b45309; --amber-bg: #fef3c7;
+    --red: #9b2226; --red-bg: #fce4e4;
+    --blue: #4a6fa5; --blue-bg: #e8eef6;
+    --purple: #7b2d8b; --purple-bg: #f3e8f9;
+    --gray: #6b7280; --gray-bg: #f3f4f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem; font-size: 18px;
+  }
+  .deck { max-width: 920px; margin: 0 auto; }
+  .slide {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 2.5rem; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .slide-title {
+    font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--accent); margin-bottom: 0.25rem; font-weight: 600;
+  }
+  h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 1rem; }
+  h3 { font-size: 1.05rem; font-weight: 600; margin: 1.25rem 0 0.6rem; }
+  p { margin-bottom: 0.85rem; color: var(--text-secondary); font-size: 0.92rem; }
+  .subtitle { font-size: 1.05rem; color: var(--text-secondary); }
+  .date { font-size: 0.85rem; color: var(--accent); font-weight: 500; }
+  .badge {
+    display: inline-block; background: var(--amber-bg); color: var(--amber);
+    font-size: 0.8rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 4px; margin-top: 0.5rem;
+  }
+  .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+  th {
+    text-align: left; padding: 0.55rem 0.7rem; background: var(--tag-bg);
+    font-weight: 600; border-bottom: 2px solid var(--border);
+  }
+  td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+
+  /* Grid layouts */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .flow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 0.75rem 0; }
+
+  /* Cards — use border-left color to indicate category */
+  .card {
+    border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem;
+    border-left: 3px solid var(--accent); margin-bottom: 0.6rem;
+  }
+  .card.red { border-left-color: var(--red); }
+  .card.green { border-left-color: var(--green); }
+  .card.amber { border-left-color: var(--amber); }
+  .card.blue { border-left-color: var(--blue); }
+  .card.purple { border-left-color: var(--purple); }
+  .card.gray { border-left-color: var(--gray); }
+  .card strong { display: block; font-size: 0.92rem; margin-bottom: 0.2rem; }
+  .card span, .card p { font-size: 0.85rem; color: var(--text-secondary); margin: 0; }
+
+  /* Callout boxes */
+  .callout {
+    background: var(--accent-light); border-radius: 8px;
+    padding: 1rem 1.25rem; margin: 1rem 0; font-size: 0.9rem;
+  }
+  .callout.red { background: var(--red-bg); }
+  .callout strong { color: var(--text); }
+
+  /* Phase/flow diagrams — vertical timeline */
+  .phase {
+    position: relative; padding: 1rem 1rem 1rem 3.25rem;
+    border-left: 3px solid var(--accent-light); margin-left: 1rem;
+  }
+  .phase:last-child { border-left-color: transparent; }
+  .phase-num {
+    position: absolute; left: -0.9rem; top: 0.85rem;
+    width: 1.8rem; height: 1.8rem; background: var(--accent); color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700;
+  }
+  .phase-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
+  .phase-desc { font-size: 0.85rem; color: var(--text-secondary); }
+
+  /* Checkpoint and escape badges */
+  .checkpoint {
+    display: inline-block; background: var(--amber-bg); color: var(--amber);
+    font-size: 0.75rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 3px;
+  }
+  .escape {
+    display: inline-block; background: var(--red-bg); color: var(--red);
+    font-size: 0.75rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 3px;
+  }
+
+  /* Recovery step boxes */
+  .recovery-step {
+    background: var(--tag-bg); border-radius: 8px; padding: 1rem;
+    margin-bottom: 0.5rem; position: relative;
+  }
+  .recovery-step .step-label {
+    display: inline-block; background: var(--accent); color: white;
+    font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.45rem;
+    border-radius: 3px; margin-bottom: 0.4rem;
+  }
+  .recovery-step .timing {
+    float: right; font-size: 0.75rem; color: var(--accent); font-weight: 600;
+  }
+  .arrow-down {
+    text-align: center; color: var(--accent); font-size: 1.2rem; margin: 0.25rem 0;
+  }
+
+  /* Preset columns */
+  .preset {
+    border: 1px solid var(--border); border-radius: 8px; padding: 1rem;
+    border-top: 3px solid var(--accent);
+  }
+  .preset.blue-top { border-top-color: var(--blue); }
+  .preset.amber-top { border-top-color: var(--amber); }
+  .preset.gray-top { border-top-color: var(--gray); }
+  .preset h3 { margin-top: 0; }
+  .preset ul { list-style: none; padding: 0; }
+  .preset li {
+    padding: 0.25rem 0; font-size: 0.85rem; color: var(--text-secondary);
+    padding-left: 1rem; position: relative;
+  }
+  .preset li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+
+  /* Principle cards */
+  .principle {
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.75rem 1rem; margin-bottom: 0.5rem;
+  }
+  .principle strong { font-size: 0.92rem; }
+  .principle span { font-size: 0.85rem; color: var(--text-secondary); }
+
+  /* Status indicators */
+  .status-pass { color: var(--green); font-weight: 600; }
+  .status-fail { color: var(--red); font-weight: 600; }
+  .status-pending { color: var(--gray); font-weight: 600; }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .two-col, .three-col, .flow-grid { grid-template-columns: 1fr; }
+    body { padding: 1rem; } .slide { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!--
+  =============================================
+  SLIDE TYPES — Copy and fill in as needed
+  =============================================
+-->
+
+<!-- TITLE SLIDE -->
+<div class="slide">
+  <div class="slide-title">[Category, e.g. "Epoch 1", "Phase 2", "Evaluation"]</div>
+  <h1>[Main Title]</h1>
+  <p class="subtitle">[One-line description]</p>
+  <p class="date">[Date]</p>
+  <div class="badge">[Status badge, e.g. "📋 Pending Review"]</div>
+</div>
+
+<!--
+  MORE SLIDE TYPES — uncomment and use as needed:
+
+  RISK SLIDE:
+  <div class="slide">
+    <div class="slide-title">🚨 [Risk Category]</div>
+    <h2>[Title]</h2>
+    <div class="card red">
+      <strong>[Risk title]</strong>
+      <span>[Description and mitigation]</span>
+    </div>
+  </div>
+
+  TABLE SLIDE:
+  <div class="slide">
+    <div class="slide-title">[Category]</div>
+    <h2>[Title]</h2>
+    <table>
+      <thead><tr><th>[Col 1]</th><th>[Col 2]</th><th>[Col 3]</th></tr></thead>
+      <tbody>
+        <tr><td>[data]</td><td>[data]</td><td>[data]</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  CARD GRID SLIDE:
+  <div class="slide">
+    <div class="slide-title">[Category]</div>
+    <h2>[Title]</h2>
+    <div class="flow-grid">
+      <div class="card green"><strong>[Title]</strong><span>[Description]</span></div>
+      <div class="card amber"><strong>[Title]</strong><span>[Description]</span></div>
+    </div>
+  </div>
+
+  FLOW DIAGRAM SLIDE:
+  <div class="slide">
+    <div class="slide-title">[Category]</div>
+    <h2>[Title]</h2>
+    <div class="phase">
+      <div class="phase-num">1</div>
+      <div class="phase-title">[Step title]</div>
+      <div class="phase-desc">[Description] <span class="checkpoint">⏸ Human Review</span></div>
+    </div>
+  </div>
+
+  TWO-COLUMN COMPARISON SLIDE:
+  <div class="slide">
+    <div class="slide-title">[Category]</div>
+    <h2>[Title]</h2>
+    <div class="two-col">
+      <div class="card green"><strong>[Option A]</strong><span>[Details]</span></div>
+      <div class="card red"><strong>[Option B]</strong><span>[Details]</span></div>
+    </div>
+  </div>
+
+  CALLOUT SLIDE:
+  <div class="slide">
+    <div class="slide-title">[Category]</div>
+    <h2>[Title]</h2>
+    <div class="callout">
+      <strong>[Key point]</strong> [Supporting detail]
+    </div>
+  </div>
+
+  CONFIRMATION SLIDE:
+  <div class="slide">
+    <div class="slide-title">Your Call</div>
+    <h2>[Decision Question]</h2>
+    <div class="two-col">
+      <div class="card green"><strong>✅ Approve</strong><span>[What happens next]</span></div>
+      <div class="card amber"><strong>✏️ Request Changes</strong><span>[What to do]</span></div>
+    </div>
+  </div>
+-->
+
+</div>
+</body>
+</html>

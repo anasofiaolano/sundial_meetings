@@ -1,0 +1,26 @@
+[
+  {
+    "file_path": "fixture-06-before.md",
+    "field_label": "Tammy notes",
+    "old_value": "(no notes yet)",
+    "new_value": "Internal champion. Very candid — gives direct, detailed feedback.",
+    "confidence": "high",
+    "source_quote": "we also want to have a meeting with Tammy individually since she's like our confident"
+  },
+  {
+    "file_path": "fixture-06-before.md",
+    "field_label": "Confirmed interest",
+    "old_value": "Internal champion. Very candid — gives direct, detailed feedback.",
+    "new_value": "Internal champion. Very candid — gives direct, detailed feedback.\n\nConfirmed interest: recording meetings, transcripts, action items, follow-up automation.",
+    "confidence": "high",
+    "source_quote": "recording meetings and calls, developing a follow-up"
+  },
+  {
+    "file_path": "fixture-06-before.md",
+    "field_label": "Sentiment",
+    "old_value": "Internal champion. Very candid — gives direct, detailed feedback.\n\nConfirmed interest: recording meetings, transcripts, action items, follow-up automation.",
+    "new_value": "Internal champion. Very candid — gives direct, detailed feedback.\n\nConfirmed interest: recording meetings, transcripts, action items, follow-up automation.\n\nSentiment: Positive — proactively messaged to confirm and move forward.",
+    "confidence": "high",
+    "source_quote": "she messaged me independently to just be like yeah sounds good let's set up the calls"
+  }
+]

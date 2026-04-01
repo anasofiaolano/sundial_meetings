@@ -1,0 +1,3032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Golden Eagle — Thompson</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; color: #111827; }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+
+    /* Tabs */
+    .tab {
+      display: flex; align-items: center; gap: 6px;
+      padding: 0 14px; height: 36px;
+      border-right: 1px solid #e5e7eb;
+      font-size: 13px; cursor: pointer; user-select: none; white-space: nowrap;
+      color: #6b7280; background: #f3f4f6;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .tab:hover { background: #ececec; }
+    .tab.active { background: white; color: #111827; border-bottom: 1px solid white; }
+    .tab-close {
+      font-size: 16px; line-height: 1; color: #9ca3af;
+      width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 3px;
+    }
+    .tab-close:hover { background: #e5e7eb; color: #374151; }
+
+    /* Left nav items */
+    .nav-item {
+      padding: 3px 8px 3px 20px;
+      font-size: 13px; color: #374151;
+      cursor: pointer; border-radius: 4px; line-height: 1.8;
+    }
+    .nav-item:hover { background: #f3f4f6; }
+    .nav-item.active { background: #dbeafe; color: #1d4ed8; }
+
+    /* Section header (collapsible) */
+    .sec-header {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; user-select: none;
+      padding: 3px 4px; border-radius: 4px;
+    }
+    .sec-header:hover { background: #f9fafb; }
+    .sec-chevron { font-size: 9px; color: #9ca3af; }
+
+    /* AI chat bubbles */
+    .bubble-ai {
+      background: white; border-radius: 10px 10px 10px 2px;
+      padding: 8px 12px; font-size: 13px; max-width: 215px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07); line-height: 1.5;
+    }
+    .bubble-user {
+      background: #1d4ed8; color: white;
+      border-radius: 10px 10px 2px 10px;
+      padding: 8px 12px; font-size: 13px; max-width: 215px; line-height: 1.5;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 2px 9px; border-radius: 12px;
+      font-size: 11px; font-weight: 500;
+    }
+
+    /* Person avatar */
+    .avatar {
+      width: 46px; height: 46px; border-radius: 50%;
+      background: #e5e7eb;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 15px; color: #6b7280;
+      flex-shrink: 0;
+    }
+
+    /* Editable field value */
+    [contenteditable="true"] {
+      outline: none; border-radius: 3px; padding: 1px 4px;
+    }
+    [contenteditable="true"]:hover  { background: #f0f9ff; }
+    [contenteditable="true"]:focus  { background: #dbeafe; box-shadow: 0 0 0 1px #93c5fd; }
+
+    /* Field rows */
+    .field-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+    .field-label { font-weight: 500; text-decoration: underline; font-size: 13px; white-space: nowrap; }
+    .field-value { font-size: 13px; color: #374151; }
+
+    /* Linked name */
+    .linked { text-decoration: underline; cursor: pointer; color: #111827; }
+    .linked:hover { color: #1d4ed8; }
+
+    /* Forms */
+    .form-field-row {
+      display: flex; align-items: baseline; gap: 10px;
+      padding: 7px 0; border-bottom: 1px solid #f3f4f6;
+    }
+    .form-field-row:last-child { border-bottom: none; }
+    .form-field-label {
+      font-size: 12px; color: #6b7280; min-width: 180px; flex-shrink: 0;
+    }
+    .form-field-value {
+      font-size: 13px; color: #111827; flex: 1;
+    }
+    .form-field-note {
+      font-size: 11px; color: #9ca3af; margin-left: 6px;
+    }
+    .form-pending-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 5px 0; font-size: 13px; color: #9ca3af; font-style: italic;
+    }
+    .form-section-box {
+      border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; margin-bottom: 20px;
+    }
+    .form-section-box-header {
+      padding: 8px 14px; font-size: 12px; font-weight: 600;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .form-section-box-body { padding: 0 14px; }
+
+    /* Flag pills on key moments */
+    .flag-pill {
+      font-size: 10px; padding: 1px 7px; border-radius: 10px;
+      font-weight: 500; white-space: nowrap;
+    }
+
+    /* Changelog diff row */
+    .diff-row {
+      background: #f0fdf4; border-left: 3px solid #22c55e;
+      padding: 5px 10px; border-radius: 0 5px 5px 0;
+      font-size: 12px; margin-bottom: 4px;
+      display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap;
+    }
+
+    /* Task card */
+    .task-card {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb; border-radius: 8px;
+      margin-bottom: 6px;
+    }
+    .task-card:hover { background: #fafafa; }
+    .task-card.is-pending { border-color: #fde68a; background: #fffbeb; }
+    .task-card.is-pending:hover { background: #fef9c3; }
+    .task-check {
+      width: 15px; height: 15px; border-radius: 3px;
+      border: 2px solid #d1d5db; flex-shrink: 0; margin-top: 1px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px;
+    }
+    .task-check.done    { background: #22c55e; border-color: #22c55e; color: white; }
+    .task-check.pending { background: #fef9c3; border-color: #f59e0b; color: #b45309; font-size: 10px; }
+    .priority-dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px;
+    }
+    /* Pending status badge */
+    .status-pending {
+      font-size: 10px; font-weight: 500;
+      background: #fef9c3; color: #92400e;
+      padding: 1px 7px; border-radius: 10px;
+      border: 1px solid #fde68a;
+    }
+
+    /* Email draft block */
+    .email-shell {
+      border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;
+    }
+    .email-header {
+      background: #f9fafb; padding: 9px 14px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .email-body {
+      padding: 14px 16px; font-size: 12px; line-height: 1.7;
+      color: #374151; white-space: pre-wrap; font-family: inherit;
+    }
+
+    /* Content section toggle */
+    .content-sec-header {
+      display: flex; align-items: center; gap: 7px;
+      font-weight: 700; font-size: 14px;
+      cursor: pointer; user-select: none;
+      margin-bottom: 10px;
+    }
+    .content-sec-header:hover { color: #374151; }
+
+    /* Section divider label */
+    .panel-section-label {
+      font-weight: 700; font-size: 14px;
+      padding-bottom: 8px; margin-bottom: 10px;
+      border-bottom: 1px solid #d1d5db;
+    }
+
+    /* Calendar */
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+    }
+    .cal-day-header {
+      font-size: 10px; color: #9ca3af;
+      padding: 4px 0;
+    }
+    .cal-day {
+      width: 28px; height: 28px; margin: 1px auto;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; font-size: 11px;
+      position: relative; color: #374151;
+    }
+    .cal-day.other-month { color: #d1d5db; }
+    .cal-day.has-call { cursor: pointer; font-weight: 600; color: #1d4ed8; }
+    .cal-day.has-call:hover { background: #eff6ff; }
+    .cal-day.is-today { background: #3b82f6 !important; color: white !important; }
+    .cal-dot {
+      position: absolute; bottom: 1px; left: 50%;
+      transform: translateX(-50%);
+      width: 4px; height: 4px; border-radius: 50%;
+    }
+
+    /* Timeline */
+    .tl-entry { position: relative; padding-left: 22px; padding-bottom: 14px; }
+    .tl-entry:last-child { padding-bottom: 0; }
+    .tl-dot {
+      position: absolute; left: 0; top: 3px;
+      width: 13px; height: 13px; border-radius: 50%;
+    }
+    .tl-line {
+      position: absolute; left: 6px; top: 16px;
+      width: 1px; bottom: 0; background: #e5e7eb;
+    }
+    .tl-label {
+      font-size: 13px; font-weight: 500; cursor: pointer; line-height: 1.3;
+    }
+    .tl-label:hover { color: #2563eb; }
+    .tl-meta { font-size: 11px; color: #9ca3af; margin-top: 1px; }
+
+    /* Version history */
+    .field-history-panel {
+      margin: 0 0 8px 0;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      overflow: hidden;
+      font-size: 11px;
+    }
+    .field-history-header {
+      padding: 5px 10px;
+      font-size: 10px; font-weight: 600;
+      color: #6b7280; letter-spacing: 0.05em; text-transform: uppercase;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f3f4f6;
+    }
+    .field-history-row {
+      display: flex; align-items: baseline; gap: 8px;
+      padding: 5px 10px; border-bottom: 1px solid #f3f4f6;
+      flex-wrap: wrap;
+    }
+    .field-history-row:last-child { border-bottom: none; }
+    .history-value { font-weight: 500; color: #111827; }
+    .history-null { color: #d1d5db; font-style: italic; }
+    .history-current-badge {
+      font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 8px;
+      background: #fef9c3; color: #92400e; border: 1px solid #fde68a;
+    }
+    .history-meta { color: #9ca3af; }
+    .history-source { text-decoration: underline; cursor: pointer; color: #6b7280; }
+    .history-source:hover { color: #1d4ed8; }
+    .history-icon {
+      color: #d1d5db; cursor: pointer; font-size: 11px;
+      padding: 0 3px; border-radius: 3px; user-select: none;
+      flex-shrink: 0; margin-left: auto;
+    }
+    .history-icon:hover { color: #6b7280; background: #f3f4f6; }
+    .form-field-row:hover .history-icon { color: #9ca3af; }
+
+    /* Google Docs-style version history panel */
+    .gdocs-ver-panel {
+      width: 220px; flex-shrink: 0;
+      border-left: 1px solid #e5e7eb;
+      background: #fafafa;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .gdocs-ver-header {
+      padding: 12px 14px 8px;
+      font-size: 11px; font-weight: 600; color: #6b7280;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .gdocs-ver-close {
+      font-size: 15px; color: #9ca3af; cursor: pointer;
+      width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+      border-radius: 3px; line-height: 1;
+    }
+    .gdocs-ver-close:hover { background: #e5e7eb; color: #374151; }
+    .gdocs-ver-list { overflow-y: auto; flex: 1; padding: 6px 0; }
+    .gdocs-ver-item {
+      padding: 8px 14px; cursor: pointer;
+      border-left: 3px solid transparent;
+    }
+    .gdocs-ver-item:hover { background: #f3f4f6; }
+    .gdocs-ver-item.selected {
+      background: #eff6ff;
+      border-left-color: #3b82f6;
+    }
+    .gdocs-ver-label {
+      font-size: 13px; font-weight: 500; color: #111827;
+    }
+    .gdocs-ver-meta {
+      font-size: 11px; color: #9ca3af; margin-top: 2px;
+    }
+    .gdocs-ver-current-pill {
+      display: inline-block; font-size: 9px; font-weight: 600;
+      padding: 1px 6px; border-radius: 8px;
+      background: #dcfce7; color: #15803d;
+      border: 1px solid #bbf7d0; margin-top: 3px;
+    }
+    .gdocs-ver-banner {
+      background: #eff6ff; border-bottom: 1px solid #bfdbfe;
+      padding: 7px 16px; font-size: 12px; color: #1d4ed8;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .gdocs-restore-btn {
+      font-size: 11px; font-weight: 500; color: #1d4ed8;
+      border: 1px solid #93c5fd; border-radius: 5px;
+      padding: 3px 10px; cursor: pointer; background: white; white-space: nowrap;
+    }
+    .gdocs-restore-btn:hover { background: #dbeafe; }
+    .fp-field-row {
+      display: flex; align-items: baseline; gap: 8px;
+      padding: 7px 0; border-bottom: 1px solid #f3f4f6;
+    }
+    .fp-field-label { font-weight: 500; font-size: 13px; color: #6b7280; white-space: nowrap; min-width: 140px; }
+    .fp-field-value { font-size: 13px; color: #111827; }
+    .fp-field-null  { font-size: 13px; color: #d1d5db; font-style: italic; }
+    /* Proposed edits module (Cursor-style) */
+    .pe-module {
+      border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .pe-module-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .pe-accept-all {
+      font-size: 12px; font-weight: 500; color: white;
+      background: #16a34a; border: none; border-radius: 5px;
+      padding: 4px 12px; cursor: pointer;
+    }
+    .pe-accept-all:hover { background: #15803d; }
+    .pe-dismiss-all {
+      font-size: 12px; color: #9ca3af; background: none; border: none;
+      cursor: pointer; padding: 4px 8px;
+    }
+    .pe-dismiss-all:hover { color: #6b7280; }
+    .pe-file-block { border-bottom: 1px solid #f3f4f6; }
+    .pe-file-block:last-child { border-bottom: none; }
+    .pe-file-header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 14px; background: white;
+    }
+    .pe-file-name { font-size: 13px; font-weight: 500; color: #111827; flex: 1; }
+    .pe-accept-btn {
+      font-size: 11px; font-weight: 500;
+      color: #16a34a; background: #f0fdf4;
+      border: 1px solid #bbf7d0; border-radius: 4px;
+      padding: 2px 9px; cursor: pointer;
+    }
+    .pe-accept-btn:hover { background: #dcfce7; }
+    .pe-skip-btn {
+      font-size: 11px; color: #9ca3af; background: none;
+      border: 1px solid #e5e7eb; border-radius: 4px;
+      padding: 2px 9px; cursor: pointer;
+    }
+    .pe-skip-btn:hover { background: #f9fafb; color: #6b7280; }
+    .pe-edit-row {
+      display: flex; align-items: baseline; gap: 0;
+      font-size: 12px; font-family: monospace;
+      padding: 2px 0;
+    }
+    .pe-edit-removed {
+      background: #fef2f2; color: #991b1b;
+      padding: 2px 14px 2px 28px; display: block; width: 100%;
+      text-decoration: line-through;
+    }
+    .pe-edit-added {
+      background: #f0fdf4; color: #166534;
+      padding: 2px 14px 2px 28px; display: block; width: 100%;
+    }
+    .pe-edit-label {
+      font-size: 10px; font-weight: 600; color: #9ca3af;
+      letter-spacing: .05em; text-transform: uppercase;
+      padding: 6px 14px 2px 14px; display: block;
+    }
+    .pe-file-accepted .pe-file-name { color: #9ca3af; }
+    .pe-file-accepted .pe-file-header { background: #f9fafb; }
+    .pe-file-accepted .pe-edits-body { display: none; }
+    .pe-file-skipped { opacity: 0.4; }
+    .pe-file-skipped .pe-edits-body { display: none; }
+
+    /* inline diff — additions highlighted, deletions struck through */
+    .fp-add {
+      background: #d1fae5; color: #065f46;
+      border-radius: 2px; padding: 0 2px;
+    }
+    .fp-del {
+      text-decoration: line-through;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden bg-white">
+
+  <!-- ═══════════════════════════════════
+       TOP NAV BAR
+  ═══════════════════════════════════ -->
+  <div style="height:48px; border-bottom:1px solid #e5e7eb; background:white; display:flex; align-items:center; padding:0 16px; gap:12px; flex-shrink:0; z-index:10;">
+
+    <!-- Back / Forward -->
+    <div style="display:flex; align-items:center; gap:2px;">
+      <button id="nav-back" onclick="navBack()"
+        style="width:28px;height:28px;border:none;background:none;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:15px;"
+        onmouseenter="this.style.background='#f3f4f6';this.style.color='#374151'"
+        onmouseleave="this.style.background='none';this.style.color='#9ca3af'"
+      >‹</button>
+      <button id="nav-fwd" onclick="navForward()"
+        style="width:28px;height:28px;border:none;background:none;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:15px;"
+        onmouseenter="this.style.background='#f3f4f6';this.style.color='#374151'"
+        onmouseleave="this.style.background='none';this.style.color='#9ca3af'"
+      >›</button>
+    </div>
+
+    <!-- Search bar -->
+    <div style="flex:1; max-width:420px; margin:0 auto; position:relative;">
+      <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:13px;pointer-events:none;">⌕</span>
+      <input id="global-search" type="text" placeholder="Search people, calls, tasks…"
+        style="width:100%;height:32px;border:1px solid #e5e7eb;border-radius:20px;padding:0 12px 0 30px;font-size:13px;color:#374151;outline:none;background:#f9fafb;"
+        onfocus="this.style.borderColor='#93c5fd';this.style.background='white'"
+        onblur="this.style.borderColor='#e5e7eb';this.style.background='#f9fafb'"
+        oninput="handleSearch(this.value)"
+      >
+      <div id="search-results" style="display:none;position:absolute;top:38px;left:0;right:0;background:white;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.08);z-index:100;overflow:hidden;"></div>
+    </div>
+
+    <!-- User avatar -->
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+      <div style="width:30px;height:30px;border-radius:50%;background:#dbeafe;border:2px solid #93c5fd;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#1d4ed8;cursor:pointer;"
+           title="Ana Olano">AO</div>
+    </div>
+
+  </div>
+
+  <!-- Three-column area fills remaining height -->
+  <div class="flex flex-1 overflow-hidden">
+
+  <!-- ═══════════════════════════════════
+       LEFT PANEL
+  ═══════════════════════════════════ -->
+  <div id="left-panel" class="flex flex-col border-r border-gray-200 flex-shrink-0" style="width: 272px;">
+    <div class="flex-1 overflow-y-auto p-4 space-y-6">
+
+      <!-- CALLS section -->
+      <div>
+        <div class="panel-section-label">Calls</div>
+
+        <!-- Calendar -->
+        <div id="calendar-mount" class="mb-4 rounded-lg p-2" style="border: 1px solid #e5e7eb;"></div>
+
+        <!-- Timeline -->
+        <div id="timeline-mount"></div>
+      </div>
+
+      <!-- PROJECT FILES section -->
+      <div>
+        <div class="panel-section-label">Project Files</div>
+        <div id="project-files-mount"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       CENTER PANEL
+  ═══════════════════════════════════ -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- Tab bar -->
+    <div class="flex border-b border-gray-200 bg-gray-50 flex-shrink-0 overflow-x-auto" style="min-height: 37px;">
+      <div id="tab-bar" class="flex"></div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div id="breadcrumb" class="px-6 py-2 text-xs text-gray-400 border-b border-gray-100 flex-shrink-0">
+      —
+    </div>
+
+    <!-- Main content -->
+    <div id="content" class="flex-1 overflow-y-auto px-8 py-6">
+      <div class="text-gray-300 text-sm mt-12 text-center">Open a file from the left panel.</div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════
+       RIGHT PANEL — AI CHAT
+  ═══════════════════════════════════ -->
+  <div class="flex flex-col border-l border-gray-200 flex-shrink-0" style="width: 272px; background: #fefce8;">
+
+    <!-- Header -->
+    <div class="flex-shrink-0 px-4 py-3 border-b border-yellow-100">
+      <div class="font-semibold text-sm">AI Assistant</div>
+      <div class="text-xs text-yellow-700 mt-0.5">Ana Olano</div>
+    </div>
+
+    <!-- Messages -->
+    <div id="ai-messages" class="flex-1 overflow-y-auto p-3 space-y-3">
+      <div class="bubble-ai">Hi Ana — I'm loaded up on the Thompson project. What do you need?</div>
+    </div>
+
+    <!-- Input -->
+    <div class="flex-shrink-0 p-3 border-t border-yellow-100">
+      <div class="flex gap-2">
+        <input
+          id="ai-input"
+          type="text"
+          placeholder="Ask anything…"
+          class="flex-1 text-xs border border-yellow-200 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-1 focus:ring-yellow-400"
+          onkeydown="if(event.key==='Enter') sendAI()"
+        >
+        <button
+          onclick="sendAI()"
+          class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-semibold text-sm px-3 py-2 rounded-md"
+        >↑</button>
+      </div>
+    </div>
+
+  </div><!-- end right panel -->
+  </div><!-- end three-column wrapper -->
+
+  <script>
+    // ── CALLS DATA ──────────────────────────────────────────────────────
+    const CALLS = [
+      {
+        id: 'call1', date: '2026-01-22', label: 'Jan 22, 2026',
+        status: 'past', short: 'Lauren · 32 min',
+        participants: ['Lauren Thompson'],
+        duration: 32, platform: 'Microsoft Teams',
+        summary: 'Initial discovery call. Lauren found Golden Eagle via a YouTube log home tour and reached out through the website. She and her husband Mike are looking to build in Summit County, CO. Lauren identified the Lofted Log floor plan as a strong candidate. Mike owns the financial decisions but was not on the call. No financing in place yet.',
+        moments: [
+          { time: '08:12', speaker: 'Lauren', flag: 'source',           quote: "I found you guys on YouTube — I watched like four videos in a row. The Lofted Log walkthrough was the one that got me." },
+          { time: '15:33', speaker: 'Lauren', flag: 'floor plan',       quote: "The Lofted Log feels like the right size for us — not too big, but the loft makes it feel open." },
+          { time: '22:47', speaker: 'Lauren', flag: 'qualifier mention', quote: "My husband Mike handles most of the financial stuff — I'll loop him in once we have more concrete numbers." },
+          { time: '28:55', speaker: 'Lauren', flag: 'location',          quote: "We're looking at Summit County — we have a lot we're still getting surveyed." },
+        ],
+        changes: [
+          { field: 'Contact created', from: null,         to: 'Lauren Thompson — inbound via YouTube' },
+          { field: 'Location',        from: null,         to: 'Summit County, CO' },
+          { field: 'Floor plan',      from: null,         to: 'Lofted Log (size + loft openness noted)' },
+          { field: 'Stage',           from: null,         to: 'discovery' },
+        ],
+        taskIds: ['t1'],
+        emailDraft: null,
+        transcript: [
+          { time: '00:18', speaker: 'Lukas',  text: "Lauren, great to meet you. Thanks for reaching out — how'd you find us?" },
+          { time: '00:24', speaker: 'Lauren', text: "YouTube, actually. I was just going down a rabbit hole one night and your Lofted Log walkthrough came up. I watched it three times." },
+          { time: '00:41', speaker: 'Lukas',  text: "That's great to hear. What was it about that one specifically?" },
+          { time: '00:48', speaker: 'Lauren', text: "Honestly the loft. And the way the logs feel inside — it doesn't feel like a cabin, it feels like a real home. That's the thing I kept coming back to." },
+          { time: '02:10', speaker: 'Lukas',  text: "Tell me a little about what you're envisioning — size, location, timeline." },
+          { time: '02:18', speaker: 'Lauren', text: "We have a lot in Summit County, Colorado. Still getting it surveyed — we bought it about eight months ago. As for size, we don't want anything massive. We have two kids but we want it to feel intentional, not just big." },
+          { time: '03:45', speaker: 'Lukas',  text: "Have you had a chance to look at any of our floor plan families? Sounds like the Lofted Log range might be a good fit." },
+          { time: '03:52', speaker: 'Lauren', text: "Yes — I've been going back and forth between the Lofted Log and the Eagle Ridge. The Eagle Ridge feels a little more traditional but I keep coming back to the Lofted Log." },
+          { time: '08:12', speaker: 'Lauren', text: "I found you guys on YouTube — I watched like four videos in a row. The Lofted Log walkthrough was the one that got me." },
+          { time: '10:30', speaker: 'Lukas',  text: "What does your husband think? Is he in the loop on this?" },
+          { time: '10:36', speaker: 'Lauren', text: "He loves the idea. He's excited. But he's more — he wants the details. He'll want to know what things cost before he gets emotionally attached, if that makes sense." },
+          { time: '11:05', speaker: 'Lukas',  text: "Totally makes sense. We can walk through rough ballpark numbers today if that's helpful, or we can loop him in for that conversation." },
+          { time: '11:14', speaker: 'Lauren', text: "Let's do the overview today and then maybe a call with both of us for the numbers piece." },
+          { time: '15:33', speaker: 'Lauren', text: "The Lofted Log feels like the right size for us — not too big, but the loft makes it feel open." },
+          { time: '17:20', speaker: 'Lukas',  text: "The 2184 is our most popular in that line. Main floor, loft, room for two kids — it's a solid footprint. Have you thought about additions at all?" },
+          { time: '17:30', speaker: 'Lauren', text: "We'd probably want a mudroom. Especially in Colorado — skis, boots, all of that. It's not optional for us really." },
+          { time: '22:47', speaker: 'Lauren', text: "My husband Mike handles most of the financial stuff — I'll loop him in once we have more concrete numbers." },
+          { time: '25:10', speaker: 'Lukas',  text: "That's totally fine. I'll send over some floor plan PDFs and a rough ballpark so you have something to share with him." },
+          { time: '28:55', speaker: 'Lauren', text: "We're looking at Summit County — we have a lot we're still getting surveyed." },
+          { time: '30:02', speaker: 'Lukas',  text: "Got it. That matters for delivery logistics — once the survey's done we can get a better handle on site costs. No rush on that though." },
+          { time: '31:40', speaker: 'Lauren', text: "This has been really helpful. I feel like I've been researching forever and this is the first conversation that's actually felt real." },
+          { time: '31:50', speaker: 'Lukas',  text: "I'm glad. Let's set up a follow-up with Mike — I want him to feel as good about this as you do." },
+        ],
+      },
+      {
+        id: 'call2', date: '2026-02-24', label: 'Feb 24, 2026',
+        status: 'past', short: 'Lauren · 38 min',
+        participants: ['Lauren Thompson'],
+        duration: 38, platform: 'Microsoft Teams',
+        summary: "Lauren and Lukas narrowed to Lofted Log 2184 as the base plan. Mudroom off the back entry confirmed as a must-have. Mike's father (architect) mentioned as a potential design influencer. Ballpark worksheet reviewed — ~$260K base before add-ons. SA-211F design agreement sent to the Thompsons for review.",
+        moments: [
+          { time: '06:20', speaker: 'Lauren', flag: 'floor plan',        quote: "We've been going back and forth but I think the 2184 is the one — the square footage is right for what we need." },
+          { time: '14:55', speaker: 'Lauren', flag: 'design request',    quote: "One thing we know for sure is we need a mudroom — coming in from the back, especially in Colorado winters." },
+          { time: '21:10', speaker: 'Lauren', flag: 'influencer mention', quote: "Mike's dad is actually an architect, so he'll probably want to look at the plans too before we go too far." },
+          { time: '31:08', speaker: 'Lukas', flag: 'pricing',            quote: "Based on what you've described, you're probably looking at the $260K range as a starting point before we get into the finish options." },
+        ],
+        changes: [
+          { field: 'Floor plan',      from: 'undecided',        to: 'Lofted Log 2184 shortlisted' },
+          { field: 'Mudroom addition', from: null,              to: 'Confirmed as must-have' },
+          { field: "Mike's Father",   from: null,               to: 'Added as influencer stakeholder' },
+          { field: 'SA-211F',         from: null,               to: 'Sent for review' },
+        ],
+        taskIds: ['t2', 't3'],
+        emailDraft: null,
+        transcript: [
+          { time: '00:12', speaker: 'Lukas',  text: "Lauren, good to see you again. How's everything?" },
+          { time: '00:17', speaker: 'Lauren', text: "Good! I've been going through the floor plans you sent. I think I've made up my mind actually." },
+          { time: '00:24', speaker: 'Lukas',  text: "Yeah? Tell me." },
+          { time: '00:27', speaker: 'Lauren', text: "The 2184. I keep coming back to it. The square footage is right, the loft works for us, and I just — I can see it. The Eagle Ridge never gave me that." },
+          { time: '01:10', speaker: 'Lukas',  text: "That's great. Let's dig into it then. What are the things you'd want to change or add?" },
+          { time: '01:18', speaker: 'Lauren', text: "The mudroom is the big one. We talked about it last time — off the back entry. That's non-negotiable for us." },
+          { time: '01:30', speaker: 'Lukas',  text: "Totally doable. We can design that as an addition off the back. What are you using it for primarily?" },
+          { time: '01:37', speaker: 'Lauren', text: "Ski gear, snow boots, dog stuff. Colorado living basically. We want built-in storage, hooks, a bench." },
+          { time: '06:20', speaker: 'Lauren', text: "We've been going back and forth but I think the 2184 is the one — the square footage is right for what we need." },
+          { time: '09:45', speaker: 'Lukas',  text: "What about finishes? Have you thought about the log look — smooth vs. hand hewn?" },
+          { time: '09:52', speaker: 'Lauren', text: "Hand hewn, definitely. I want it to look like the real thing. That texture. I showed Mike the finish gallery and that was the one he pointed to immediately too." },
+          { time: '14:55', speaker: 'Lauren', text: "One thing we know for sure is we need a mudroom — coming in from the back, especially in Colorado winters." },
+          { time: '18:30', speaker: 'Lukas',  text: "Has Mike had a chance to look at any of the kitchen options?" },
+          { time: '18:36', speaker: 'Lauren', text: "A little. He likes the hickory cabinets — actually that was one of the first things he said. I do too. It goes with the whole look." },
+          { time: '21:10', speaker: 'Lauren', text: "Mike's dad is actually an architect, so he'll probably want to look at the plans too before we go too far." },
+          { time: '21:25', speaker: 'Lukas',  text: "Good to know. Happy to get him involved — having an architect in the family reviewing plans is actually really helpful." },
+          { time: '21:40', speaker: 'Lauren', text: "He has opinions. That's for sure." },
+          { time: '24:00', speaker: 'Lukas',  text: "Let me pull up the ballpark numbers. Based on the 2184 base, mudroom addition, hand hewn finish, and Summit County delivery — you're looking somewhere in the $260K range as a starting point before we nail down the finish spec." },
+          { time: '24:18', speaker: 'Lauren', text: "That's about what Mike expected. He'll want it more exact before he commits to anything, but as a number to work with, that's fine." },
+          { time: '31:08', speaker: 'Lukas',  text: "Based on what you've described, you're probably looking at the $260K range as a starting point before we get into the finish options." },
+          { time: '34:50', speaker: 'Lukas',  text: "I'd like to send over the design agreement — it's the SA-211F. It locks in the base plan and gets a design deposit down so we can start the formal spec process." },
+          { time: '35:05', speaker: 'Lauren', text: "How much is the deposit?" },
+          { time: '35:08', speaker: 'Lukas',  text: "Twenty-five hundred. It goes toward the final package." },
+          { time: '35:15', speaker: 'Lauren', text: "Let me show Mike tonight. I think he'll be fine with it but I don't want to sign anything without him." },
+          { time: '37:20', speaker: 'Lukas',  text: "Of course. I'll send it over today along with the ballpark worksheet so he has everything in one place." },
+          { time: '37:30', speaker: 'Lauren', text: "Perfect. I'm excited. This feels like it's actually happening." },
+        ],
+      },
+      {
+        id: 'call3', date: '2026-03-10', label: 'Mar 10, 2026',
+        status: 'past', short: 'Lauren, Mike · 45 min',
+        participants: ['Lauren Thompson', 'Mike Thompson'],
+        duration: 45, platform: 'Microsoft Teams',
+        summary: "Lukas spoke with Lauren and Mike Thompson about their Lofted Log 2184 build in Summit County, CO. Mike joined for the first time. Full package pricing discussed (~$285K). Hand hewn finish pricing sheet requested by Mike. Mudroom off back entry confirmed as must-have. Summit County builder intro requested. Financing pre-approval expected by end of next week.",
+        moments: [
+          { time: '12:04', speaker: 'Lauren', flag: 'design request',  quote: "We love the Lofted Log but we really want to add a mudroom off the back entry — it's a must-have for us." },
+          { time: '23:15', speaker: 'Mike',  flag: 'price sensitive',  quote: "What does hand hewn actually add to the cost? That's the finish we really want but I need to know what we're looking at." },
+          { time: '31:40', speaker: 'Mike',  flag: 'logistics',        quote: "Our builder told us permits take 8 to 12 weeks in Summit County — is that typical or is there something we can do to speed it up?" },
+          { time: '38:22', speaker: 'Lauren', flag: 'design request',   quote: "Can we see the kitchen rendered with hickory cabinets? I keep going back to that look — I think it's the one." },
+          { time: '44:10', speaker: 'Lauren', flag: 'buying signal',    quote: "Honestly, we love it. This feels like the right fit. We just need to get the details sorted." },
+        ],
+        changes: [
+          { field: 'Stage',           from: 'discovery',         to: 'proposal' },
+          { field: 'Estimated value', from: '$260K',             to: '$285K' },
+          { field: 'Mike Thompson',   from: 'not on calls',      to: 'Joined — added as Qualifier' },
+          { field: 'Hand hewn finish', from: 'mentioned interest', to: 'Confirmed selection' },
+        ],
+        taskIds: ['t4', 't5', 't6', 't7'],
+        emailDraft: {
+          subject: 'Hand Hewn Pricing + Summit County Builder Intro — Thompson',
+          body: `Hi Lauren and Mike,
+
+Great connecting with both of you today — wonderful to finally have you on a call, Mike.
+
+As promised, I'm attaching the hand hewn finish pricing sheet. For the Lofted Log 2184 with the mudroom addition, hand hewn adds approximately $22,000–$26,000 depending on log diameter. Full breakdown is in the attachment.
+
+On the builder side — I'm introducing you to Jake Mercer at Mercer Mountain Builds. Jake has done three Golden Eagle homes in Summit County and knows the permit process cold. I'm CCing him here so you can connect directly.
+
+Two items to keep things moving:
+  1. Financing pre-approval update (you mentioned end of next week — no rush, just flagging)
+  2. Lot survey completion date — once that's in we can lock the delivery estimate
+
+Talk soon,
+Lukas`,
+        },
+        transcript: [
+          { time: '00:10', speaker: 'Lukas',  text: "Lauren, Mike — great to have you both on. Mike, welcome, we've been looking forward to getting you on a call." },
+          { time: '00:18', speaker: 'Mike',   text: "Yeah, sorry it took so long. I've been following along with everything Lauren's been sending me. I have some questions." },
+          { time: '00:26', speaker: 'Lauren', text: "He has a lot of questions." },
+          { time: '00:29', speaker: 'Lukas',  text: "That's exactly what I'm here for. Let's get into it." },
+          { time: '02:15', speaker: 'Lukas',  text: "So where I'd like to start — we've landed on the Lofted Log 2184 as the base. Lauren confirmed that last call. Does that feel right to you too, Mike?" },
+          { time: '02:24', speaker: 'Mike',   text: "Yeah. Lauren showed me the floor plan and I think it works. My main thing is understanding the full cost picture." },
+          { time: '05:40', speaker: 'Lukas',  text: "Absolutely. Let me walk you through the line items. Base plan is $238K. The mudroom addition off the back entry adds roughly $18K depending on how much built-in storage we do." },
+          { time: '05:55', speaker: 'Mike',   text: "And what does hand hewn add?" },
+          { time: '12:04', speaker: 'Lauren', text: "We love the Lofted Log but we really want to add a mudroom off the back entry — it's a must-have for us." },
+          { time: '14:30', speaker: 'Lukas',  text: "That's locked in. We're already working on a modified floor plan with the mudroom off the back entry." },
+          { time: '23:15', speaker: 'Mike',   text: "What does hand hewn actually add to the cost? That's the finish we really want but I need to know what we're looking at." },
+          { time: '23:28', speaker: 'Lukas',  text: "Hand hewn runs $22K to $26K on top of standard, depending on log diameter. I'll send you the full pricing sheet today so you have the exact breakdown." },
+          { time: '23:40', speaker: 'Mike',   text: "Okay. That's a number I can work with. I just needed an actual number, not a range." },
+          { time: '25:10', speaker: 'Lauren', text: "See, he just needed a number." },
+          { time: '28:00', speaker: 'Lukas',  text: "On the builder side — do you have someone in Summit County already, or is that still open?" },
+          { time: '28:08', speaker: 'Mike',   text: "We have someone we've been talking to but nothing's signed. Why?" },
+          { time: '31:40', speaker: 'Mike',   text: "Our builder told us permits take 8 to 12 weeks in Summit County — is that typical or is there something we can do to speed it up?" },
+          { time: '31:55', speaker: 'Lukas',  text: "That's about right for Summit County, yeah. I can introduce you to a builder we work with there who knows the permit process well — could be a good second opinion at minimum." },
+          { time: '32:10', speaker: 'Mike',   text: "I'd be open to that." },
+          { time: '38:22', speaker: 'Lauren', text: "Can we see the kitchen rendered with hickory cabinets? I keep going back to that look — I think it's the one." },
+          { time: '38:35', speaker: 'Lukas',  text: "I don't have the render today but I'll get that to you this week. It's a great combo with the hand hewn." },
+          { time: '40:05', speaker: 'Mike',   text: "One more thing — financing. We're still working through that. We should have something from the bank by end of next week." },
+          { time: '40:18', speaker: 'Lukas',  text: "No pressure. Just keep me posted — once that's confirmed we can move pretty quickly on the spec." },
+          { time: '44:10', speaker: 'Lauren', text: "Honestly, we love it. This feels like the right fit. We just need to get the details sorted." },
+          { time: '44:22', speaker: 'Mike',   text: "The numbers are starting to make sense. Send me the hand hewn pricing sheet and I'll look it over." },
+          { time: '44:50', speaker: 'Lukas',  text: "Will do — sending it today. And I'll get the builder intro out tomorrow. Let's plan to reconnect once you have the financing confirmation." },
+          { time: '45:05', speaker: 'Lauren', text: "Sounds great. Thanks Lukas." },
+        ],
+      },
+      {
+        id: 'call5', date: '2026-03-25', label: 'Mar 25, 2026',
+        status: 'past', short: 'Lauren, Mike · 28 min',
+        participants: ['Lauren Thompson', 'Mike Thompson'],
+        duration: 28, platform: 'Microsoft Teams',
+        summary: "Lauren and Mike reviewed the hand hewn pricing sheet. Lauren wants to swap the flooring from white oak to cedar after getting samples in person — Mike is fine with it. Mike confirmed financing pre-approval came through from the bank. Updated estimate discussed ($292K reflecting cedar premium). Design team's mudroom floor plan is still in progress — Lauren asked for it before the April 1 call.",
+        moments: [
+          { time: '04:12', speaker: 'Mike',   flag: 'buying signal',   quote: "We got the pre-approval. Came through yesterday actually — $310K approved, so we have room." },
+          { time: '09:38', speaker: 'Lauren', flag: 'design request',  quote: "I got the flooring samples and I actually think I want cedar now — the white oak felt a little too light once I saw it next to the log finish." },
+          { time: '14:55', speaker: 'Mike',   flag: 'price sensitive', quote: "What's the delta between the two? If it's not significant I don't care, but I want to know." },
+          { time: '21:40', speaker: 'Lauren', flag: 'buying signal',   quote: "I feel like we're so close. I just want to see the mudroom floor plan and then I think we're ready to move." },
+        ],
+        changes: [
+          { field: 'Financing',    from: 'Unconfirmed',           to: 'Pre-approval confirmed — $310K' },
+          { field: 'Flooring',     from: 'Wide plank white oak',  to: 'Wide plank cedar (Lauren preference after samples)' },
+          { field: 'Est. total',   from: '$285,000',              to: '~$292,000 (cedar premium + updated site est.)' },
+        ],
+        taskIds: [],
+        emailDraft: {
+          subject: 'Cedar Flooring Pricing + Mudroom Update — Thompson',
+          body: `Hi Lauren and Mike,
+
+Great talking today. A few quick follow-ups:
+
+Cedar vs. white oak: the delta is roughly $3,800 on the 2184 footprint. I've updated the estimate to ~$292K reflecting that swap and the revised site delivery figure. Full updated worksheet attached.
+
+Mudroom floor plan: design team has it — I'm following up with them today to make sure we have a draft before our April 1 call.
+
+Congratulations on the financing pre-approval. That's a big milestone. Talk soon.
+
+Lukas`,
+        },
+        transcript: [
+          { time: '00:15', speaker: 'Lukas',  text: "Lauren, Mike — good to connect again. Mike, how are you?" },
+          { time: '00:21', speaker: 'Mike',   text: "Good. I've had a busy week but I had a chance to look over the hand hewn pricing. It's a lot but it's in the range I expected." },
+          { time: '00:34', speaker: 'Lukas',  text: "Glad it landed where you expected. I know you wanted the real number, not a range." },
+          { time: '04:05', speaker: 'Lukas',  text: "Any update on the financing side?" },
+          { time: '04:12', speaker: 'Mike',   text: "We got the pre-approval. Came through yesterday actually — $310K approved, so we have room." },
+          { time: '04:28', speaker: 'Lauren', text: "We were so relieved. It felt like that was the last big question mark." },
+          { time: '09:30', speaker: 'Lauren', text: "I actually wanted to talk about the flooring. I got the samples last week." },
+          { time: '09:38', speaker: 'Lauren', text: "I got the flooring samples and I actually think I want cedar now — the white oak felt a little too light once I saw it next to the log finish." },
+          { time: '09:55', speaker: 'Lukas',  text: "Cedar is a great call with hand hewn. The warmth matches really well. What does Mike think?" },
+          { time: '10:02', speaker: 'Mike',   text: "I defer to Lauren on finishes. She's better at visualizing it than I am." },
+          { time: '14:48', speaker: 'Lukas',  text: "Cedar is a small premium over white oak on this footprint. Let me pull that up." },
+          { time: '14:55', speaker: 'Mike',   text: "What's the delta between the two? If it's not significant I don't care, but I want to know." },
+          { time: '15:08', speaker: 'Lukas',  text: "It runs about $3,800 more on the 2184 footprint. I'll send an updated worksheet with that reflected today." },
+          { time: '15:18', speaker: 'Mike',   text: "That's fine. Let's do cedar." },
+          { time: '21:33', speaker: 'Lauren', text: "Any update on the mudroom floor plan? That's the one thing I keep thinking about." },
+          { time: '21:40', speaker: 'Lauren', text: "I feel like we're so close. I just want to see the mudroom floor plan and then I think we're ready to move." },
+          { time: '21:52', speaker: 'Lukas',  text: "Design team has it — I'll follow up today and make sure it's ready before our April 1 call." },
+          { time: '27:10', speaker: 'Mike',   text: "Sounds good. Lauren and I are aligned. Once we see the mudroom plan I think we can move forward." },
+          { time: '27:22', speaker: 'Lauren', text: "Yes. I'm excited. I feel like it's real now." },
+        ],
+        proposedEdits: [
+          {
+            id: 'pe_fp',
+            file: 'Floor Plan',
+            fileId: 'floorplan',
+            fileType: 'floorplan',
+            icon: '📐',
+            edits: [
+              { label: 'Flooring',    from: 'Wide plank white oak',   to: 'Wide plank cedar' },
+              { label: 'Style notes', from: 'Rustic farmhouse + traditional log. Lauren drives aesthetic, Mike needs cost clarity on everything.', to: 'Rustic farmhouse + traditional log. Lauren drives aesthetic, Mike needs cost clarity on everything. Cedar flooring confirmed after samples.' },
+            ],
+          },
+          {
+            id: 'pe_ov',
+            file: 'Project Overview',
+            fileId: 'overview',
+            fileType: 'overview',
+            icon: '◎',
+            edits: [
+              { label: 'Estimated value', from: '$285,000',     to: '$292,000' },
+              { label: 'Financing',       from: 'Unconfirmed',  to: 'Pre-approval confirmed — $310K' },
+            ],
+          },
+          {
+            id: 'pe_lau',
+            file: 'Lauren Thompson',
+            fileId: 'sarah',
+            fileType: 'person',
+            icon: '👤',
+            edits: [
+              { label: 'Notes', from: null, to: 'Prefers cedar over white oak — decided after seeing samples in person against hand hewn finish.' },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'call4', date: '2026-04-01', label: 'Apr 1, 2026',
+        status: 'upcoming', short: 'Lauren, Mike',
+        participants: ['Lauren Thompson', 'Mike Thompson'],
+        duration: null, platform: 'Microsoft Teams',
+        summary: 'Scheduled — agenda: review hand hewn pricing sheet, mudroom floor plan update, financing pre-approval status.',
+        moments: [], changes: [], taskIds: [], emailDraft: null,
+        brief: {
+          mission: {
+            objective: "Get Mike's buy-in on hand hewn pricing and lock in a follow-up date with the design team present.",
+            why: "Lauren is already sold. Mike needs one concrete number before this moves forward. This is the call that either accelerates or stalls.",
+            success: "Call ends with Mike having seen the exact hand hewn price and a Thursday design review on the calendar."
+          },
+          signals: [
+            { date: 'Mar 28', type: 'Email opened', detail: "Mike opened the Mar 12 follow-up — 2 days after it was sent. No reply yet.", significance: "He's reading. The hand hewn pricing sheet was attached. He has seen it." },
+            { date: 'Mar 29', type: 'Website visit', detail: "Lauren visited goldeneaglehomes.com — Lofted Log product page and finish gallery.", significance: "Still active and engaged. Likely showing Mike the finish options." },
+          ],
+          dealHealth: {
+            risk: 'medium',
+            daysSinceContact: 18,
+            flags: [
+              { label: 'Financing unconfirmed', detail: "Pre-approval expected 'end of next week' as of Mar 10 — now 20 days ago with no update.", severity: 'medium', action: 'Ask directly. Most likely stall point.' }
+            ],
+            momentum: "Lauren remains highly engaged. Mike's email open is a positive signal. The only unresolved blocker is financing confirmation."
+          },
+          emotionalArc: [
+            { call: 1, date: 'Jan 22', tone: 'Exploratory and warm. Lauren only. She found us — came in interested.', milestone: 'First contact via YouTube inbound.' },
+            { call: 2, date: 'Feb 24', tone: 'Decided and excited. Lauren only. She had already made up her mind — this was about design details.', milestone: 'Lofted Log 2184 locked in.' },
+            { call: 3, date: 'Mar 10', tone: 'More cautious. Mike joined for the first time — analytical, not cold. Lauren still warm. Mike disengaged briefly when financing came up.', milestone: 'Mike joined. Mudroom + hand hewn pricing raised. Financing flagged.' },
+          ],
+          weOweThem: [
+            { item: 'Modified floor plan with mudroom addition', owner: 'Design team', status: 'in_progress', due: 'Today' },
+            { item: 'Hand hewn finish pricing sheet', owner: 'Lukas', status: 'pending', due: 'Today' },
+            { item: 'Summit County builder intro', owner: 'Lukas', status: 'pending', due: 'Mar 11 — overdue' },
+          ],
+          theyOweUs: [
+            { item: 'Financing pre-approval', expected: 'End of next week as of Mar 10 — now overdue', risk: 'medium' },
+            { item: 'Lot survey completion date', expected: 'Unknown', risk: 'low' },
+          ],
+          theirWorld: {
+            rapportNotes: [
+              "Lauren found Golden Eagle through YouTube — visually driven, responds immediately to renders and anything aesthetic.",
+              "Mike is a civil engineer. He wants precision, not ranges. Engages when he has a real number to work with.",
+              "This is their forever home. It's personal and emotional for both, even if Mike expresses it differently.",
+              "Lauren is the champion. Mike is the qualifier. Close Lauren first — she will bring Mike along.",
+            ],
+            lightsThem: [
+              { who: 'Lauren', what: 'Aesthetics — finishes, the kitchen, the feel of the home. Show her renders and she engages immediately.' },
+              { who: 'Mike', what: 'Specifics — real numbers, hard timelines, concrete answers. Give him a figure and watch him lean in.' },
+            ],
+            landmines: [
+              "Do not give Mike a range on hand hewn — he said 'I need to know what we're looking at', not a ballpark. Come with the number.",
+              "Do not re-explain Summit County permitting timelines — Mike already knows. Repeating it signals you weren't listening.",
+              "Do not mention financing first — Mike went quiet on it last time. Let him bring it up, or approach it after the design conversation is warm.",
+            ],
+            coldTopics: [
+              { topic: 'Eagle Ridge 1800', context: 'Discussed call 1, dropped decisively call 2. Do not resurface.' },
+              { topic: 'Wraparound porch', context: 'Lauren mentioned once on call 2, never again. May come back if prompted by a render.' },
+            ],
+            whoElse: [
+              { name: "Mike's Father", role: 'Architect (retired)', context: "Mentioned call 2 — has design opinions. Not on any call yet. Influence unclear.", action: "Consider inviting him to the next call. Ignoring him is a risk." },
+              { name: 'Their current builder', role: 'GC, Summit County', context: "Already engaged. Source of the 8–12 week permit figure. Not a GE partner.", action: "Offer the GE Summit County builder intro as a value-add, not a replacement." },
+            ],
+          },
+          talkingPoints: [
+            { point: "Lead with the mudroom floor plan — open with it if design has a draft.", why: "This was Lauren's must-have. Delivering it is the highest-visibility proof we listened." },
+            { point: "Walk Mike through hand hewn pricing as a line item — the actual number, not a range.", why: "This is the explicit thing Mike asked for on call 3. Precision is the highest-leverage move on this call." },
+            { point: "If the hickory cabinet render is ready, show it to Lauren.", why: "She asked for it on call 3. Delivering it is a small wow moment that keeps her energy high." },
+            { point: "Ask about financing — gently, after the design conversation is going well.", why: "Most likely stall point. Mike went quiet on it last time, so approach after rapport is warm." },
+            { point: "Before ending, propose locking in a Thursday session with the design team.", why: "Mission success condition: a specific next step on the calendar, not a vague 'talk soon'." },
+          ],
+          questions: [
+            { q: "Mike — now that you've had a chance to look at the pricing sheet, what questions do you have?", purpose: "Opens the pricing conversation on his terms. Signals we sent it and we're ready to discuss." },
+            { q: "Any update on the financing side — are you still expecting something from the bank?", purpose: "Surfaces the most likely stall without pressure." },
+            { q: "Has Mike's dad had a chance to weigh in on the design at all?", purpose: "Acknowledges the stakeholder, surfaces influence level, creates an opening to involve him." },
+            { q: "What would need to be true for you to feel ready to move forward?", purpose: "Forces the prospect to name their own remaining blockers." },
+          ],
+        },
+      },
+    ];
+
+    // ── TASKS DATA ───────────────────────────────────────────────────────
+    const TASKS = {
+      t1: { id:'t1', title:'Send Lofted Log floor plan options to Lauren',           assigned:'Lukas Brenner',  status:'done',    due:'2026-01-23', callId:'call1', priority:'high'   },
+      t2: { id:'t2', title:'Send SA-211F design agreement to the Thompsons',        assigned:'Lukas Brenner',  status:'done',    due:'2026-02-25', callId:'call2', priority:'high'   },
+      t3: { id:'t3', title:'Send ballpark worksheet — Lofted Log 2184 base',        assigned:'Lukas Brenner',  status:'done',    due:'2026-02-25', callId:'call2', priority:'medium' },
+      t4: { id:'t4', title:'Send post-call email — hand hewn pricing + builder intro', assigned:'Lukas Brenner', status:'pending', due:'2026-03-10', callId:'call3', priority:'high',   emailRef:'call3' },
+      t5: { id:'t5', title:'Intro Thompsons to Summit County builder partner',       assigned:'Lukas Brenner',  status:'pending', due:'2026-03-11', callId:'call3', priority:'high'   },
+      t6: { id:'t6', title:'Generate modified floor plan — mudroom off back entry',  assigned:'Design Team',    status:'open',    due:'2026-03-13', callId:'call3', priority:'medium' },
+      t7: { id:'t7', title:'Follow up on financing pre-approval status',             assigned:'Lukas Brenner',  status:'open',    due:'2026-03-17', callId:'call3', priority:'medium' },
+    };
+
+    // date string → call
+    const CALL_DATE_MAP = {};
+    CALLS.forEach(c => { CALL_DATE_MAP[c.date] = c; });
+
+    // "today" for the mockup
+    const TODAY_STR = '2026-03-30';
+    const TODAY = { y: 2026, m: 2, d: 30 }; // month is 0-indexed
+
+    // ── CALENDAR ────────────────────────────────────────────────────────
+    const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const DAY_HEADERS = ['S','M','T','W','T','F','S'];
+
+    let calYear = 2026, calMonth = 2; // start on March 2026
+
+    function renderCalendar() {
+      const firstDow = new Date(calYear, calMonth, 1).getDay();
+      const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+      let html = `
+        <!-- nav row -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding: 4px 2px 6px;">
+          <button onclick="calNav(-1)"
+            style="width:22px;height:22px;border:none;background:none;cursor:pointer;color:#6b7280;font-size:15px;line-height:1;border-radius:4px;"
+            onmouseenter="this.style.background='#f3f4f6'" onmouseleave="this.style.background='none'"
+          >‹</button>
+          <span style="font-size:12px; font-weight:600; color:#374151;">${MONTH_NAMES[calMonth]} ${calYear}</span>
+          <button onclick="calNav(1)"
+            style="width:22px;height:22px;border:none;background:none;cursor:pointer;color:#6b7280;font-size:15px;line-height:1;border-radius:4px;"
+            onmouseenter="this.style.background='#f3f4f6'" onmouseleave="this.style.background='none'"
+          >›</button>
+        </div>
+        <!-- day headers -->
+        <div class="cal-grid">
+          ${DAY_HEADERS.map(d => `<div class="cal-day-header">${d}</div>`).join('')}
+        </div>
+        <!-- day cells -->
+        <div class="cal-grid">
+      `;
+
+      // leading empty cells
+      for (let i = 0; i < firstDow; i++) html += '<div></div>';
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const ds = `${calYear}-${String(calMonth + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const call = CALL_DATE_MAP[ds];
+        const isToday = ds === TODAY_STR;
+        const isUpcoming = call?.status === 'upcoming';
+        const dotColor = isUpcoming ? '#10b981' : '#3b82f6';
+
+        let cls = 'cal-day';
+        if (isToday) cls += ' is-today';
+        else if (call) cls += ' has-call';
+
+        const onclick = call ? `openTab('${call.id}','${call.label}','call')` : '';
+
+        html += `
+          <div class="${cls}" ${onclick ? `onclick="${onclick}"` : ''}>
+            ${d}
+            ${call ? `<span class="cal-dot" style="background:${isToday ? 'white' : dotColor};"></span>` : ''}
+          </div>
+        `;
+      }
+
+      html += '</div>'; // close cal-grid
+      document.getElementById('calendar-mount').innerHTML = html;
+    }
+
+    function calNav(dir) {
+      calMonth += dir;
+      if (calMonth > 11) { calMonth = 0; calYear++; }
+      if (calMonth < 0)  { calMonth = 11; calYear--; }
+      renderCalendar();
+    }
+
+    // ── TIMELINE ────────────────────────────────────────────────────────
+    function renderTimeline() {
+      const sorted = [...CALLS].sort((a, b) => b.date.localeCompare(a.date));
+
+      const html = sorted.map((call, i) => {
+        const isUpcoming = call.status === 'upcoming';
+        const isLast     = i === sorted.length - 1;
+
+        // check for pending tasks on this call
+        const pendingCount = call.taskIds
+          ? call.taskIds.filter(tid => TASKS[tid]?.status === 'pending').length
+          : 0;
+        const hasPending = pendingCount > 0;
+
+        const dotBg = isUpcoming ? '#10b981' : hasPending ? '#f59e0b' : '#9ca3af';
+        const labelColor = hasPending ? '#92400e' : '';
+
+        return `
+          <div class="tl-entry">
+            ${!isLast ? '<div class="tl-line"></div>' : ''}
+            <div class="tl-dot" style="background: ${dotBg};"></div>
+            <div class="tl-label" style="${labelColor ? `color:${labelColor};` : ''}"
+                 onclick="openTab('${call.id}','${call.label}','call')">
+              ${call.label}
+              ${isUpcoming ? '<span style="font-size:11px; color:#10b981; font-style:italic;"> (upcoming)</span>' : ''}
+              ${hasPending ? `<span style="font-size:10px; background:#fef9c3; color:#92400e; border:1px solid #fde68a; border-radius:10px; padding:0px 6px; margin-left:5px; font-weight:500;">${pendingCount} pending</span>` : ''}
+            </div>
+            <div class="tl-meta">${call.short}</div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('timeline-mount').innerHTML =
+        `<div style="max-height:290px; overflow-y:auto; padding-right:4px;">${html}</div>`;
+    }
+
+    // ── FORMS DATA ──────────────────────────────────────────────────────
+    const FORMS = {
+      sa211f: {
+        id: 'sa211f',
+        label: 'SA-211F — Design Agreement',
+        status: 'signed_and_paid',
+        statusLabel: 'Signed & paid',
+        statusStyle: 'background:#dcfce7;color:#15803d;',
+        signed: '2026-03-01',
+        deposit: '$2,500',
+        signatories: ['Lauren Thompson', 'Mike Thompson'],
+        basePlan: 'Lofted Log 2184',
+        rep: 'Lukas Brenner',
+      },
+      idq: {
+        id: 'idq',
+        label: 'IDQ — Interior Design Questionnaire',
+        status: 'complete',
+        statusLabel: 'Complete',
+        statusStyle: 'background:#dcfce7;color:#15803d;',
+        submitted: '2026-03-05',
+        fields: [
+          { label: 'Kitchen style',      value: 'Rustic farmhouse',
+            history: [{ value: 'Rustic farmhouse', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true }] },
+          { label: 'Cabinets',           value: 'Hickory',
+            history: [{ value: 'Hickory', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true }] },
+          { label: 'Countertops',        value: 'Butcher block or leathered granite',
+            history: [{ value: 'Butcher block or leathered granite', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true }] },
+          { label: 'Flooring',           value: 'Wide plank white oak',
+            history: [{ value: 'Wide plank white oak', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true }] },
+          { label: 'Primary bath',       value: 'Spa feel, natural stone',
+            history: [{ value: 'Spa feel, natural stone', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true }] },
+          { label: 'Log finish',         value: 'Hand hewn',
+            history: [
+              { value: 'Hand hewn', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: 'confirmed by both Lauren and Mike', current: true },
+              { value: 'Hand hewn (Lauren preference)', date: 'Feb 24', author: 'AI extraction', source: 'call2', sourceLabel: 'Feb 24 call', reason: null, current: false },
+            ]},
+          { label: 'Interior log walls', value: 'Yes',
+            history: [{ value: 'Yes', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true }] },
+          { label: 'Ceiling',            value: 'Open loft with exposed beams',
+            history: [{ value: 'Open loft with exposed beams', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true }] },
+          { label: 'Fireplace',          value: 'Yes — stone surround, wood burning',
+            history: [{ value: 'Yes — stone surround, wood burning', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true }] },
+          { label: 'Mudroom',            value: 'Required off back entry — ski gear + outdoor storage',
+            history: [
+              { value: 'Required off back entry — ski gear + outdoor storage', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true },
+              { value: 'Mudroom — back entry, Colorado winters', date: 'Jan 22', author: 'AI extraction', source: 'call1', sourceLabel: 'Jan 22 call', reason: null, current: false },
+            ]},
+          { label: 'Master closet',      value: 'Walk-in',
+            history: [{ value: 'Walk-in', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true }] },
+          { label: 'Aesthetic',          value: 'Barndominium-inspired + traditional log',
+            history: [{ value: 'Barndominium-inspired + traditional log', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true }] },
+          { label: 'Additional notes',   value: 'Lauren drives aesthetic, Mike needs functional/cost clarity on everything.',
+            history: [{ value: 'Lauren drives aesthetic, Mike needs functional/cost clarity on everything.', date: 'Mar 5', author: 'Lauren Thompson', source: 'idq', sourceLabel: 'IDQ submission', reason: null, current: true }] },
+        ],
+      },
+      sa211d: {
+        id: 'sa211d',
+        label: 'SA-211D — Project Specification',
+        status: 'in_progress',
+        statusLabel: 'In progress',
+        statusStyle: 'background:#fef9c3;color:#92400e;',
+        filled: [
+          { label: 'Base plan', value: 'Lofted Log 2184', history: [
+            { value: 'Lofted Log 2184', date: 'Feb 24', author: 'AI extraction', source: 'call2', sourceLabel: 'Feb 24 call', reason: 'confirmed on call', current: true },
+            { value: 'Lofted Log or Eagle Ridge — undecided', date: 'Jan 22', author: 'AI extraction', source: 'call1', sourceLabel: 'Jan 22 call', reason: null, current: false },
+          ]},
+          { label: 'Log finish', value: 'Hand hewn', history: [
+            { value: 'Hand hewn', date: 'Feb 24', author: 'AI extraction', source: 'call2', sourceLabel: 'Feb 24 call', reason: 'confirmed on call', current: true },
+            { value: null, date: 'Jan 22', author: 'AI extraction', source: 'call1', sourceLabel: 'Jan 22 call', reason: 'not yet discussed', current: false },
+          ]},
+          { label: 'Modifications', value: 'Mudroom off back entry (confirmed)', history: [
+            { value: 'Mudroom off back entry (confirmed)', date: 'Feb 24', author: 'AI extraction', source: 'call2', sourceLabel: 'Feb 24 call', reason: null, current: true },
+            { value: 'Mudroom mentioned — not yet confirmed', date: 'Jan 22', author: 'AI extraction', source: 'call1', sourceLabel: 'Jan 22 call', reason: null, current: false },
+          ]},
+          { label: 'Kitchen cabinets', value: 'Hickory', history: [
+            { value: 'Hickory', date: 'Mar 5', author: 'AI extraction', source: 'idq', sourceLabel: 'IDQ', reason: null, current: true },
+          ]},
+          { label: 'Countertops', value: 'Butcher block or leathered granite', history: [
+            { value: 'Butcher block or leathered granite', date: 'Mar 5', author: 'AI extraction', source: 'idq', sourceLabel: 'IDQ', reason: null, current: true },
+          ]},
+          { label: 'Flooring', value: 'Wide plank white oak', history: [
+            { value: 'Wide plank white oak', date: 'Mar 5', author: 'AI extraction', source: 'idq', sourceLabel: 'IDQ', reason: null, current: true },
+          ]},
+          { label: 'Fireplace', value: 'Stone surround, wood burning', history: [
+            { value: 'Stone surround, wood burning', date: 'Mar 5', author: 'AI extraction', source: 'idq', sourceLabel: 'IDQ', reason: null, current: true },
+          ]},
+          { label: 'Build location', value: 'Summit County, CO', history: [
+            { value: 'Summit County, CO', date: 'Jan 22', author: 'AI extraction', source: 'call1', sourceLabel: 'Jan 22 call', reason: null, current: true },
+          ]},
+          { label: 'Lot survey', value: 'Pending — not yet complete', history: [
+            { value: 'Pending — not yet complete', date: 'Mar 10', author: 'AI extraction', source: 'call3', sourceLabel: 'Mar 10 call', reason: null, current: true },
+            { value: 'In progress — timing uncertain', date: 'Feb 24', author: 'AI extraction', source: 'call2', sourceLabel: 'Feb 24 call', reason: null, current: false },
+            { value: 'Not started — lot recently purchased', date: 'Jan 22', author: 'AI extraction', source: 'call1', sourceLabel: 'Jan 22 call', reason: null, current: false },
+          ]},
+          { label: 'Estimated total', value: '$285,000', history: [
+            { value: '$285,000', date: 'Mar 10', author: 'Lukas Brenner', source: 'call3', sourceLabel: 'Mar 10 call', reason: null, current: true },
+            { value: '$260,000', date: 'Feb 24', author: 'AI extraction', source: 'call2', sourceLabel: 'Feb 24 call', reason: 'ballpark estimate', current: false },
+            { value: null, date: 'Jan 22', author: 'AI extraction', source: 'call1', sourceLabel: 'Jan 22 call', reason: 'not yet captured', current: false },
+          ]},
+        ],
+        pending: [
+          'Square footage — main floor',
+          'Square footage — loft',
+          'Square footage — mudroom addition',
+          'Foundation type',
+          'Roof pitch',
+          'Log species + diameter',
+          'Window package',
+          'Door package',
+          'HVAC type',
+          'Electrical panel size',
+          'Plumbing fixture selections',
+          'Engineering stamp required?',
+          'Permit status',
+        ],
+      },
+      ballpark: {
+        id: 'ballpark',
+        label: 'Ballpark Worksheet',
+        status: 'complete',
+        statusLabel: 'Complete',
+        statusStyle: 'background:#dcfce7;color:#15803d;',
+        sent: '2026-02-25',
+        fields: [
+          { label: 'Base plan',            value: 'Lofted Log 2184',    note: null,
+            history: [{ value: 'Lofted Log 2184', date: 'Feb 24', author: 'Lukas Brenner', source: 'call2', sourceLabel: 'Feb 24 call', reason: null, current: true }] },
+          { label: 'Base price',           value: '$238,000',           note: null,
+            history: [{ value: '$238,000', date: 'Feb 24', author: 'Lukas Brenner', source: 'call2', sourceLabel: 'Feb 24 call', reason: null, current: true }] },
+          { label: 'Mudroom addition',     value: '~$18,000',           note: 'Back entry, ski gear storage',
+            history: [{ value: '~$18,000', date: 'Feb 24', author: 'Lukas Brenner', source: 'call2', sourceLabel: 'Feb 24 call', reason: null, current: true }] },
+          { label: 'Hand hewn finish',     value: 'TBD',                note: 'Pricing sheet requested — est. $22K–$26K',
+            history: [{ value: 'TBD — pricing sheet requested', date: 'Feb 24', author: 'Lukas Brenner', source: 'call2', sourceLabel: 'Feb 24 call', reason: null, current: true }] },
+          { label: 'Site delivery',        value: '~$12,000',           note: 'Summit County — may shift pending lot survey',
+            history: [{ value: '~$12,000', date: 'Feb 24', author: 'Lukas Brenner', source: 'call2', sourceLabel: 'Feb 24 call', reason: 'estimate — pending lot survey', current: true }] },
+          { label: 'Total estimate (low)', value: '$268,000',           note: null,
+            history: [{ value: '$268,000', date: 'Feb 24', author: 'Lukas Brenner', source: 'call2', sourceLabel: 'Feb 24 call', reason: null, current: true }] },
+          { label: 'Total estimate (high)', value: '$295,000',          note: 'Assumes mid-range hand hewn diameter',
+            history: [
+              { value: '$295,000', date: 'Mar 10', author: 'Lukas Brenner', source: 'call3', sourceLabel: 'Mar 10 call', reason: 'revised up after mudroom confirmation', current: true },
+              { value: '$285,000', date: 'Feb 24', author: 'Lukas Brenner', source: 'call2', sourceLabel: 'Feb 24 call', reason: null, current: false },
+            ] },
+        ],
+      },
+    };
+
+    // ── PROJECT DATA ─────────────────────────────────────────────────────
+    const PROJECT = {
+      name:     'Thompson — Lofted Log 2184',
+      stage:    'proposal',
+      value:    285000,
+      rep:      'Lukas Brenner',
+      location: 'Summit County, CO',
+      source:   'Inbound — YouTube',
+      created:  '2026-01-22',
+      blockers: [
+        'Financing pre-approval not yet confirmed',
+        'Lot survey still pending',
+      ],
+      history: {
+        stage: [
+          { value: 'proposal', date: 'Mar 1', author: 'AI extraction', source: 'sa211f', sourceLabel: 'SA-211F signed', reason: 'design agreement signed + deposit paid', current: true },
+          { value: 'discovery', date: 'Feb 24', author: 'AI extraction', source: 'call2', sourceLabel: 'Feb 24 call', reason: null, current: false },
+          { value: 'lead', date: 'Jan 22', author: 'AI extraction', source: 'call1', sourceLabel: 'Jan 22 call', reason: 'initial contact', current: false },
+        ],
+        value: [
+          { value: '$285,000', date: 'Mar 10', author: 'Lukas Brenner', source: 'call3', sourceLabel: 'Mar 10 call', reason: null, current: true },
+          { value: '$260,000', date: 'Feb 24', author: 'AI extraction', source: 'call2', sourceLabel: 'Feb 24 call', reason: 'ballpark estimate', current: false },
+          { value: null, date: 'Jan 22', author: 'AI extraction', source: 'call1', sourceLabel: 'Jan 22 call', reason: 'not yet estimated', current: false },
+        ],
+      },
+    };
+
+    // ── FLOOR PLAN VERSION SNAPSHOTS ────────────────────────────────────
+    // Each entry is a full snapshot of floor plan state at that point in time.
+    // Newest first — index 0 is always current.
+    const FLOORPLAN_VERSIONS = [
+      {
+        id: 'call3',
+        label: 'Mar 10 call',
+        date: 'Mar 10, 2026',
+        author: 'AI extraction',
+        current: true,
+        fields: [
+          { label: 'Base plan',       value: 'Lofted Log 2184' },
+          { label: 'Sq footage',      value: '2,184 sq ft' },
+          { label: 'Log finish',      value: 'Hand hewn' },
+          { label: 'Modifications',   value: 'Mudroom off back entry (confirmed)' },
+          { label: 'Flooring',        value: 'Wide plank white oak' },
+          { label: 'Fireplace',       value: 'Stone surround, wood burning' },
+          { label: 'Build location',  value: 'Summit County, CO' },
+          { label: 'Lot survey',      value: 'Pending — not yet complete' },
+          { label: 'Style notes',     value: 'Rustic farmhouse + traditional log. Lauren drives aesthetic, Mike needs cost clarity on everything.' },
+        ],
+        notes: [
+          'Mike joined for the first time — civil engineer, needs exact numbers not ranges',
+          'Mudroom confirmed as a must-have modification; design team has it in progress',
+          'Hand hewn finish still TBD — pricing sheet expected back this week',
+          'Lot survey still pending, affects site delivery estimate',
+          'Follow up on financing pre-approval — Mike said they\'re working on it',
+        ],
+      },
+      {
+        id: 'call2',
+        label: 'Feb 24 call',
+        date: 'Feb 24, 2026',
+        author: 'AI extraction',
+        current: false,
+        fields: [
+          { label: 'Base plan',       value: 'Lofted Log 2184' },
+          { label: 'Sq footage',      value: '2,184 sq ft' },
+          { label: 'Log finish',      value: 'Hand hewn' },
+          { label: 'Modifications',   value: 'Mudroom off back entry (discussed, not confirmed)' },
+          { label: 'Flooring',        value: null },
+          { label: 'Fireplace',       value: null },
+          { label: 'Build location',  value: 'Summit County, CO' },
+          { label: 'Lot survey',      value: 'In progress — timing uncertain' },
+          { label: 'Style notes',     value: 'Rustic farmhouse + traditional log.' },
+        ],
+        notes: [
+          'Lofted Log 2184 confirmed as base plan — Lauren decided between calls',
+          'Mudroom off back entry discussed but not yet locked in',
+          'Mike\'s father (retired architect) mentioned as potential design influencer',
+          'Ballpark reviewed — ~$260K base before add-ons',
+          'SA-211F design agreement sent for review',
+        ],
+      },
+      {
+        id: 'call1',
+        label: 'Jan 22 call',
+        date: 'Jan 22, 2026',
+        author: 'AI extraction',
+        current: false,
+        fields: [
+          { label: 'Base plan',       value: 'Lofted Log (candidate — not confirmed)' },
+          { label: 'Sq footage',      value: null },
+          { label: 'Log finish',      value: null },
+          { label: 'Modifications',   value: null },
+          { label: 'Flooring',        value: null },
+          { label: 'Fireplace',       value: null },
+          { label: 'Build location',  value: 'Summit County, CO' },
+          { label: 'Lot survey',      value: 'Not started — lot recently purchased' },
+          { label: 'Style notes',     value: 'Rustic farmhouse vibe. Loft feel important to Lauren.' },
+        ],
+        notes: [
+          'First call — Lauren reached out via website after YouTube log home tour',
+          'Lofted Log identified as a strong candidate but not yet decided',
+          'Mike (husband) owns financial decisions, was not on this call',
+          'No financing in place yet',
+          'Send floor plan PDF options and rough ballpark for Lauren to share with Mike',
+        ],
+      },
+    ];
+
+    // which version is being previewed (null = current)
+    let floorplanPreviewId = null;
+
+    // ── PERSON VERSION SNAPSHOTS ─────────────────────────────────────────
+    // Keyed by person id. Each array is newest-first snapshots.
+    const PERSON_VERSIONS = {
+      sarah: [
+        {
+          id: 'call5',
+          label: 'Mar 25 call',
+          date: 'Mar 25, 2026',
+          author: 'AI extraction',
+          current: true,
+          fields: [
+            { label: 'Role',            value: 'Champion' },
+            { label: 'Sentiment',       value: 'Highly engaged — excited, financing confirmed, ready to move' },
+            { label: 'Key preferences', value: 'Cedar flooring (confirmed after samples), hand hewn finish, hickory cabinets, mudroom off back entry' },
+            { label: 'Decision style',  value: 'Drives all aesthetic decisions. Defers to Mike on cost. Will not move forward without his sign-off.' },
+            { label: 'Responds to',     value: 'Renderings, visual assets, concrete progress (e.g. receiving the mudroom floor plan)' },
+          ],
+          notes: [
+            'Switched flooring preference from white oak to cedar after seeing samples in person',
+            'Financing pre-approval confirmed — $310K approved',
+            'Mudroom floor plan is the last thing she\'s waiting on before feeling ready to move forward',
+            'Drives all aesthetic decisions; Mike defers to her on finishes',
+            'Responds immediately to visual deliverables — renders, samples, floor plan drafts',
+            'Found Golden Eagle via YouTube log home tour; emotionally invested in this build',
+          ],
+        },
+        {
+          id: 'call3',
+          label: 'Mar 10 call',
+          date: 'Mar 10, 2026',
+          author: 'AI extraction',
+          current: false,
+          fields: [
+            { label: 'Role',            value: 'Champion' },
+            { label: 'Sentiment',       value: 'Warm and excited — still the driving force, Mike joining didn\'t change her energy' },
+            { label: 'Key preferences', value: 'Hand hewn finish, hickory cabinets, mudroom off back entry, loft openness' },
+            { label: 'Decision style',  value: 'Drives aesthetic decisions. Mike handles cost and logistics.' },
+            { label: 'Responds to',     value: 'Renderings, visual assets' },
+          ],
+          notes: [
+            'Primary point of contact throughout — highly engaged',
+            'Asked for kitchen render with hickory cabinets on this call',
+            'Mudroom is non-negotiable — confirmed again on this call',
+            'Mike joined for the first time; Lauren remained warm and engaged throughout',
+            'Financing pre-approval expected "end of next week" — not yet confirmed',
+            'Found Golden Eagle via YouTube log home tour; emotionally invested in this build',
+          ],
+        },
+        {
+          id: 'call2',
+          label: 'Feb 24 call',
+          date: 'Feb 24, 2026',
+          author: 'AI extraction',
+          current: false,
+          fields: [
+            { label: 'Role',            value: 'Champion' },
+            { label: 'Sentiment',       value: 'Decided and excited — came in having already chosen the 2184 between calls' },
+            { label: 'Key preferences', value: 'Lofted Log 2184, hand hewn finish, mudroom off back entry' },
+            { label: 'Decision style',  value: 'Makes aesthetic calls independently. Will loop in Mike before signing anything.' },
+            { label: 'Responds to',     value: 'Visual assets' },
+          ],
+          notes: [
+            'Decided on Lofted Log 2184 between calls — came in fully committed',
+            'Mudroom off back entry is a must-have (ski gear, Colorado winters)',
+            'Mentioned Mike\'s father — retired architect, may have design opinions',
+            'Agreed to review SA-211F design agreement with Mike',
+            'Won\'t sign anything without Mike — but she drives the decisions',
+          ],
+        },
+        {
+          id: 'call1',
+          label: 'Jan 22 call',
+          date: 'Jan 22, 2026',
+          author: 'AI extraction',
+          current: false,
+          fields: [
+            { label: 'Role',            value: 'Champion (initial contact)' },
+            { label: 'Sentiment',       value: 'Exploratory — warm, engaged, clearly been researching for a while' },
+            { label: 'Key preferences', value: 'Loft feel, rustic farmhouse aesthetic — Lofted Log a strong candidate' },
+            { label: 'Decision style',  value: 'Will loop in Mike for financial decisions once concrete numbers are available' },
+            { label: 'Responds to',     value: null },
+          ],
+          notes: [
+            'Inbound via YouTube — watched Lofted Log walkthrough multiple times',
+            'First call — very little known beyond initial preferences',
+            'Mike not on the call; owns financial decisions',
+            'No financing in place yet',
+            'Lot in Summit County recently purchased, survey not yet started',
+          ],
+        },
+      ],
+    };
+
+    // person version panel state
+    const personVerPanelOpen = {};
+    const personPreviewId    = {};
+
+    // ── PEOPLE DATA ─────────────────────────────────────────────────────
+    const PEOPLE = {
+      sarah: {
+        id: 'sarah', name: 'Lauren Thompson', role: 'Champion',
+        profession: 'Interior Designer (freelance)',
+        location: 'Denver, CO',
+        email: 'sarah.thompson@gmail.com',
+        relationships: [
+          { id: 'mike', name: 'Mike Thompson', desc: "Lauren's husband" },
+        ],
+        callIds: ['call1', 'call2', 'call3'],
+        notes: 'Drives all aesthetic decisions. Found Golden Eagle via YouTube log home tour. Highly engaged — primary point of contact throughout. Responds well to visual assets and renderings.',
+      },
+      mike: {
+        id: 'mike', name: 'Mike Thompson', role: 'Qualifier',
+        profession: 'Civil Engineer — Summit Engineering Group',
+        location: 'Denver, CO',
+        email: 'mike.thompson@gmail.com',
+        relationships: [
+          { id: 'sarah',  name: 'Lauren Thompson', desc: "Mike's wife"              },
+          { id: 'father', name: "Mike's Father",  desc: "Mike's father (architect)" },
+        ],
+        callIds: ['call3'],
+        notes: 'Owns all cost and logistics decisions. Joined for the first time on call 3. Needs precise numbers — reacts poorly to ranges. Civil engineering background means he will push on permit timelines and structural details.',
+      },
+      father: {
+        id: 'father', name: "Mike's Father", role: 'Influencer',
+        profession: 'Architect (retired, 35-year career)',
+        location: 'Madison, WI',
+        email: null,
+        relationships: [
+          { id: 'mike', name: 'Mike Thompson', desc: "Father's son" },
+        ],
+        callIds: [],
+        notes: "Mentioned by Mike on call 2. Has not been on any calls yet. May influence design decisions once plans are further along. His architecture background means he may scrutinize structural and aesthetic choices.",
+      },
+    };
+
+    // role → badge colors
+    const ROLE_BADGE = {
+      Champion:  'background:#dcfce7; color:#15803d;',
+      Qualifier: 'background:#dbeafe; color:#1d4ed8;',
+      Influencer:'background:#f3e8ff; color:#7e22ce;',
+    };
+
+    // track which content sections are collapsed, keyed by unique id
+    const contentCollapsed = {};
+
+    function toggleContentSec(bodyId, chevronId) {
+      const body = document.getElementById(bodyId);
+      const chev = document.getElementById(chevronId);
+      if (!body) return;
+      const hidden = body.style.display === 'none';
+      body.style.display = hidden ? '' : 'none';
+      if (chev) chev.textContent = hidden ? '∧' : '∨';
+    }
+
+    // ── PEOPLE VIEW ─────────────────────────────────────────────────────
+    function personVerField(pid, label) {
+      const versions = PERSON_VERSIONS[pid];
+      if (!versions) return null;
+      const activeIdx = personPreviewId[pid]
+        ? versions.findIndex(v => v.id === personPreviewId[pid])
+        : 0;
+      const activeVer = versions[activeIdx];
+      const prevVer   = versions[activeIdx + 1] || null;
+      const isHistorical = !activeVer.current;
+      const cur = activeVer.fields.find(f => f.label === label);
+      const curVal = cur ? cur.value : null;
+      if (!isHistorical || !prevVer) {
+        return curVal ? `<span class="field-value">${curVal}</span>` : `<span style="color:#d1d5db;font-style:italic;">—</span>`;
+      }
+      const old = prevVer.fields.find(f => f.label === label);
+      const oldVal = old ? old.value : null;
+      if (curVal === oldVal) {
+        return curVal ? `<span class="field-value">${curVal}</span>` : `<span style="color:#d1d5db;font-style:italic;">—</span>`;
+      }
+      let html = '';
+      if (oldVal) html += `<span class="fp-del">${oldVal}</span> `;
+      if (curVal) html += `<span class="fp-add">${curVal}</span>`;
+      if (!curVal) html += `<span style="color:#d1d5db;font-style:italic;">—</span>`;
+      return html;
+    }
+
+    function personVerNotes(pid) {
+      const versions = PERSON_VERSIONS[pid];
+      if (!versions) return null;
+      const activeIdx = personPreviewId[pid]
+        ? versions.findIndex(v => v.id === personPreviewId[pid])
+        : 0;
+      const activeVer = versions[activeIdx];
+      const prevVer   = versions[activeIdx + 1] || null;
+      const isHistorical = !activeVer.current;
+      const curNotes = activeVer.notes;
+      if (!isHistorical || !prevVer) {
+        return curNotes.map(n => `<li style="padding:2px 0; font-size:13px; color:#374151;">${n}</li>`).join('');
+      }
+      const oldSet = new Set(prevVer.notes);
+      const curSet = new Set(curNotes);
+      const removed = prevVer.notes.filter(n => !curSet.has(n));
+      let items = curNotes.map(n =>
+        oldSet.has(n)
+          ? `<li style="padding:2px 0; font-size:13px; color:#374151;">${n}</li>`
+          : `<li style="padding:2px 0; font-size:13px;"><span class="fp-add">${n}</span></li>`
+      );
+      removed.forEach(n => {
+        items.push(`<li style="padding:2px 0; font-size:13px;"><span class="fp-del">${n}</span></li>`);
+      });
+      return items.join('');
+    }
+
+    function renderPerson(pid) {
+      const p = PEOPLE[pid];
+      if (!p) return;
+
+      const initials    = p.name.split(' ').map(n => n[0]).join('');
+      const badgeStyle  = ROLE_BADGE[p.role] || 'background:#f3f4f6; color:#374151;';
+      const personCalls = CALLS.filter(c => p.callIds.includes(c.id) && c.status === 'past');
+      const versions    = PERSON_VERSIONS[pid];
+
+      // version panel state
+      const verOpen  = personVerPanelOpen[pid] || false;
+      const activeIdx = versions
+        ? (personPreviewId[pid] ? versions.findIndex(v => v.id === personPreviewId[pid]) : 0)
+        : 0;
+      const activeVer     = versions ? versions[activeIdx] : null;
+      const isHistorical  = activeVer ? !activeVer.current : false;
+      const prevVer       = versions ? (versions[activeIdx + 1] || null) : null;
+
+      const verPanelHtml = versions && verOpen ? `
+        <div class="gdocs-ver-panel">
+          <div class="gdocs-ver-header">
+            Version history
+            <span class="gdocs-ver-close" onclick="personToggleVer('${pid}')">×</span>
+          </div>
+          <div class="gdocs-ver-list">
+            ${versions.map(v => `
+              <div class="gdocs-ver-item${activeVer && activeVer.id === v.id ? ' selected' : ''}"
+                   onclick="personSelectVer('${pid}','${v.id}')">
+                <div class="gdocs-ver-label">${v.label}</div>
+                <div class="gdocs-ver-meta">${v.date} · ${v.author}</div>
+                ${v.current ? `<div class="gdocs-ver-current-pill">Current version</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : '';
+
+      const bannerHtml = isHistorical ? `
+        <div class="gdocs-ver-banner">
+          <span>Showing changes made in <strong>${activeVer.label}</strong>${prevVer ? ` <span style="font-weight:400;color:#3b82f6;">vs ${prevVer.label}</span>` : ''}</span>
+          <button class="gdocs-restore-btn" onclick="personSelectVer('${pid}', null)">Back to current</button>
+        </div>
+      ` : '';
+
+      // intel fields (only shown if person has versions)
+      const intelHtml = versions ? `
+        <div style="margin-bottom:24px;">
+          <div class="content-sec-header" onclick="toggleContentSec('intel-${pid}','ch-intel-${pid}')">
+            <span id="ch-intel-${pid}" style="font-size:12px; color:#9ca3af;">∧</span>
+            Intelligence
+          </div>
+          <div id="intel-${pid}">
+            ${['Role','Sentiment','Key preferences','Decision style','Responds to'].map(label => `
+              <div class="field-row">
+                <span class="field-label">${label}:</span>
+                <div>${personVerField(pid, label)}</div>
+              </div>
+            `).join('')}
+            <div style="margin-top:14px;">
+              <div style="font-size:11px; font-weight:600; color:#6b7280; letter-spacing:.05em; text-transform:uppercase; margin-bottom:6px;">Notes</div>
+              <ul style="list-style:disc; padding-left:18px; line-height:1.7;">
+                ${personVerNotes(pid)}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ` : `
+        <div style="margin-bottom:24px;">
+          <div class="content-sec-header" onclick="toggleContentSec('notes-${pid}','ch-notes-${pid}')">
+            <span id="ch-notes-${pid}" style="font-size:12px; color:#9ca3af;">∧</span>
+            Notes
+          </div>
+          <div id="notes-${pid}" style="font-size:13px; color:#4b5563; line-height:1.6;" contenteditable="true">${p.notes}</div>
+        </div>
+      `;
+
+      document.getElementById('content').innerHTML = `
+        <div style="display:flex; flex-direction:column; height:100%;">
+          ${bannerHtml}
+          <div style="display:flex; flex:1; min-height:0;">
+            <div style="flex:1; overflow-y:auto; padding:20px 24px;">
+
+              <!-- Header row -->
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+                <div style="display:flex; align-items:center; gap:14px;">
+                  <div class="avatar">${initials}</div>
+                  <div>
+                    <h1 style="font-size:24px; font-weight:400; margin-bottom:5px;">${p.name}</h1>
+                    <span class="badge" style="${badgeStyle}">${p.role}</span>
+                  </div>
+                </div>
+                ${versions ? `
+                  <button onclick="personToggleVer('${pid}')"
+                    style="display:flex; align-items:center; gap:5px; font-size:12px;
+                      color:${verOpen ? '#1d4ed8' : '#6b7280'};
+                      background:${verOpen ? '#eff6ff' : 'white'};
+                      border:1px solid ${verOpen ? '#93c5fd' : '#e5e7eb'};
+                      border-radius:6px; padding:5px 10px; cursor:pointer; white-space:nowrap; flex-shrink:0;">
+                    <span style="font-size:13px;">◷</span> Version history
+                  </button>
+                ` : ''}
+              </div>
+
+              <!-- Personal Details -->
+              <div style="margin-bottom:24px;">
+                <div class="content-sec-header" onclick="toggleContentSec('pd-${pid}','ch-pd-${pid}')">
+                  <span id="ch-pd-${pid}" style="font-size:12px; color:#9ca3af;">∧</span>
+                  Personal Details
+                </div>
+                <div id="pd-${pid}">
+                  <div class="field-row">
+                    <span class="field-label">Profession:</span>
+                    <span class="field-value" contenteditable="true">${p.profession}</span>
+                  </div>
+                  <div class="field-row">
+                    <span class="field-label">Location:</span>
+                    <span class="field-value" contenteditable="true">${p.location}</span>
+                  </div>
+                  <div class="field-row">
+                    <span class="field-label">Email:</span>
+                    <span class="field-value" contenteditable="true">${p.email ?? '—'}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Relationships -->
+              <div style="margin-bottom:24px;">
+                <div class="content-sec-header" onclick="toggleContentSec('rel-${pid}','ch-rel-${pid}')">
+                  <span id="ch-rel-${pid}" style="font-size:12px; color:#9ca3af;">∧</span>
+                  Relationships
+                </div>
+                <div id="rel-${pid}">
+                  ${p.relationships.map(r => `
+                    <div style="display:flex; align-items:baseline; gap:8px; margin-bottom:8px;">
+                      <span style="color:#9ca3af;">•</span>
+                      <span class="linked" onclick="openTab('${r.id}','${r.name}','person')">${r.name}</span>
+                      <span style="font-size:12px; color:#9ca3af;">— ${r.desc}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              ${intelHtml}
+
+              <!-- Call history -->
+              <div style="margin-bottom:24px;">
+                <div class="content-sec-header" onclick="toggleContentSec('ch-${pid}','ch-ch-${pid}')">
+                  <span id="ch-ch-${pid}" style="font-size:12px; color:#9ca3af;">∧</span>
+                  Call History
+                </div>
+                <div id="ch-${pid}">
+                  ${personCalls.length === 0
+                    ? `<div style="font-size:13px; color:#9ca3af; font-style:italic;">Has not been on a call yet.</div>`
+                    : personCalls.map(c => `
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                          <span style="color:#d1d5db; font-size:10px;">●</span>
+                          <span class="linked" style="font-size:13px;"
+                            onclick="openTab('${c.id}','${c.label}','call')">${c.label}</span>
+                          <span style="font-size:11px; color:#9ca3af;">${c.short}</span>
+                        </div>
+                      `).join('')
+                  }
+                </div>
+              </div>
+
+            </div><!-- scroll div -->
+            ${verPanelHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function personToggleVer(pid) {
+      personVerPanelOpen[pid] = !personVerPanelOpen[pid];
+      renderPerson(pid);
+    }
+    function personSelectVer(pid, verId) {
+      personPreviewId[pid] = verId;
+      renderPerson(pid);
+    }
+
+    // ── FLAG PILL COLORS ────────────────────────────────────────────────
+    const FLAG_COLORS = {
+      'source':            'background:#f3f4f6; color:#6b7280;',
+      'floor plan':        'background:#e0e7ff; color:#3730a3;',
+      'design request':    'background:#f3e8ff; color:#6d28d9;',
+      'price sensitive':   'background:#fff7ed; color:#c2410c;',
+      'buying signal':     'background:#dcfce7; color:#15803d;',
+      'logistics':         'background:#dbeafe; color:#1d4ed8;',
+      'qualifier mention': 'background:#f3f4f6; color:#6b7280;',
+      'influencer mention':'background:#fce7f3; color:#9d174d;',
+      'location':          'background:#f3f4f6; color:#6b7280;',
+      'pricing':           'background:#fef9c3; color:#854d0e;',
+    };
+
+    // ── TASK CARD HELPER ────────────────────────────────────────────────
+    function taskCard(task, showCallLink) {
+      const isPending = task.status === 'pending';
+      const isDone    = task.status === 'done';
+      const priorityColor = { high: '#ef4444', medium: '#f59e0b', low: '#9ca3af' }[task.priority] || '#9ca3af';
+      const call = CALLS.find(c => c.id === task.callId);
+
+      let checkClass = 'task-check';
+      let checkContent = '';
+      if (isDone)    { checkClass += ' done';    checkContent = '✓'; }
+      if (isPending) { checkClass += ' pending'; checkContent = '·'; }
+
+      return `
+        <div class="task-card${isPending ? ' is-pending' : ''}">
+          <div class="${checkClass}">${checkContent}</div>
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:3px;">
+              <span style="font-size:13px; ${isDone ? 'text-decoration:line-through; color:#9ca3af;' : ''}">
+                ${task.title}
+              </span>
+              ${isPending ? '<span class="status-pending">pending</span>' : ''}
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+              <span style="font-size:11px; color:#9ca3af;">${task.assigned}</span>
+              <span style="font-size:11px; color:#9ca3af;">Due ${task.due}</span>
+              ${showCallLink && call ? `
+                <span style="font-size:11px; color:#3b82f6; cursor:pointer;"
+                  onclick="openTab('${call.id}','${call.label}','call')">
+                  ← ${call.label}
+                </span>` : ''}
+              ${task.emailRef ? `
+                <span style="font-size:11px; color:#d97706; cursor:pointer; font-weight:500;"
+                  onclick="openTab('${task.emailRef}','${call ? call.label : task.emailRef}','call'); setTimeout(()=>{ const el=document.getElementById('em-${task.emailRef}'); if(el) el.scrollIntoView({behavior:'smooth'}); },120);">
+                  → view email draft
+                </span>` : ''}
+            </div>
+          </div>
+          <div class="priority-dot" style="background:${priorityColor};"></div>
+        </div>
+      `;
+    }
+
+    // ── PROPOSED EDITS STATE ─────────────────────────────────────────────
+    // keyed by `${callId}__${editId}` → 'pending' | 'accepted' | 'skipped'
+    const peState = {};
+
+    function peKey(callId, editId) { return `${callId}__${editId}`; }
+
+    function peUpdateBlock(callId, editId, state) {
+      const block = document.getElementById(`pe-block-${callId}-${editId}`);
+      if (!block) return;
+      block.className = `pe-file-block pe-file-${state}`;
+      const header = block.querySelector('.pe-file-header');
+      header.querySelectorAll('button, .pe-status-badge').forEach(el => el.remove());
+      const badge = document.createElement('span');
+      badge.className = 'pe-status-badge';
+      if (state === 'accepted') {
+        badge.style.cssText = 'font-size:11px; color:#16a34a; font-weight:500;';
+        badge.textContent = '✓ Applied';
+      } else {
+        badge.style.cssText = 'font-size:11px; color:#9ca3af;';
+        badge.textContent = 'Skipped';
+      }
+      header.appendChild(badge);
+      const body = block.querySelector('.pe-edits-body');
+      if (body) body.style.display = 'none';
+    }
+
+    function peUpdateModuleHeader(callId) {
+      const call = CALLS.find(c => c.id === callId);
+      if (!call?.proposedEdits) return;
+      const pending  = call.proposedEdits.filter(pe => (peState[peKey(callId, pe.id)] || 'pending') === 'pending');
+      const accepted = call.proposedEdits.filter(pe => peState[peKey(callId, pe.id)] === 'accepted');
+      const skipped  = call.proposedEdits.filter(pe => peState[peKey(callId, pe.id)] === 'skipped');
+      const allDone  = pending.length === 0;
+      const totalChanges = call.proposedEdits.reduce((n, pe) => n + pe.edits.length, 0);
+
+      const meta = document.getElementById(`pe-sec-meta-${callId}`);
+      if (meta) meta.textContent = allDone
+        ? `${accepted.length} applied · ${skipped.length} skipped`
+        : `${call.proposedEdits.length} files · ${totalChanges} changes`;
+
+      const secBadge = document.getElementById(`pe-sec-badge-${callId}`);
+      if (secBadge) secBadge.style.display = allDone ? 'none' : '';
+
+      const mh = document.getElementById(`pe-module-header-${callId}`);
+      if (mh) mh.innerHTML = `
+        <div style="font-size:12px; color:#6b7280;">
+          AI extracted changes from this call
+          ${!allDone ? `· <strong style="color:#111827;">${pending.length} pending</strong>` : ''}
+        </div>
+        <div style="display:flex; gap:6px;">
+          ${!allDone ? `<button class="pe-accept-all" onclick="peAcceptAll('${callId}')">Accept all</button>` : ''}
+          ${!allDone ? `<button class="pe-dismiss-all" onclick="peDismissAll('${callId}')">Dismiss all</button>` : ''}
+        </div>
+      `;
+    }
+
+    function peAccept(callId, editId) {
+      peState[peKey(callId, editId)] = 'accepted';
+      peUpdateBlock(callId, editId, 'accepted');
+      peUpdateModuleHeader(callId);
+    }
+    function peSkip(callId, editId) {
+      peState[peKey(callId, editId)] = 'skipped';
+      peUpdateBlock(callId, editId, 'skipped');
+      peUpdateModuleHeader(callId);
+    }
+    function peAcceptAll(callId) {
+      const call = CALLS.find(c => c.id === callId);
+      if (!call?.proposedEdits) return;
+      call.proposedEdits.forEach(pe => {
+        if ((peState[peKey(callId, pe.id)] || 'pending') === 'pending') {
+          peState[peKey(callId, pe.id)] = 'accepted';
+          peUpdateBlock(callId, pe.id, 'accepted');
+        }
+      });
+      peUpdateModuleHeader(callId);
+    }
+    function peDismissAll(callId) {
+      const call = CALLS.find(c => c.id === callId);
+      if (!call?.proposedEdits) return;
+      call.proposedEdits.forEach(pe => {
+        if ((peState[peKey(callId, pe.id)] || 'pending') === 'pending') {
+          peState[peKey(callId, pe.id)] = 'skipped';
+          peUpdateBlock(callId, pe.id, 'skipped');
+        }
+      });
+      peUpdateModuleHeader(callId);
+    }
+
+    function renderProposedEdits(call) {
+      if (!call.proposedEdits?.length) return '';
+      const pending  = call.proposedEdits.filter(pe => (peState[peKey(call.id, pe.id)] || 'pending') === 'pending');
+      const accepted = call.proposedEdits.filter(pe => peState[peKey(call.id, pe.id)] === 'accepted');
+      const skipped  = call.proposedEdits.filter(pe => peState[peKey(call.id, pe.id)] === 'skipped');
+      const totalChanges = call.proposedEdits.reduce((n, pe) => n + pe.edits.length, 0);
+      const allDone = pending.length === 0;
+
+      const fileBlocksHtml = call.proposedEdits.map(pe => {
+        const state = peState[peKey(call.id, pe.id)] || 'pending';
+        const editsHtml = pe.edits.map(e => `
+          <span class="pe-edit-label">${e.label}</span>
+          ${e.from ? `<span class="pe-edit-removed">- ${e.from}</span>` : ''}
+          ${e.to   ? `<span class="pe-edit-added">+ ${e.to}</span>`    : ''}
+        `).join('');
+
+        const acceptedBadge = `<span style="font-size:11px; color:#16a34a; font-weight:500;">✓ Applied</span>`;
+        const skippedBadge  = `<span style="font-size:11px; color:#9ca3af;">Skipped</span>`;
+
+        return `
+          <div class="pe-file-block pe-file-${state}" id="pe-block-${call.id}-${pe.id}">
+            <div class="pe-file-header">
+              <span style="font-size:14px;">${pe.icon}</span>
+              <span class="pe-file-name">${pe.file}</span>
+              ${state === 'accepted' ? acceptedBadge
+              : state === 'skipped'  ? skippedBadge
+              : `<button class="pe-accept-btn" onclick="peAccept('${call.id}','${pe.id}')">Accept</button>
+                 <button class="pe-skip-btn"   onclick="peSkip('${call.id}','${pe.id}')">Skip</button>`}
+            </div>
+            <div class="pe-edits-body">${state === 'pending' ? editsHtml : ''}</div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div style="margin-bottom:24px;">
+          <div class="content-sec-header" onclick="toggleContentSec('pe-${call.id}','ch-pe-${call.id}')">
+            <span id="ch-pe-${call.id}" style="font-size:12px;color:#9ca3af;">∧</span>
+            Proposed Edits
+            <span id="pe-sec-meta-${call.id}" style="font-size:11px; color:#9ca3af; font-weight:400;">${allDone
+                ? `${accepted.length} applied · ${skipped.length} skipped`
+                : `${call.proposedEdits.length} files · ${totalChanges} changes`}</span>
+            <span id="pe-sec-badge-${call.id}" class="badge" style="background:#eff6ff;color:#1d4ed8;margin-left:4px;font-size:10px;${allDone ? 'display:none;' : ''}">Needs review</span>
+          </div>
+          <div id="pe-${call.id}">
+            <div class="pe-module">
+              <div class="pe-module-header" id="pe-module-header-${call.id}">
+                <div style="font-size:12px; color:#6b7280;">
+                  AI extracted changes from this call
+                  ${!allDone ? `· <strong style="color:#111827;">${pending.length} pending</strong>` : ''}
+                </div>
+                <div style="display:flex; gap:6px;">
+                  ${!allDone ? `<button class="pe-accept-all" onclick="peAcceptAll('${call.id}')">Accept all</button>` : ''}
+                  ${!allDone ? `<button class="pe-dismiss-all" onclick="peDismissAll('${call.id}')">Dismiss all</button>` : ''}
+                </div>
+              </div>
+              ${fileBlocksHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── CALL VIEW ────────────────────────────────────────────────────────
+    function renderCall(callId) {
+      const call = CALLS.find(c => c.id === callId);
+      if (!call) return;
+
+      const isUpcoming = call.status === 'upcoming';
+      if (isUpcoming && call.brief) { renderPreCallBrief(call); return; }
+      const callTasks  = call.taskIds.map(id => TASKS[id]).filter(Boolean);
+
+      document.getElementById('content').innerHTML = `
+        <div style="max-width:640px;">
+
+          <!-- Header -->
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
+            <h1 style="font-size:24px; font-weight:400;">${call.label}</h1>
+            <span class="badge" style="${isUpcoming ? 'background:#dcfce7;color:#15803d;' : 'background:#f3f4f6;color:#6b7280;'}">
+              ${isUpcoming ? 'Upcoming' : 'Past'}
+            </span>
+          </div>
+          <div style="font-size:12px; color:#9ca3af; margin-bottom:28px;">
+            ${call.platform}${call.duration ? ` · ${call.duration} min` : ''} · ${call.participants.join(', ')}
+          </div>
+
+          <!-- Summary -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('sum-${callId}','ch-sum-${callId}')">
+              <span id="ch-sum-${callId}" style="font-size:12px;color:#9ca3af;">∧</span>
+              Summary
+            </div>
+            <div id="sum-${callId}"
+              style="font-size:13px; color:#4b5563; line-height:1.6;"
+              contenteditable="true"
+            >${call.summary}</div>
+          </div>
+
+          ${call.moments.length > 0 ? `
+          <!-- Key Moments -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('mom-${callId}','ch-mom-${callId}')">
+              <span id="ch-mom-${callId}" style="font-size:12px;color:#9ca3af;">∧</span>
+              Key Moments
+            </div>
+            <div id="mom-${callId}" style="display:flex; flex-direction:column; gap:14px;">
+              ${call.moments.map(m => {
+                const pillStyle = FLAG_COLORS[m.flag] || 'background:#f3f4f6;color:#6b7280;';
+                return `
+                  <div style="display:flex; gap:12px; align-items:flex-start;">
+                    <span style="font-family:monospace; font-size:11px; color:#9ca3af; width:38px; flex-shrink:0; padding-top:2px;">${m.time}</span>
+                    <div>
+                      <div style="display:flex; align-items:center; gap:7px; margin-bottom:4px;">
+                        <span style="font-size:12px; font-weight:600;">${m.speaker}</span>
+                        <span class="flag-pill" style="${pillStyle}">${m.flag}</span>
+                      </div>
+                      <div style="font-size:13px; color:#4b5563; font-style:italic; line-height:1.5;">
+                        "${m.quote}"
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>` : ''}
+
+
+          ${callTasks.length > 0 ? `
+          <!-- Tasks -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('tsk-${callId}','ch-tsk-${callId}')">
+              <span id="ch-tsk-${callId}" style="font-size:12px;color:#9ca3af;">∧</span>
+              Tasks Created
+            </div>
+            <div id="tsk-${callId}">
+              ${callTasks.map(t => taskCard(t, false)).join('')}
+            </div>
+          </div>` : ''}
+
+          ${call.transcript?.length ? `
+          <!-- Transcript -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('tr-${callId}','ch-tr-${callId}')">
+              <span id="ch-tr-${callId}" style="font-size:12px;color:#9ca3af;">∨</span>
+              Transcript
+              <span style="font-size:11px;color:#9ca3af;font-weight:400;">${call.transcript.length} segments</span>
+            </div>
+            <div id="tr-${callId}" style="display:none;">
+              <div class="form-section-box">
+                <div class="form-section-box-body" style="padding:0 14px;">
+                  ${call.transcript.map((line, i) => `
+                    <div style="display:flex;gap:12px;padding:8px 0;border-bottom:${i < call.transcript.length-1 ? '1px solid #f3f4f6' : 'none'};">
+                      <span style="font-family:monospace;font-size:11px;color:#9ca3af;width:38px;flex-shrink:0;padding-top:2px;">${line.time}</span>
+                      <div style="flex:1;">
+                        <span style="font-size:12px;font-weight:600;color:${line.speaker === 'Lukas' ? '#1d4ed8' : '#111827'};">${line.speaker}</span>
+                        <span style="font-size:13px;color:#374151;margin-left:8px;">${line.text}</span>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          </div>` : ''}
+
+          ${call.emailDraft ? `
+          <!-- Email draft -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('em-${callId}','ch-em-${callId}')">
+              <span id="ch-em-${callId}" style="font-size:12px;color:#9ca3af;">∧</span>
+              Post-Call Email Draft
+              <span class="badge" style="background:#fef9c3;color:#854d0e;margin-left:4px;">Ready to send</span>
+            </div>
+            <div id="em-${callId}" class="email-shell">
+              <div class="email-header">
+                <div style="flex:1; font-size:12px; color:#6b7280;">
+                  To: <span style="color:#374151; font-weight:500;">${call.participants.join(', ')}</span>
+                  &nbsp;|&nbsp;
+                  Subject: <span style="color:#374151; font-weight:500;">${call.emailDraft.subject}</span>
+                </div>
+                <button style="background:#1d4ed8;color:white;font-size:11px;padding:4px 12px;border-radius:5px;border:none;cursor:pointer;font-weight:500;flex-shrink:0;">
+                  Send
+                </button>
+              </div>
+              <div class="email-body" contenteditable="true">${call.emailDraft.body}</div>
+            </div>
+          </div>` : ''}
+
+          ${renderProposedEdits(call)}
+
+        </div>
+      `;
+    }
+
+    // ── OVERVIEW ────────────────────────────────────────────────────────
+    function renderOverview() {
+      const allTasks   = Object.values(TASKS);
+      const pending    = allTasks.filter(t => t.status === 'pending');
+      const open       = allTasks.filter(t => t.status === 'open');
+      const done       = allTasks.filter(t => t.status === 'done');
+      const nextCall   = CALLS.find(c => c.status === 'upcoming');
+
+      // Build stat cards with optional inline history panels
+      function statCardHtml(label, value, color, bg, histKey) {
+        const hist = histKey && PROJECT.history && PROJECT.history[histKey];
+        const hid  = `hist-overview-${histKey || label.replace(/\s/g,'')}`;
+        const sourceType = (src) => src.startsWith('call') ? 'call' : 'form';
+        return `
+          <div style="border:1px solid #e5e7eb; border-radius:8px; padding:12px 14px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+              <div style="font-size:11px; color:#9ca3af;">${label}</div>
+              ${hist ? `<span class="history-icon" style="font-size:10px;" onclick="toggleHistory('${hid}')" title="Version history">◷</span>` : ''}
+            </div>
+            <div style="font-size:14px; font-weight:500; color:${color};
+              ${bg ? `background:${bg}; display:inline-block; padding:1px 8px; border-radius:10px; font-size:12px;` : ''}
+              " contenteditable="true">${value}</div>
+            ${hist ? `
+              <div id="${hid}" style="display:none; margin-top:8px;">
+                <div class="field-history-panel" style="margin:0;">
+                  <div class="field-history-header">${label} — History</div>
+                  ${hist.map(h => `
+                    <div class="field-history-row">
+                      ${h.value ? `<span class="history-value">${h.value}</span>` : `<span class="history-null">not captured</span>`}
+                      ${h.current ? `<span class="history-current-badge">CURRENT</span>` : ''}
+                      <span class="history-meta">${h.date} · ${h.author}</span>
+                      ${h.reason ? `<span class="history-meta">· ${h.reason}</span>` : ''}
+                      <span class="history-source" onclick="openTab('${h.source}','${h.sourceLabel}','${sourceType(h.source)}')">${h.sourceLabel}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>` : ''}
+          </div>`;
+      }
+
+      document.getElementById('content').innerHTML = `
+        <div style="max-width:660px;">
+
+          <!-- Title -->
+          <h1 style="font-size:24px; font-weight:400; margin-bottom:22px;">${PROJECT.name}</h1>
+
+          <!-- Stat grid -->
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:28px;">
+            ${statCardHtml('Deal Value', `$${PROJECT.value.toLocaleString()}`, '#111827', null, 'value')}
+            ${statCardHtml('Stage', PROJECT.stage, '#1d4ed8', '#dbeafe', 'stage')}
+            ${statCardHtml('Rep', PROJECT.rep, '#111827', null, null)}
+            ${statCardHtml('Source', PROJECT.source, '#111827', null, null)}
+            ${statCardHtml('Location', PROJECT.location, '#111827', null, null)}
+            ${statCardHtml('First contact', PROJECT.created, '#111827', null, null)}
+          </div>
+
+          <!-- Task summary strip -->
+          <div style="display:flex; gap:10px; margin-bottom:28px;">
+            ${pending.length ? `
+              <div style="flex:1; background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:12px 14px;">
+                <div style="font-size:11px; color:#92400e; margin-bottom:2px; font-weight:500;">Pending</div>
+                <div style="font-size:22px; font-weight:600; color:#b45309;">${pending.length}</div>
+              </div>` : ''}
+            <div style="flex:1; background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:12px 14px;">
+              <div style="font-size:11px; color:#6b7280; margin-bottom:2px; font-weight:500;">Open</div>
+              <div style="font-size:22px; font-weight:600; color:#374151;">${open.length}</div>
+            </div>
+            <div style="flex:1; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:12px 14px;">
+              <div style="font-size:11px; color:#15803d; margin-bottom:2px; font-weight:500;">Done</div>
+              <div style="font-size:22px; font-weight:600; color:#16a34a;">${done.length}</div>
+            </div>
+            ${nextCall ? `
+              <div style="flex:2; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:12px 14px; cursor:pointer;"
+                   onclick="openTab('${nextCall.id}','${nextCall.label}','call')">
+                <div style="font-size:11px; color:#15803d; margin-bottom:2px; font-weight:500;">Next call</div>
+                <div style="font-size:14px; font-weight:600; color:#15803d;">${nextCall.label}</div>
+                <div style="font-size:11px; color:#6b7280; margin-top:1px;">${nextCall.short}</div>
+              </div>` : ''}
+          </div>
+
+          <!-- Blockers -->
+          <div style="margin-bottom:28px;">
+            <div class="content-sec-header" onclick="toggleContentSec('bl-ov','ch-bl-ov')">
+              <span id="ch-bl-ov" style="font-size:12px;color:#9ca3af;">∧</span>
+              Blockers
+            </div>
+            <div id="bl-ov">
+              ${PROJECT.blockers.map(b => `
+                <div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:8px;">
+                  <span style="color:#f87171; margin-top:1px;">⚠</span>
+                  <span style="font-size:13px; color:#374151;" contenteditable="true">${b}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Pending tasks (if any) -->
+          ${pending.length ? `
+          <div style="margin-bottom:28px;">
+            <div class="content-sec-header" onclick="toggleContentSec('pend-ov','ch-pend-ov')">
+              <span id="ch-pend-ov" style="font-size:12px;color:#9ca3af;">∧</span>
+              Pending Tasks
+            </div>
+            <div id="pend-ov">
+              ${pending.map(t => taskCard(t, true)).join('')}
+            </div>
+          </div>` : ''}
+
+          <!-- Open tasks -->
+          ${open.length ? `
+          <div style="margin-bottom:28px;">
+            <div class="content-sec-header" onclick="toggleContentSec('open-ov','ch-open-ov')">
+              <span id="ch-open-ov" style="font-size:12px;color:#9ca3af;">∧</span>
+              Open Tasks
+            </div>
+            <div id="open-ov">
+              ${open.map(t => taskCard(t, true)).join('')}
+            </div>
+          </div>` : ''}
+
+          <!-- People -->
+          <div>
+            <div class="content-sec-header" onclick="toggleContentSec('ppl-ov','ch-ppl-ov')">
+              <span id="ch-ppl-ov" style="font-size:12px;color:#9ca3af;">∧</span>
+              People
+            </div>
+            <div id="ppl-ov">
+              ${Object.values(PEOPLE).map(p => {
+                const badgeStyle = ROLE_BADGE[p.role] || '';
+                const initials   = p.name.split(' ').map(n => n[0]).join('');
+                return `
+                  <div style="display:flex; align-items:center; gap:10px; padding:8px; border-radius:8px; cursor:pointer; margin-bottom:4px;"
+                       onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background=''"
+                       onclick="openTab('${p.id}','${p.name}','person')">
+                    <div class="avatar" style="width:34px;height:34px;font-size:12px;">${initials}</div>
+                    <div>
+                      <div style="font-size:13px; font-weight:500; text-decoration:underline;">${p.name}</div>
+                      <span class="badge" style="${badgeStyle} font-size:10px;">${p.role}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+        </div>
+      `;
+    }
+
+    // ── TASKS MASTER VIEW ────────────────────────────────────────────────
+    function renderTasksView() {
+      const allTasks = Object.values(TASKS);
+      const pending  = allTasks.filter(t => t.status === 'pending');
+      const open     = allTasks.filter(t => t.status === 'open');
+      const done     = allTasks.filter(t => t.status === 'done');
+
+      function section(id, label, labelColor, tasks, startOpen = true) {
+        if (!tasks.length) return '';
+        return `
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('ts-${id}','ch-ts-${id}')">
+              <span id="ch-ts-${id}" style="font-size:12px;color:#9ca3af;">∧</span>
+              <span style="color:${labelColor};">${label}</span>
+              <span style="font-size:12px; color:#9ca3af; font-weight:400; margin-left:2px;">(${tasks.length})</span>
+            </div>
+            <div id="ts-${id}">
+              ${tasks.map(t => taskCard(t, true)).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      document.getElementById('content').innerHTML = `
+        <div style="max-width:640px;">
+          <h1 style="font-size:24px; font-weight:400; margin-bottom:24px;">Tasks</h1>
+          ${section('pending', 'Pending', '#b45309', pending)}
+          ${section('open',    'Open',    '#374151', open)}
+          ${section('done',    'Done',    '#9ca3af', done)}
+        </div>
+      `;
+    }
+
+    // ── PRE-CALL BRIEF ──────────────────────────────────────────────────
+    function renderPreCallBrief(call) {
+      const b = call.brief;
+      const riskColor = { medium: '#b45309', high: '#dc2626', low: '#15803d' };
+      const riskBg    = { medium: '#fffbeb', high: '#fef2f2', low: '#f0fdf4' };
+      const riskBorder= { medium: '#fde68a', high: '#fecaca', low: '#bbf7d0' };
+
+      function owedStatusStyle(s) {
+        if (s === 'pending')     return 'background:#fffbeb;color:#92400e;border:1px solid #fde68a;';
+        if (s === 'in_progress') return 'background:#dbeafe;color:#1d4ed8;border:1px solid #bfdbfe;';
+        return 'background:#f3f4f6;color:#6b7280;';
+      }
+
+      document.getElementById('content').innerHTML = `
+        <div style="max-width:640px;">
+
+          <!-- Header -->
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;">
+            <h1 style="font-size:24px;font-weight:400;">${call.label}</h1>
+            <span class="badge" style="background:#dcfce7;color:#15803d;">Upcoming</span>
+            <span style="font-size:12px;color:#9ca3af;margin-left:2px;">Pre-call brief</span>
+          </div>
+          <div style="font-size:12px;color:#9ca3af;margin-bottom:28px;">
+            ${call.platform} · ${call.participants.join(', ')}
+          </div>
+
+          <!-- Mission -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('miss','ch-miss')">
+              <span id="ch-miss" style="font-size:12px;color:#9ca3af;">∧</span>
+              Mission
+            </div>
+            <div id="miss" class="form-section-box">
+              <div class="form-section-box-body" style="padding:12px 14px;">
+                <div class="form-field-row" style="border-bottom:1px solid #f3f4f6;padding-bottom:10px;margin-bottom:10px;">
+                  <span class="form-field-label">Objective</span>
+                  <span class="form-field-value" contenteditable="true">${b.mission.objective}</span>
+                </div>
+                <div class="form-field-row" style="border-bottom:1px solid #f3f4f6;padding-bottom:10px;margin-bottom:10px;">
+                  <span class="form-field-label">Why this matters</span>
+                  <span class="form-field-value" style="color:#4b5563;" contenteditable="true">${b.mission.why}</span>
+                </div>
+                <div class="form-field-row" style="border:none;margin-bottom:0;">
+                  <span class="form-field-label">Success looks like</span>
+                  <span class="form-field-value" style="color:#15803d;" contenteditable="true">${b.mission.success}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Signals -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('sigs','ch-sigs')">
+              <span id="ch-sigs" style="font-size:12px;color:#9ca3af;">∧</span>
+              Recent Signals
+              <span style="font-size:11px;color:#9ca3af;font-weight:400;">last 72 hrs</span>
+            </div>
+            <div id="sigs" class="form-section-box">
+              <div class="form-section-box-body">
+                ${b.signals.map((s, i) => `
+                  <div class="form-field-row" style="${i === b.signals.length-1 ? 'border:none;' : ''}">
+                    <div style="min-width:180px;flex-shrink:0;">
+                      <div style="font-size:12px;color:#6b7280;">${s.date}</div>
+                      <span class="badge" style="background:#f3f4f6;color:#374151;margin-top:2px;">${s.type}</span>
+                    </div>
+                    <div>
+                      <div style="font-size:13px;color:#111827;">${s.detail}</div>
+                      <div style="font-size:12px;color:#6b7280;margin-top:2px;font-style:italic;">${s.significance}</div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Deal Health -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('dh','ch-dh')">
+              <span id="ch-dh" style="font-size:12px;color:#9ca3af;">∧</span>
+              Deal Health
+            </div>
+            <div id="dh">
+              <div style="font-size:13px;color:#4b5563;margin-bottom:10px;">${b.dealHealth.momentum}</div>
+              ${b.dealHealth.flags.map(f => `
+                <div style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border-radius:8px;margin-bottom:6px;
+                  background:${riskBg[f.severity]};border:1px solid ${riskBorder[f.severity]};">
+                  <span style="color:${riskColor[f.severity]};margin-top:1px;">⚠</span>
+                  <div>
+                    <div style="font-size:13px;font-weight:500;color:${riskColor[f.severity]};">${f.label}</div>
+                    <div style="font-size:12px;color:#4b5563;margin-top:2px;">${f.detail}</div>
+                    <div style="font-size:12px;color:#6b7280;margin-top:3px;font-style:italic;">→ ${f.action}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Open Items -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('oi','ch-oi')">
+              <span id="ch-oi" style="font-size:12px;color:#9ca3af;">∧</span>
+              Open Items
+            </div>
+            <div id="oi" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="form-section-box">
+                <div class="form-section-box-header" style="background:#f9fafb;">We owe them</div>
+                <div class="form-section-box-body" style="padding:8px 14px;">
+                  ${b.weOweThem.map(item => `
+                    <div style="padding:7px 0;border-bottom:1px solid #f3f4f6;display:flex;flex-direction:column;gap:3px;">
+                      <div style="font-size:13px;color:#111827;">${item.item}</div>
+                      <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:11px;color:#9ca3af;">${item.owner}</span>
+                        <span class="badge" style="${owedStatusStyle(item.status)};font-size:10px;">${item.status.replace('_',' ')}</span>
+                        <span style="font-size:11px;color:#9ca3af;">${item.due}</span>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              <div class="form-section-box">
+                <div class="form-section-box-header" style="background:#f9fafb;">They owe us</div>
+                <div class="form-section-box-body" style="padding:8px 14px;">
+                  ${b.theyOweUs.map(item => `
+                    <div style="padding:7px 0;border-bottom:1px solid #f3f4f6;display:flex;flex-direction:column;gap:3px;">
+                      <div style="font-size:13px;color:#111827;">${item.item}</div>
+                      <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:11px;color:#9ca3af;">${item.expected}</span>
+                        ${item.risk !== 'low' ? `<span class="badge" style="background:${riskBg[item.risk]};color:${riskColor[item.risk]};border:1px solid ${riskBorder[item.risk]};font-size:10px;">${item.risk} risk</span>` : ''}
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Their World -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('tw','ch-tw')">
+              <span id="ch-tw" style="font-size:12px;color:#9ca3af;">∧</span>
+              Their World
+            </div>
+            <div id="tw" style="display:flex;flex-direction:column;gap:12px;">
+
+              <!-- Rapport -->
+              <div class="form-section-box">
+                <div class="form-section-box-header" style="background:#f9fafb;">Rapport + character</div>
+                <div class="form-section-box-body" style="padding:8px 14px;">
+                  ${b.theirWorld.rapportNotes.map(n => `
+                    <div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid #f3f4f6;font-size:13px;color:#374151;">
+                      <span style="color:#d1d5db;flex-shrink:0;">•</span>${n}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- What lights them up -->
+              <div class="form-section-box">
+                <div class="form-section-box-header" style="background:#f9fafb;">What lights them up</div>
+                <div class="form-section-box-body">
+                  ${b.theirWorld.lightsThem.map((l, i) => `
+                    <div class="form-field-row" style="${i === b.theirWorld.lightsThem.length-1 ? 'border:none;' : ''}">
+                      <span class="form-field-label">${l.who}</span>
+                      <span class="form-field-value">${l.what}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- Landmines -->
+              <div class="form-section-box">
+                <div class="form-section-box-header" style="background:#fef2f2;color:#dc2626;">Landmines to avoid</div>
+                <div class="form-section-box-body" style="padding:8px 14px;">
+                  ${b.theirWorld.landmines.map(l => `
+                    <div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid #f3f4f6;font-size:13px;color:#374151;">
+                      <span style="color:#f87171;flex-shrink:0;margin-top:1px;">✕</span>${l}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- Topics that went cold -->
+              <div class="form-section-box">
+                <div class="form-section-box-header" style="background:#f9fafb;color:#9ca3af;">Topics that went cold</div>
+                <div class="form-section-box-body">
+                  ${b.theirWorld.coldTopics.map((t, i) => `
+                    <div class="form-field-row" style="${i === b.theirWorld.coldTopics.length-1 ? 'border:none;' : ''}">
+                      <span class="form-field-label" style="color:#9ca3af;">${t.topic}</span>
+                      <span class="form-field-value" style="color:#9ca3af;font-style:italic;">${t.context}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- Who else -->
+              <div class="form-section-box">
+                <div class="form-section-box-header" style="background:#f9fafb;">Who else is in their world</div>
+                <div class="form-section-box-body" style="padding:8px 14px;">
+                  ${b.theirWorld.whoElse.map(w => `
+                    <div style="padding:7px 0;border-bottom:1px solid #f3f4f6;">
+                      <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
+                        <span style="font-size:13px;font-weight:500;color:#111827;">${w.name}</span>
+                        <span class="badge" style="background:#f3f4f6;color:#6b7280;">${w.role}</span>
+                      </div>
+                      <div style="font-size:12px;color:#6b7280;">${w.context}</div>
+                      <div style="font-size:12px;color:#1d4ed8;margin-top:2px;">→ ${w.action}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Emotional Arc -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('arc','ch-arc')">
+              <span id="ch-arc" style="font-size:12px;color:#9ca3af;">∧</span>
+              Emotional Arc
+            </div>
+            <div id="arc" class="form-section-box">
+              <div class="form-section-box-body">
+                ${b.emotionalArc.map((a, i) => `
+                  <div class="form-field-row" style="${i === b.emotionalArc.length-1 ? 'border:none;' : ''}">
+                    <div style="min-width:180px;flex-shrink:0;">
+                      <div style="font-size:12px;color:#6b7280;">Call ${a.call} · ${a.date}</div>
+                      <div style="font-size:11px;color:#9ca3af;font-style:italic;margin-top:1px;">${a.milestone}</div>
+                    </div>
+                    <span class="form-field-value" style="color:#4b5563;">${a.tone}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Talking Points -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('tp','ch-tp')">
+              <span id="ch-tp" style="font-size:12px;color:#9ca3af;">∧</span>
+              Talking Points
+            </div>
+            <div id="tp" style="display:flex;flex-direction:column;gap:6px;">
+              ${b.talkingPoints.map((t, i) => `
+                <div style="display:flex;gap:12px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px;">
+                  <div style="width:20px;height:20px;border-radius:50%;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#6b7280;flex-shrink:0;margin-top:1px;">${i+1}</div>
+                  <div>
+                    <div style="font-size:13px;color:#111827;margin-bottom:3px;">${t.point}</div>
+                    <div style="font-size:12px;color:#9ca3af;font-style:italic;">${t.why}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Questions to Ask -->
+          <div style="margin-bottom:24px;">
+            <div class="content-sec-header" onclick="toggleContentSec('qa','ch-qa')">
+              <span id="ch-qa" style="font-size:12px;color:#9ca3af;">∧</span>
+              Questions to Ask
+            </div>
+            <div id="qa" style="display:flex;flex-direction:column;gap:6px;">
+              ${b.questions.map(q => `
+                <div style="padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px;">
+                  <div style="font-size:13px;color:#111827;margin-bottom:3px;">"${q.q}"</div>
+                  <div style="font-size:12px;color:#9ca3af;font-style:italic;">${q.purpose}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+        </div>
+      `;
+    }
+
+    // ── FORMS VIEW ──────────────────────────────────────────────────────
+    function renderForm(fid) {
+      const form = FORMS[fid];
+      if (!form) return;
+
+      let body = '';
+
+      if (fid === 'sa211f') {
+        body = `
+          <div class="form-section-box">
+            <div class="form-section-box-header" style="background:#f0fdf4; color:#15803d;">Agreement details</div>
+            <div class="form-section-box-body">
+              ${[
+                ['Signed',       form.signed,                null],
+                ['Deposit',      form.deposit + ' — paid',   null],
+                ['Signatories',  form.signatories.join(', '), null],
+                ['Base plan',    form.basePlan,               null],
+                ['Rep',          form.rep,                    null],
+              ].map(([l, v, n]) => `
+                <div class="form-field-row">
+                  <span class="form-field-label">${l}</span>
+                  <span class="form-field-value" contenteditable="true">${v}</span>
+                  ${n ? `<span class="form-field-note">${n}</span>` : ''}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <div style="font-size:12px;color:#9ca3af;margin-top:8px;">
+            Next step: SA-211D spec form opened after design kickoff.
+          </div>
+        `;
+      }
+
+      else if (fid === 'idq') {
+        body = `
+          <div style="font-size:12px;color:#9ca3af;margin-bottom:16px;">Submitted ${form.submitted} · feeds directly into SA-211D · click ◷ on any field to see history</div>
+          <div class="form-section-box">
+            <div class="form-section-box-header" style="background:#f9fafb;">Preferences</div>
+            <div class="form-section-box-body">
+              ${form.fields.map((f, i) => formFieldWithHistory(f, i, 'idq')).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      else if (fid === 'sa211d') {
+        body = `
+          <div style="font-size:12px;color:#9ca3af;margin-bottom:16px;">
+            Partially filled — basics captured from IDQ + calls. Click ◷ on any field to see version history. Formal engineering fields pending design kickoff.
+          </div>
+
+          <div class="form-section-box">
+            <div class="form-section-box-header" style="background:#f0fdf4;color:#15803d;">
+              ✓ Filled — ${form.filled.length} fields
+            </div>
+            <div class="form-section-box-body">
+              ${form.filled.map((f, i) => formFieldWithHistory(f, i, 'sa211d')).join('')}
+            </div>
+          </div>
+
+          <div class="form-section-box">
+            <div class="form-section-box-header" style="background:#fffbeb;color:#92400e;">
+              ○ Pending — ${form.pending.length} fields · design not started yet
+            </div>
+            <div class="form-section-box-body" style="padding:8px 14px;">
+              ${form.pending.map(f => `
+                <div class="form-pending-row">
+                  <span style="color:#d1d5db;font-style:normal;">○</span>
+                  ${f}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      else if (fid === 'ballpark') {
+        const tbd = form.fields.find(f => f.value === 'TBD');
+        body = `
+          <div style="font-size:12px;color:#9ca3af;margin-bottom:16px;">Sent ${form.sent} · not binding · hand hewn TBD pending pricing sheet · click ◷ to see history</div>
+          <div class="form-section-box">
+            <div class="form-section-box-header" style="background:#f9fafb;">Line items</div>
+            <div class="form-section-box-body">
+              ${form.fields.map((f, i) => {
+                const hid  = `hist-ballpark-${i}`;
+                const hist = f.history || [];
+                return `
+                  <div class="form-field-row">
+                    <span class="form-field-label">${f.label}</span>
+                    <span class="form-field-value" contenteditable="true"
+                      style="${f.value === 'TBD' ? 'color:#f59e0b;font-weight:500;' : ''}">
+                      ${f.value}
+                    </span>
+                    ${f.note ? `<span class="form-field-note">${f.note}</span>` : ''}
+                    ${hist.length ? `<span class="history-icon" onclick="toggleHistory('${hid}')" title="Version history">◷</span>` : ''}
+                  </div>
+                  ${historyPanel(f, hid)}`;
+              }).join('')}
+            </div>
+          </div>
+          ${tbd ? `
+            <div style="display:flex;align-items:center;gap:8px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e;">
+              <span>⚠</span>
+              Hand hewn pricing TBD — task pending with Lukas.
+              <span style="text-decoration:underline;cursor:pointer;margin-left:auto;"
+                onclick="openTab('call3','Mar 10, 2026','call')">View task →</span>
+            </div>` : ''}
+        `;
+      }
+
+      document.getElementById('content').innerHTML = `
+        <div style="max-width:620px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+            <h1 style="font-size:24px;font-weight:400;">${form.label}</h1>
+            <span class="badge" style="${form.statusStyle}">${form.statusLabel}</span>
+          </div>
+          <div style="margin-bottom:24px;">${body}</div>
+        </div>
+      `;
+    }
+
+    // ── VERSION HISTORY ──────────────────────────────────────────────────
+    function toggleHistory(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function historyPanel(field, hid) {
+      const hist = field.history || [];
+      if (!hist.length) return '';
+      const sourceType = (src) => src === 'idq' ? 'form' : src.startsWith('call') ? 'call' : 'form';
+      const sourceTab  = (src, lbl) => `openTab('${src}','${lbl}','${sourceType(src)}')`;
+      return `
+        <div id="${hid}" style="display:none; margin: -4px 0 8px 190px;">
+          <div class="field-history-panel">
+            <div class="field-history-header">${field.label} — History</div>
+            ${hist.map(h => `
+              <div class="field-history-row">
+                ${h.value ? `<span class="history-value">${h.value}</span>` : `<span class="history-null">not captured</span>`}
+                ${h.current ? `<span class="history-current-badge">CURRENT</span>` : ''}
+                <span class="history-meta">${h.date} · ${h.author}</span>
+                ${h.reason ? `<span class="history-meta">· ${h.reason}</span>` : ''}
+                <span class="history-source" onclick="${sourceTab(h.source, h.sourceLabel)}">${h.sourceLabel}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>`;
+    }
+
+    function formFieldWithHistory(f, idx, prefix) {
+      const hid  = `hist-${prefix}-${idx}`;
+      const hist = f.history || [];
+      return `
+        <div class="form-field-row">
+          <span class="form-field-label">${f.label}</span>
+          <span class="form-field-value" contenteditable="true">${f.value}</span>
+          ${f.note ? `<span class="form-field-note">${f.note}</span>` : ''}
+          ${hist.length ? `<span class="history-icon" onclick="toggleHistory('${hid}')" title="Version history">◷</span>` : ''}
+        </div>
+        ${historyPanel(f, hid)}`;
+    }
+
+    // ── NAV TREE DEFINITION ─────────────────────────────────────────────
+    const NAV_SECTIONS = [
+      {
+        id: 'project-details', label: 'Project details',
+        items: [
+          { id: 'overview',   label: 'Overview',    type: 'overview'   },
+          { id: 'tasks',      label: 'Tasks',       type: 'tasks'      },
+          { id: 'floorplan',  label: 'Floor plan',  type: 'floorplan'  },
+        ]
+      },
+      {
+        id: 'people', label: 'People',
+        items: [
+          { id: 'sarah',  label: 'Lauren Thompson', type: 'person' },
+          { id: 'mike',   label: 'Mike Thompson',  type: 'person' },
+          { id: 'father', label: "Mike's Father",  type: 'person' },
+        ]
+      },
+      {
+        id: 'forms', label: 'Forms',
+        items: [
+          { id: 'sa211f',   label: 'SA-211F — Design Agreement',   type: 'form' },
+          { id: 'idq',      label: 'IDQ',                          type: 'form' },
+          { id: 'sa211d',   label: 'SA-211D (in progress)',         type: 'form' },
+          { id: 'ballpark', label: 'Ballpark Worksheet',            type: 'form' },
+        ]
+      },
+    ];
+
+    // track which sections are collapsed
+    const navCollapsed = {};
+
+    function renderProjectFiles() {
+      const html = NAV_SECTIONS.map(sec => {
+        const isCollapsed = navCollapsed[sec.id];
+        const items = isCollapsed ? '' : sec.items.map(item => `
+          <div class="nav-item${item.id === activeTab ? ' active' : ''}"
+               onclick="openTab('${item.id}','${item.label}','${item.type}')">
+            ${item.label}
+          </div>
+        `).join('');
+
+        return `
+          <div style="margin-bottom: 2px;">
+            <div class="sec-header" onclick="toggleNavSection('${sec.id}')">
+              <span class="sec-chevron">${isCollapsed ? '▶' : '▼'}</span>
+              ${sec.label}
+            </div>
+            ${items}
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('project-files-mount').innerHTML = html;
+    }
+
+    function toggleNavSection(id) {
+      navCollapsed[id] = !navCollapsed[id];
+      renderProjectFiles();
+    }
+
+    // ── TABS ────────────────────────────────────────────────────────────
+    let tabs      = [];
+    let activeTab = null;
+
+    function openTab(id, label, type) {
+      if (!tabs.find(t => t.id === id)) tabs.push({ id, label, type });
+      activeTab = id;
+      renderAll();
+    }
+
+    function switchTab(id) {
+      activeTab = id;
+      renderAll();
+    }
+
+    function closeTab(id) {
+      tabs = tabs.filter(t => t.id !== id);
+      if (activeTab === id) {
+        activeTab = tabs.length ? tabs[tabs.length - 1].id : null;
+      }
+      renderAll();
+    }
+
+    function renderTabs() {
+      document.getElementById('tab-bar').innerHTML = tabs.map(tab => `
+        <div class="tab${tab.id === activeTab ? ' active' : ''}" onclick="switchTab('${tab.id}')">
+          ${tab.label}
+          <span class="tab-close" onclick="event.stopPropagation(); closeTab('${tab.id}')">×</span>
+        </div>
+      `).join('');
+    }
+
+    // ── CONTENT ROUTING ─────────────────────────────────────────────────
+    // Type → breadcrumb prefix map
+    const BREADCRUMB_PREFIX = {
+      overview:  'Project details',
+      tasks:     'Project details',
+      floorplan: 'Project details',
+      person:    'People',
+      call:      'Calls',
+      form:      'Forms',
+    };
+
+    // ── FLOOR PLAN VIEW ─────────────────────────────────────────────────
+    let floorplanVerPanelOpen = false;
+
+    function renderFloorplan() {
+      const content = document.getElementById('content');
+
+      const activeIdx = floorplanPreviewId
+        ? FLOORPLAN_VERSIONS.findIndex(v => v.id === floorplanPreviewId)
+        : 0;
+      const activeVer = FLOORPLAN_VERSIONS[activeIdx];
+      // "prev" here means the version just before (older than) the selected one
+      const prevVer = FLOORPLAN_VERSIONS[activeIdx + 1] || null;
+      const isHistorical = !activeVer.current;
+
+      // Returns inline HTML for a field value, showing diff vs prevVer if any
+      function diffFieldHtml(label) {
+        const cur = activeVer.fields.find(f => f.label === label);
+        const curVal = cur ? cur.value : null;
+
+        if (!isHistorical || !prevVer) {
+          return curVal
+            ? `<span class="fp-field-value">${curVal}</span>`
+            : `<span class="fp-field-null">—</span>`;
+        }
+        const old = prevVer.fields.find(f => f.label === label);
+        const oldVal = old ? old.value : null;
+        if (curVal === oldVal) {
+          return curVal
+            ? `<span class="fp-field-value">${curVal}</span>`
+            : `<span class="fp-field-null">—</span>`;
+        }
+        let html = '';
+        if (oldVal) html += `<span class="fp-del">${oldVal}</span> `;
+        if (curVal) html += `<span class="fp-add">${curVal}</span>`;
+        if (!curVal) html += `<span class="fp-field-null">—</span>`;
+        return html;
+      }
+
+      function diffNotesHtml() {
+        const curNotes = activeVer.notes;
+        if (!isHistorical || !prevVer) {
+          return curNotes.map(n =>
+            `<li style="padding:3px 0; font-size:13px; color:#374151;">${n}</li>`
+          ).join('');
+        }
+        const oldNotes = prevVer.notes;
+        const oldSet   = new Set(oldNotes);
+        const curSet   = new Set(curNotes);
+        const removed  = oldNotes.filter(n => !curSet.has(n));
+        let items = curNotes.map(n =>
+          oldSet.has(n)
+            ? `<li style="padding:3px 0; font-size:13px; color:#374151;">${n}</li>`
+            : `<li style="padding:3px 0; font-size:13px;"><span class="fp-add">${n}</span></li>`
+        );
+        removed.forEach(n => {
+          items.push(`<li style="padding:3px 0; font-size:13px;"><span class="fp-del">${n}</span></li>`);
+        });
+        return items.join('');
+      }
+
+      const fieldsHtml = activeVer.fields.map(f => `
+        <div class="fp-field-row">
+          <div class="fp-field-label">${f.label}</div>
+          <div>${diffFieldHtml(f.label)}</div>
+        </div>
+      `).join('');
+
+      const notesHtml = `
+        <div style="margin-top:20px;">
+          <div style="font-size:11px; font-weight:600; color:#6b7280; letter-spacing:.05em; text-transform:uppercase; margin-bottom:8px;">Notes</div>
+          <ul style="list-style:disc; padding-left:18px; line-height:1.7;">
+            ${diffNotesHtml()}
+          </ul>
+        </div>
+      `;
+
+      const verListHtml = FLOORPLAN_VERSIONS.map(v => `
+        <div class="gdocs-ver-item${activeVer.id === v.id ? ' selected' : ''}"
+             onclick="floorplanSelectVer('${v.id}')">
+          <div class="gdocs-ver-label">${v.label}</div>
+          <div class="gdocs-ver-meta">${v.date} · ${v.author}</div>
+          ${v.current ? `<div class="gdocs-ver-current-pill">Current version</div>` : ''}
+        </div>
+      `).join('');
+
+      const bannerHtml = isHistorical ? `
+        <div class="gdocs-ver-banner">
+          <span>Showing changes made in <strong>${activeVer.label}</strong>
+            ${prevVer ? `<span style="font-weight:400; color:#3b82f6;"> vs ${prevVer.label}</span>` : ''}</span>
+          <button class="gdocs-restore-btn" onclick="floorplanRestore()">Back to current</button>
+        </div>
+      ` : '';
+
+      const verPanelHtml = floorplanVerPanelOpen ? `
+        <div class="gdocs-ver-panel">
+          <div class="gdocs-ver-header">
+            Version history
+            <span class="gdocs-ver-close" onclick="floorplanToggleVerPanel()">×</span>
+          </div>
+          <div class="gdocs-ver-list">${verListHtml}</div>
+        </div>
+      ` : '';
+
+      content.innerHTML = `
+        <div style="display:flex; flex-direction:column; height:100%;">
+          ${bannerHtml}
+          <div style="display:flex; flex:1; min-height:0;">
+
+            <div style="flex:1; overflow-y:auto; padding:20px 24px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
+                <div>
+                  <div style="font-size:16px; font-weight:600; color:#111827;">Floor Plan</div>
+                  <div style="font-size:12px; color:#9ca3af; margin-top:2px;">
+                    ${isHistorical
+                      ? `Changes made in ${activeVer.label}${prevVer ? ` · compared to ${prevVer.label}` : ' · first version'}`
+                      : `Last updated ${FLOORPLAN_VERSIONS[0].date} · ${FLOORPLAN_VERSIONS[0].author}`}
+                  </div>
+                </div>
+                <button onclick="floorplanToggleVerPanel()"
+                  style="display:flex; align-items:center; gap:5px; font-size:12px;
+                    color:${floorplanVerPanelOpen ? '#1d4ed8' : '#6b7280'};
+                    background:${floorplanVerPanelOpen ? '#eff6ff' : 'white'};
+                    border:1px solid ${floorplanVerPanelOpen ? '#93c5fd' : '#e5e7eb'};
+                    border-radius:6px; padding:5px 10px; cursor:pointer;">
+                  <span style="font-size:13px;">◷</span> Version history
+                </button>
+              </div>
+
+              ${fieldsHtml}
+              ${notesHtml}
+            </div>
+
+            ${verPanelHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function floorplanToggleVerPanel() {
+      floorplanVerPanelOpen = !floorplanVerPanelOpen;
+      renderFloorplan();
+    }
+
+    function floorplanSelectVer(id) {
+      floorplanPreviewId = id;
+      renderFloorplan();
+    }
+
+    function floorplanRestore() {
+      floorplanPreviewId = null;
+      renderFloorplan();
+    }
+
+    function renderContent() {
+      const crumb = document.getElementById('breadcrumb');
+      const content = document.getElementById('content');
+
+      if (!activeTab) {
+        crumb.textContent = '—';
+        content.innerHTML = `<div style="color:#d1d5db; font-size:13px; margin-top:60px; text-align:center;">
+          Open a file from the left panel.
+        </div>`;
+        return;
+      }
+
+      const tab = tabs.find(t => t.id === activeTab);
+      if (!tab) return;
+
+      const prefix = BREADCRUMB_PREFIX[tab.type] || '';
+      crumb.innerHTML = prefix ? `${prefix} &rsaquo; ${tab.label}` : tab.label;
+
+      if (tab.type === 'person')    { renderPerson(tab.id);   return; }
+      if (tab.type === 'call')      { renderCall(tab.id);     return; }
+      if (tab.type === 'overview')  { renderOverview();       return; }
+      if (tab.type === 'tasks')     { renderTasksView();      return; }
+      if (tab.type === 'form')      { renderForm(tab.id);     return; }
+      if (tab.type === 'floorplan') { renderFloorplan();      return; }
+
+      content.innerHTML = `
+        <div style="color:#9ca3af; font-size:13px; margin-top:40px;">[ view coming ]</div>
+      `;
+    }
+
+    // ── AI CHAT ─────────────────────────────────────────────────────────
+    const aiMsgs = [
+      { role: 'ai', text: "Hi Ana — I'm loaded up on the Thompson project. What do you need?" }
+    ];
+
+    function renderAI() {
+      const el = document.getElementById('ai-messages');
+      el.innerHTML = aiMsgs.map(m => `
+        <div style="display:flex; justify-content:${m.role === 'user' ? 'flex-end' : 'flex-start'};">
+          <div class="${m.role === 'user' ? 'bubble-user' : 'bubble-ai'}">${m.text}</div>
+        </div>
+      `).join('');
+      el.scrollTop = el.scrollHeight;
+    }
+
+    function sendAI() {
+      const inp = document.getElementById('ai-input');
+      const msg = inp.value.trim();
+      if (!msg) return;
+      aiMsgs.push({ role: 'user', text: msg });
+      inp.value = '';
+      renderAI();
+      setTimeout(() => {
+        aiMsgs.push({ role: 'ai', text: '[ AI responses coming in a later step ]' });
+        renderAI();
+      }, 400);
+    }
+
+    // ── NAV HISTORY (back / forward) ────────────────────────────────────
+    let navHistory = [];
+    let navPos     = -1;
+
+    // wrap openTab to record history
+    const _openTab = openTab;
+    openTab = function(id, label, type) {
+      // trim forward history when branching
+      navHistory = navHistory.slice(0, navPos + 1);
+      navHistory.push({ id, label, type });
+      navPos = navHistory.length - 1;
+      _openTab(id, label, type);
+      updateNavButtons();
+    };
+
+    function navBack() {
+      if (navPos <= 0) return;
+      navPos--;
+      const entry = navHistory[navPos];
+      _openTab(entry.id, entry.label, entry.type);
+      updateNavButtons();
+    }
+
+    function navForward() {
+      if (navPos >= navHistory.length - 1) return;
+      navPos++;
+      const entry = navHistory[navPos];
+      _openTab(entry.id, entry.label, entry.type);
+      updateNavButtons();
+    }
+
+    function updateNavButtons() {
+      const back = document.getElementById('nav-back');
+      const fwd  = document.getElementById('nav-fwd');
+      if (back) back.style.opacity = navPos <= 0 ? '0.3' : '1';
+      if (fwd)  fwd.style.opacity  = navPos >= navHistory.length - 1 ? '0.3' : '1';
+    }
+
+    // ── GLOBAL SEARCH ───────────────────────────────────────────────────
+    // Build a flat searchable index from all data
+    const SEARCH_INDEX = [
+      ...Object.values(PEOPLE).map(p => ({
+        label: p.name, sub: p.role, id: p.id, type: 'person', icon: '👤'
+      })),
+      ...CALLS.map(c => ({
+        label: c.label, sub: c.short, id: c.id, type: 'call', icon: '📞'
+      })),
+      ...Object.values(TASKS).map(t => ({
+        label: t.title, sub: t.assigned, id: t.callId, type: 'call', icon: '✓'
+      })),
+      { label: 'Overview',         sub: 'Project details', id: 'overview',  type: 'overview',  icon: '◎' },
+      { label: 'Tasks',            sub: 'Project details', id: 'tasks',     type: 'tasks',     icon: '☑' },
+      { label: 'Floor plan',       sub: 'Project details', id: 'floorplan', type: 'floorplan', icon: '📐' },
+      { label: 'SA-211F',          sub: 'Design Agreement', id: 'sa211f',   type: 'form',      icon: '📄' },
+      { label: 'IDQ',              sub: 'Interior Design Questionnaire', id: 'idq', type: 'form', icon: '📄' },
+      { label: 'SA-211D',          sub: 'Project Specification', id: 'sa211d', type: 'form',   icon: '📄' },
+      { label: 'Ballpark Worksheet', sub: 'Forms', id: 'ballpark',          type: 'form',      icon: '📄' },
+    ];
+
+    function handleSearch(query) {
+      const box = document.getElementById('search-results');
+      if (!query.trim()) { box.style.display = 'none'; return; }
+
+      const q = query.toLowerCase();
+      const hits = SEARCH_INDEX.filter(item =>
+        item.label.toLowerCase().includes(q) || item.sub?.toLowerCase().includes(q)
+      ).slice(0, 8);
+
+      if (!hits.length) { box.style.display = 'none'; return; }
+
+      box.innerHTML = hits.map(h => `
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;font-size:13px;"
+          onmouseenter="this.style.background='#f3f4f6'" onmouseleave="this.style.background=''"
+          onclick="openTab('${h.id}','${h.label}','${h.type}'); clearSearch();">
+          <span style="font-size:14px;">${h.icon}</span>
+          <div>
+            <div style="color:#111827;">${h.label}</div>
+            <div style="font-size:11px;color:#9ca3af;">${h.sub}</div>
+          </div>
+        </div>
+      `).join('');
+      box.style.display = 'block';
+    }
+
+    function clearSearch() {
+      const inp = document.getElementById('global-search');
+      const box = document.getElementById('search-results');
+      if (inp) inp.value = '';
+      if (box) box.style.display = 'none';
+    }
+
+    // close search on outside click
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#global-search') && !e.target.closest('#search-results')) {
+        clearSearch();
+      }
+    });
+
+    // ── RENDER ALL ──────────────────────────────────────────────────────
+    function renderAll() {
+      renderCalendar();
+      renderTimeline();
+      renderProjectFiles();
+      renderTabs();
+      renderContent();
+    }
+
+    // ── INIT ────────────────────────────────────────────────────────────
+    renderAll();
+    renderAI();
+    updateNavButtons();
+  </script>
+
+</body>
+</html>

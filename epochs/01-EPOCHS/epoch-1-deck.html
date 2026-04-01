@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epoch 1 — Sundial Meetings CRM Architecture</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --surface: #ffffff;
+    --text: #1a1a2e;
+    --text-secondary: #555;
+    --accent: #4a6fa5;
+    --accent-light: #e8eef6;
+    --border: #e0e0e0;
+    --tag-bg: #f0f4f8;
+    --green: #2d6a4f; --green-bg: #d8f3dc;
+    --amber: #b45309; --amber-bg: #fef3c7;
+    --red: #9b2226; --red-bg: #fce4e4;
+    --blue: #4a6fa5; --blue-bg: #e8eef6;
+    --purple: #7b2d8b; --purple-bg: #f3e8f9;
+    --gray: #6b7280; --gray-bg: #f3f4f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem; font-size: 18px;
+  }
+  .deck { max-width: 920px; margin: 0 auto; }
+  .slide {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 2.5rem; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .slide-title {
+    font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--accent); margin-bottom: 0.25rem; font-weight: 600;
+  }
+  h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 1rem; }
+  h3 { font-size: 1.05rem; font-weight: 600; margin: 1.25rem 0 0.6rem; }
+  p { margin-bottom: 0.85rem; color: var(--text-secondary); font-size: 0.92rem; }
+  .subtitle { font-size: 1.05rem; color: var(--text-secondary); }
+  .date { font-size: 0.85rem; color: var(--accent); font-weight: 500; }
+  .badge {
+    display: inline-block; background: var(--amber-bg); color: var(--amber);
+    font-size: 0.8rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 4px; margin-top: 0.5rem;
+  }
+  .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+  th {
+    text-align: left; padding: 0.55rem 0.7rem; background: var(--tag-bg);
+    font-weight: 600; border-bottom: 2px solid var(--border);
+  }
+  td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+
+  /* Grid layouts */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .flow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 0.75rem 0; }
+
+  /* Cards */
+  .card {
+    border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem;
+    border-left: 3px solid var(--accent); margin-bottom: 0.6rem;
+  }
+  .card.red { border-left-color: var(--red); }
+  .card.green { border-left-color: var(--green); }
+  .card.amber { border-left-color: var(--amber); }
+  .card.blue { border-left-color: var(--blue); }
+  .card.purple { border-left-color: var(--purple); }
+  .card.gray { border-left-color: var(--gray); }
+  .card strong { display: block; font-size: 0.92rem; margin-bottom: 0.2rem; }
+  .card span, .card p { font-size: 0.85rem; color: var(--text-secondary); margin: 0; }
+
+  /* Callout boxes */
+  .callout {
+    background: var(--accent-light); border-radius: 8px;
+    padding: 1rem 1.25rem; margin: 1rem 0; font-size: 0.9rem;
+  }
+  .callout.red { background: var(--red-bg); }
+  .callout.amber { background: var(--amber-bg); }
+  .callout.green { background: var(--green-bg); }
+  .callout strong { color: var(--text); }
+
+  /* Phase/flow diagrams */
+  .phase {
+    position: relative; padding: 1rem 1rem 1rem 3.25rem;
+    border-left: 3px solid var(--accent-light); margin-left: 1rem;
+  }
+  .phase:last-child { border-left-color: transparent; }
+  .phase-num {
+    position: absolute; left: -0.9rem; top: 0.85rem;
+    width: 1.8rem; height: 1.8rem; background: var(--accent); color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700;
+  }
+  .phase-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
+  .phase-desc { font-size: 0.85rem; color: var(--text-secondary); }
+
+  /* Checkpoint and escape badges */
+  .checkpoint {
+    display: inline-block; background: var(--amber-bg); color: var(--amber);
+    font-size: 0.75rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 3px;
+  }
+  .escape {
+    display: inline-block; background: var(--red-bg); color: var(--red);
+    font-size: 0.75rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 3px;
+  }
+
+  /* Preset columns */
+  .preset {
+    border: 1px solid var(--border); border-radius: 8px; padding: 1rem;
+    border-top: 3px solid var(--accent);
+  }
+  .preset.blue-top { border-top-color: var(--blue); }
+  .preset.amber-top { border-top-color: var(--amber); }
+  .preset.gray-top { border-top-color: var(--gray); }
+  .preset h3 { margin-top: 0; }
+  .preset ul { list-style: none; padding: 0; }
+  .preset li {
+    padding: 0.25rem 0; font-size: 0.85rem; color: var(--text-secondary);
+    padding-left: 1rem; position: relative;
+  }
+  .preset li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+
+  /* Status indicators */
+  .status-pass { color: var(--green); font-weight: 600; }
+  .status-fail { color: var(--red); font-weight: 600; }
+  .status-pending { color: var(--gray); font-weight: 600; }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .two-col, .three-col, .flow-grid { grid-template-columns: 1fr; }
+    body { padding: 1rem; } .slide { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide">
+  <div class="slide-title">Epoch 1</div>
+  <h1>Happy Path + Architecture</h1>
+  <p class="subtitle">Sundial Meetings CRM — functional build plan</p>
+  <p class="date">March 31, 2026</p>
+  <div class="badge">📋 Pending Review</div>
+</div>
+
+<!-- SLIDE 2: CRITICAL RISKS -->
+<div class="slide">
+  <div class="slide-title">🚨 Critical Risks</div>
+  <h2>Risks That Could Invalidate the Architecture</h2>
+
+  <div class="card red">
+    <strong>Git commit failures are silent unless explicitly checked</strong>
+    <span>If the Node process lacks write permission or git is absent from PATH, all version history silently disappears. Every git call must check exit code and surface a UI toast. File is written first — history is the secondary concern.</span>
+  </div>
+
+  <div class="card red">
+    <strong>Claude may return malformed JSON or partial responses</strong>
+    <span>Claude is an external dependency. A timeout mid-stream, a schema deviation, or a rate limit error can corrupt the extraction pipeline. Every response must be validated against the JSON schema before any file is touched. On failure: mark extraction as failed in SQLite, show retry UI.</span>
+  </div>
+
+  <div class="card amber">
+    <strong>Concurrent edit conflict: rep edits a field while an AI proposed edit for the same file is pending</strong>
+    <span>If the rep's direct-edit save races with an Accept of a proposed edit, one write will silently overwrite the other. Mitigation: backend checks SQLite for pending_direct_edit rows before accepting; returns 409 with a confirmation modal.</span>
+  </div>
+
+  <div class="card amber">
+    <strong>Frontend holds stale file content during direct edits</strong>
+    <span>The debounce save sends the full file content from the frontend's in-memory copy. If Claude accepted an edit to the same file while the rep had it open, the rep's save will overwrite Claude's changes. Fix: backend must re-read current file and merge, or frontend must re-fetch before saving.</span>
+  </div>
+
+  <div class="card blue">
+    <strong>Mockup migration regressions</strong>
+    <span>The existing mockup has 100% of the desired UX already built. Adding fetch() calls risks breaking tab state, panel layouts, and diff rendering. Mitigation: Phase 1 preserves all HTML/CSS exactly — JS additions only, no structural rewrites.</span>
+  </div>
+</div>
+
+<!-- SLIDE 3: WHAT WE'RE BUILDING -->
+<div class="slide">
+  <div class="slide-title">The Problem</div>
+  <h2>What We're Building and Why</h2>
+
+  <p>Sales reps at Golden Eagle log home company spend 30–90 minute calls with clients learning critical details — floor plan preferences, who the decision-makers are, what the blockers are — and then lose most of it to incomplete notes or memory.</p>
+
+  <div class="callout">
+    <strong>The core problem:</strong> Project knowledge lives in the rep's head, not in a system. Every call should update the project record. Almost none of them do, because updating is manual and friction-heavy.
+  </div>
+
+  <h3>What the CRM does</h3>
+  <div class="flow-grid">
+    <div class="card green">
+      <strong>Post-call extraction</strong>
+      <span>Upload call recording → AI reads transcript + screenshots + project files → proposes targeted edits → rep reviews and accepts in one click</span>
+    </div>
+    <div class="card green">
+      <strong>Living project documents</strong>
+      <span>Floor plan, people profiles, project overview — markdown files that stay current automatically. Human-readable. Directly editable.</span>
+    </div>
+    <div class="card green">
+      <strong>Version history</strong>
+      <span>Every accepted edit = a git commit. Google Docs-style version panel with inline diffs. Nothing is ever lost.</span>
+    </div>
+    <div class="card green">
+      <strong>AI assistant chat</strong>
+      <span>"Update Lauren's notes to say she prefers cedar" → AI reads the file → proposes the edit → same review UI → accepted and committed.</span>
+    </div>
+  </div>
+
+  <div class="callout amber">
+    <strong>Key constraint:</strong> AI cannot add document structure (sections, tables). Only content within existing structure. Structure is human-added only. This keeps the rep in control of the document shape.
+  </div>
+</div>
+
+<!-- SLIDE 4: ARCHITECTURE OVERVIEW -->
+<div class="slide">
+  <div class="slide-title">Architecture</div>
+  <h2>Components and Data Flow</h2>
+
+  <div class="two-col">
+    <div>
+      <h3>The stack</h3>
+      <div class="card blue">
+        <strong>Frontend: evolved mockup HTML/JS</strong>
+        <span>The existing mockup becomes the real app. All CSS and layout preserved. fetch() calls replace hardcoded data. No React, no bundler, no build step.</span>
+      </div>
+      <div class="card blue">
+        <strong>Backend: Express/Node</strong>
+        <span>REST API. Handles file reads/writes, git operations, SQLite queries, Claude API proxy. Runs locally.</span>
+      </div>
+      <div class="card blue">
+        <strong>Project documents: markdown files</strong>
+        <span>floor-plan.md, project-overview.md, people/lauren-thompson.md. Human-readable. AI edits these like source code.</span>
+      </div>
+      <div class="card blue">
+        <strong>Version history: git</strong>
+        <span>Project doc directory is a git repo. Every accepted edit = one commit with a labeled message. git log = version list. git diff = inline diff.</span>
+      </div>
+      <div class="card blue">
+        <strong>Structured metadata: SQLite</strong>
+        <span>Calls table, proposed_edits table (with status), tasks table, events audit log. No document content here — that's in files.</span>
+      </div>
+    </div>
+    <div>
+      <h3>Data flow: post-call extraction</h3>
+      <div class="phase">
+        <div class="phase-num">1</div>
+        <div class="phase-title">Rep uploads MP4 + transcript</div>
+        <div class="phase-desc">Backend saves to calls/{call-id}/</div>
+      </div>
+      <div class="phase">
+        <div class="phase-num">2</div>
+        <div class="phase-title">ffmpeg extracts frames</div>
+        <div class="phase-desc">Claude Vision describes each screenshot → appended to consolidated.txt</div>
+      </div>
+      <div class="phase">
+        <div class="phase-num">3</div>
+        <div class="phase-title">Claude reads everything</div>
+        <div class="phase-desc">System prompt + all project files + consolidated.txt → JSON array of proposed edits</div>
+      </div>
+      <div class="phase">
+        <div class="phase-num">4</div>
+        <div class="phase-title">Validate + write proposed-edits.json</div>
+        <div class="phase-desc">Schema validation. SQLite row inserted (status: pending). UI renders Proposed Edits module.</div>
+      </div>
+      <div class="phase">
+        <div class="phase-num">5</div>
+        <div class="phase-title">Rep accepts</div>
+        <div class="phase-desc">File written → git commit "Mar 25 call" → SQLite updated → version history panel refreshes</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: THREE PHASES -->
+<div class="slide">
+  <div class="slide-title">Build Plan</div>
+  <h2>Three Phases: MVP to Full Pipeline</h2>
+
+  <div class="phase">
+    <div class="phase-num">1</div>
+    <div class="phase-title">Phase 1 — MVP: Real data, real files, real git (no AI)</div>
+    <div class="phase-desc">
+      <strong>Goal: Dogfood the full UI with real Golden Eagle data.</strong><br>
+      Build: Express server, SQLite schema, all file/git API endpoints, frontend fetch() calls replacing hardcoded mockup data. Seed Golden Eagle project with real floor plan, people, and a manually written proposed-edits.json.<br><br>
+      <strong>Explicitly deferred:</strong> ffmpeg, Claude API, call upload pipeline.<br><br>
+      <strong>Exit criteria:</strong> Ana can open the app, browse real data, accept a proposed edit and see the file + version history update, and edit a field with the change persisting on reload.
+      <br><br><span class="checkpoint">⏸ Human approval before Phase 2</span>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-num">2</div>
+    <div class="phase-title">Phase 2 — Post-Call AI Extraction</div>
+    <div class="phase-desc">
+      <strong>Goal: Upload a real call → Claude proposes edits → rep accepts.</strong><br>
+      Build: ffmpeg frame extraction, Claude Vision per-frame, consolidated.txt assembly, Claude extraction API call with schema validation, POST /api/calls/{id}/process endpoint, call processing status UI (Processing… / Extraction ready / Failed), retry flow.<br><br>
+      <strong>Exit criteria:</strong> Upload one real Golden Eagle call recording → proposed edits appear correctly → rep accepts → files updated → version history shows the commit.
+      <br><br><span class="checkpoint">⏸ Human approval before Phase 3</span>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-num">3</div>
+    <div class="phase-title">Phase 3 — AI Assistant Chat + Full Pipeline</div>
+    <div class="phase-desc">
+      <strong>Goal: Rep can type any instruction → AI proposes edits. Full pipeline hardened.</strong><br>
+      Build: POST /api/chat endpoint (reads project files + message → Claude → validated proposed edits), chat history display, multi-call context in chat, screenshot pipeline refinements, call upload drag-and-drop polish.<br><br>
+      <strong>Exit criteria:</strong> Rep uses the full system for one month of real Golden Eagle calls with no manual backend intervention.
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: DECISION — FRAMEWORK -->
+<div class="slide">
+  <div class="slide-title">Key Decision 1</div>
+  <h2>Framework: Evolve Mockup vs. Next.js / React</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Criterion</th>
+        <th>Evolve Mockup (Express + vanilla JS) ✅</th>
+        <th>Next.js / React</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Preserves existing mockup UI</td>
+        <td>Yes — all HTML/CSS unchanged, add fetch() only</td>
+        <td>No — must port to JSX, risks regressions</td>
+      </tr>
+      <tr>
+        <td>Setup time to first working API call</td>
+        <td>~2 hours</td>
+        <td>~1 day (scaffolding, routing, components)</td>
+      </tr>
+      <tr>
+        <td>Rep can open locally without a build step</td>
+        <td>Yes — just serve the HTML file</td>
+        <td>No — requires npm run build</td>
+      </tr>
+      <tr>
+        <td>AI agent can edit without breaking state</td>
+        <td>Yes — simple JS functions, easy to reason about</td>
+        <td>Risky — React state, hooks, component tree</td>
+      </tr>
+      <tr>
+        <td>Debuggability</td>
+        <td>Browser console + network tab, direct</td>
+        <td>Same, but compiled output adds a layer</td>
+      </tr>
+      <tr>
+        <td>Who owns the fix path if it breaks</td>
+        <td>We own it entirely — no framework layer</td>
+        <td>We own it + framework version issues</td>
+      </tr>
+      <tr>
+        <td>Long-term scale (multi-rep)</td>
+        <td>Needs componentization later, but premature now</td>
+        <td>Better for scale — but premature for Phase 1</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout green">
+    <strong>Decision: Evolve the mockup.</strong> The mockup already has 100% of the desired UX. Rebuilding in React destroys that work and adds complexity with zero benefit at current scale.
+  </div>
+</div>
+
+<!-- SLIDE 7: DECISION — VERSION HISTORY -->
+<div class="slide">
+  <div class="slide-title">Key Decision 2</div>
+  <h2>Version History: Git Commits vs. Snapshot JSON Array</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Criterion</th>
+        <th>Git commits ✅</th>
+        <th>Snapshot JSON array in file</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Diff computation</td>
+        <td>git diff — exact, line-level, free</td>
+        <td>Must implement custom diff algorithm</td>
+      </tr>
+      <tr>
+        <td>Tooling for manual inspection</td>
+        <td>git log, git show, git diff — any developer</td>
+        <td>Requires custom tooling to read JSON array</td>
+      </tr>
+      <tr>
+        <td>Human can edit files directly?</td>
+        <td>Yes — git tracks the change</td>
+        <td>Yes, but silently breaks the JSON structure</td>
+      </tr>
+      <tr>
+        <td>Corruption failure mode</td>
+        <td>One version lost — rest of history intact</td>
+        <td>JSON parse error = entire history unreadable</td>
+      </tr>
+      <tr>
+        <td>Fix path on failure</td>
+        <td>git fsck, git reflog — standard tools</td>
+        <td>Custom code to repair JSON array</td>
+      </tr>
+      <tr>
+        <td>Storage growth</td>
+        <td>Text compresses extremely well in git pack files</td>
+        <td>JSON bloat grows unboundedly in the file</td>
+      </tr>
+      <tr>
+        <td>Restore semantics</td>
+        <td>Write old content as new commit (append-only)</td>
+        <td>Same append behavior required</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout green">
+    <strong>Decision: Git commits.</strong> The diff tooling is free, the storage format is battle-tested, and the failure mode (one history gap) is far less severe than JSON array corruption making all history unreadable.
+  </div>
+</div>
+
+<!-- SLIDE 8: DECISION — STORAGE MODEL -->
+<div class="slide">
+  <div class="slide-title">Key Decision 3</div>
+  <h2>Storage: Files Only vs. Files + SQLite vs. Database Only</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Criterion</th>
+        <th>Files + git only</th>
+        <th>Files + git + SQLite ✅</th>
+        <th>Database only (Postgres)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Document content</td>
+        <td>In files</td>
+        <td>In files</td>
+        <td>In DB records</td>
+      </tr>
+      <tr>
+        <td>Call metadata, proposed edit states, tasks</td>
+        <td>No structured storage</td>
+        <td>SQLite tables</td>
+        <td>DB tables</td>
+      </tr>
+      <tr>
+        <td>"Show all pending edits" query</td>
+        <td>Must scan JSON files — not practical</td>
+        <td>Single SQL query</td>
+        <td>Single SQL query</td>
+      </tr>
+      <tr>
+        <td>Setup complexity</td>
+        <td>Zero</td>
+        <td>Low — SQLite ships with Node via better-sqlite3</td>
+        <td>High — DB server, connection string, migrations</td>
+      </tr>
+      <tr>
+        <td>DB unavailable failure mode</td>
+        <td>N/A</td>
+        <td>App falls back to file-only reads</td>
+        <td>App is completely down</td>
+      </tr>
+      <tr>
+        <td>Right tool for current scale</td>
+        <td>Too limited for real use</td>
+        <td>Yes — fine for 5–10 reps, 50 projects</td>
+        <td>Premature — overkill for current scale</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout green">
+    <strong>Decision: Files + git + SQLite.</strong> Files and git excel at document content and version history. SQLite handles structured metadata without requiring a server. No over-engineering for current scale.
+  </div>
+</div>
+
+<!-- SLIDE 9: FLOW EXPLOSION HIGHLIGHTS -->
+<div class="slide">
+  <div class="slide-title">Flow Explosion</div>
+  <h2>14 Flows — The Critical Branches</h2>
+
+  <div class="two-col">
+    <div>
+      <h3>The happy paths</h3>
+      <div class="card green">
+        <strong>Post-call extraction (full pipeline)</strong>
+        <span>MP4 + transcript → ffmpeg → Claude Vision → consolidated.txt → Claude extraction → proposed-edits.json → UI module</span>
+      </div>
+      <div class="card green">
+        <strong>Transcript-only extraction</strong>
+        <span>No MP4 — skip ffmpeg, proceed with transcript only. Fewer context signals but fully functional.</span>
+      </div>
+      <div class="card green">
+        <strong>Accept all / Accept single / Skip</strong>
+        <span>Per-file or bulk accept. Each accepted file = one git commit with call label. Skip = SQLite update only, file unchanged.</span>
+      </div>
+      <div class="card green">
+        <strong>AI chat edit</strong>
+        <span>Rep types instruction → same extraction pipeline → same Proposed Edits module → same accept flow.</span>
+      </div>
+      <div class="card green">
+        <strong>Direct field edit with debounce</strong>
+        <span>2s debounce → file write → git commit "Rep edit · date". No confirmation needed — version history is the safety net.</span>
+      </div>
+      <div class="card green">
+        <strong>Version restore</strong>
+        <span>Old content written as a new commit — always append, never overwrite.</span>
+      </div>
+    </div>
+    <div>
+      <h3>The critical error branches</h3>
+      <div class="card red">
+        <strong>Claude returns invalid JSON</strong>
+        <span>Schema validation rejects it. SQLite marked "extraction_failed". UI shows error + retry button. No partial edits written.</span>
+      </div>
+      <div class="card red">
+        <strong>Git commit fails</strong>
+        <span>File is already written (intentional priority). Log to SQLite events. Show toast. Rep can manually fix git. Content is never lost.</span>
+      </div>
+      <div class="card amber">
+        <strong>Concurrent edit conflict</strong>
+        <span>Backend checks for pending_direct_edit in SQLite before accepting proposed edit. Returns 409. Modal asks rep to confirm.</span>
+      </div>
+      <div class="card amber">
+        <strong>Claude proposes edit to non-existent file path</strong>
+        <span>All file_path values validated against project directory before any write. Path traversal attempts (../../server.js) rejected.</span>
+      </div>
+      <div class="card amber">
+        <strong>Server restart with pending edits</strong>
+        <span>proposed-edits.json never deleted until all rows resolved. UI re-renders from file + SQLite on load. No orphaned pending rows.</span>
+      </div>
+      <div class="card gray">
+        <strong>Call with no changes detected</strong>
+        <span>Claude returns empty array []. UI shows "No proposed edits — no changes detected." No confusion, no module shown.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: FAILURE MODES -->
+<div class="slide">
+  <div class="slide-title">Failure Modes</div>
+  <h2>17 Failure Modes — All Mitigated or Explicitly Accepted</h2>
+
+  <table>
+    <thead>
+      <tr><th>Failure Mode</th><th>Likelihood</th><th>Mitigation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Claude returns malformed JSON</td><td>Medium</td><td>Schema validation on every response; reject and show error state</td></tr>
+      <tr><td>Claude API rate limit hit</td><td>Low (single user)</td><td>Retry × 3 with 2s backoff; then surface error</td></tr>
+      <tr><td>Claude API timeout (&gt;60s)</td><td>Low–Medium</td><td>Abort at 60s; mark extraction failed; rep can retry</td></tr>
+      <tr><td>git binary not in PATH</td><td>Low</td><td>Check on server startup; hard error if missing</td></tr>
+      <tr><td>git commit fails (permissions)</td><td>Low</td><td>File already written; log event; show toast; manually recoverable</td></tr>
+      <tr><td>git repo not initialized</td><td>Low (auto-init on project create)</td><td>Check for .git before any commit; init if missing</td></tr>
+      <tr><td>SQLite DB locked (concurrent writes)</td><td>Low (single user)</td><td>WAL mode; serialize writes via async queue</td></tr>
+      <tr><td>SQLite DB corrupted</td><td>Very Low</td><td>Accepted risk — DB is metadata only; docs survive in files/git</td></tr>
+      <tr><td>Disk full during file write</td><td>Very Low</td><td>Catch ENOSPC; surface immediately; no silent partial write</td></tr>
+      <tr><td>ffmpeg not installed</td><td>Medium (new machine)</td><td>Check on startup; skip frame extraction; proceed transcript-only</td></tr>
+      <tr><td>ffmpeg hangs on malformed MP4</td><td>Low</td><td>Kill process after 120s timeout</td></tr>
+      <tr><td>Concurrent edit conflict</td><td>Medium (real use)</td><td>409 check before accepting; modal confirmation</td></tr>
+      <tr><td>Rep accidentally deletes field content</td><td>Medium</td><td>Every direct edit is committed; restore via version history</td></tr>
+      <tr><td>proposed-edits.json stale from previous call</td><td>Low</td><td>Include call_id in JSON; UI validates match before rendering</td></tr>
+      <tr><td>Claude proposes edit to wrong file path</td><td>Low</td><td>Validate all paths are within project directory before writing</td></tr>
+      <tr><td>Network error during Claude API call</td><td>Low–Medium</td><td>Retry × 3; show error state; never leave UI in permanent loading state</td></tr>
+      <tr><td>Large project files slow Claude context</td><td>Low (5–10 small files)</td><td>Accepted risk at current scale; revisit if files exceed ~10k tokens</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SLIDE 11: ENGINEERING PRINCIPLES -->
+<div class="slide">
+  <div class="slide-title">Engineering Review</div>
+  <h2>Principles Checklist Results</h2>
+
+  <div class="two-col">
+    <div>
+      <h3>State &amp; Data Integrity</h3>
+      <div class="card green">
+        <strong><span class="status-pass">✅</span> Every state has an exit path</strong>
+        <span>Proposed edits: pending → accepted/skipped/failed. Calls: uploaded → processing → ready/failed. No limbo states. Timeout enforced on extraction.</span>
+      </div>
+      <div class="card green">
+        <strong><span class="status-pass">✅</span> Core logic in durable layers</strong>
+        <span>Document content in files + git. Proposed edit state in SQLite. Nothing critical lives only in application memory.</span>
+      </div>
+
+      <h3>Ownership &amp; Dependencies</h3>
+      <div class="card green">
+        <strong><span class="status-pass">✅</span> We own every trigger</strong>
+        <span>No third-party webhooks in the critical path. Rep action → our endpoint. No black boxes in the write path.</span>
+      </div>
+      <div class="card green">
+        <strong><span class="status-pass">✅</span> Not reimplementing platform features</strong>
+        <span>Using git for versioning, SQLite for persistence, ffmpeg for video processing. Not reinventing any of these.</span>
+      </div>
+
+      <h3>Execution Model</h3>
+      <div class="card green">
+        <strong><span class="status-pass">✅</span> No daemons where cron/event would suffice</strong>
+        <span>Express handles requests synchronously. ffmpeg is a child process that exits. No while-True loops. No scheduling.</span>
+      </div>
+    </div>
+    <div>
+      <h3>Failure &amp; Recovery</h3>
+      <div class="card green">
+        <strong><span class="status-pass">✅</span> Retry logic for external calls</strong>
+        <span>Claude API: retry × 3 with backoff. File writes: synchronous, no retry needed. Git failure: file already written, log and notify.</span>
+      </div>
+      <div class="card green">
+        <strong><span class="status-pass">✅</span> Audit trail is downstream</strong>
+        <span>SQLite events table written AFTER git commit succeeds. Not used as a trigger. Receipt, not upstream controller.</span>
+      </div>
+
+      <h3>Observability</h3>
+      <div class="card green">
+        <strong><span class="status-pass">✅</span> Failures surface to the rep immediately</strong>
+        <span>Single-user local tool. Errors appear as toasts and error banners, not in server logs the rep never sees.</span>
+      </div>
+      <div class="card amber">
+        <strong><span class="status-pending">⚠️</span> Catch-all monitors deferred</strong>
+        <span>Accepted risk for Phase 1. SQLite sanity query available for manual use. Will add background monitoring in Phase 3 if background jobs are introduced.</span>
+      </div>
+
+      <h3>Agent Safety</h3>
+      <div class="card green">
+        <strong><span class="status-pass">✅</span> Core logic in durable layers</strong>
+        <span>An AI agent editing the Express server code cannot corrupt project documents or version history. CLAUDE.md will point to this architecture doc.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: BLIND SPOT FINDINGS -->
+<div class="slide">
+  <div class="slide-title">Blind Spot Review</div>
+  <h2>8 Findings from Fresh-Perspective Review</h2>
+  <p>Prompt: <em>"You are a different engineer seeing this architecture for the first time. Here is everything we've planned. What's missing? What would break? What haven't we considered?"</em></p>
+
+  <div class="flow-grid">
+    <div class="card red">
+      <strong>1. Git repo lives WHERE? Absolute paths required.</strong>
+      <span>Plan said "project doc directory is a git repo" without specifying path resolution. Fix: git repo root stored in SQLite project record; all paths resolved to absolute before git operations.</span>
+    </div>
+    <div class="card red">
+      <strong>2. Frontend holds stale file content during direct edits</strong>
+      <span>Debounce save sends frontend's in-memory copy. If AI accepted an edit to the same file while rep had it open, rep's save overwrites it. Fix: backend must re-read and merge on save, or frontend re-fetches before saving.</span>
+    </div>
+    <div class="card red">
+      <strong>3. Claude could hallucinate file paths (path traversal risk)</strong>
+      <span>Claude returns file_path in proposed edits JSON. "../../server.js" would write to server code. Fix: validate all paths are within the project directory before any write.</span>
+    </div>
+    <div class="card amber">
+      <strong>4. Server restart with pending edits — orphaned rows</strong>
+      <span>If proposed-edits.json is cleaned up early, pending SQLite rows become orphaned. Fix: never delete proposed-edits.json until all rows for that call are resolved.</span>
+    </div>
+    <div class="card amber">
+      <strong>5. Git commit message collision</strong>
+      <span>If rep accepts edits days after the call, commit message "Mar 25 call" appears at the wrong date in git log. Fix: commit label comes from call record in SQLite (call.label), not generated at accept-time.</span>
+    </div>
+    <div class="card amber">
+      <strong>6. Version history diff direction ambiguity</strong>
+      <span>Clicking a version must show git diff &lt;parent-hash&gt; &lt;this-hash&gt;, not git diff &lt;hash&gt; HEAD. API must return the correct hash pair. Document this contract explicitly.</span>
+    </div>
+    <div class="card blue">
+      <strong>7. No authentication — document as accepted risk</strong>
+      <span>Single-user local tool in Phase 1, no auth needed. Must be explicitly documented so it isn't accidentally deployed to a shared server without adding auth first.</span>
+    </div>
+    <div class="card blue">
+      <strong>8. Monolithic script block will become unnavigable</strong>
+      <span>As fetch() calls grow, the mockup's single script block becomes unmanageable. Convention: one &lt;script&gt; section per feature (calls, files, edits, chat) from the start, without introducing a bundler.</span>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <strong>All 8 findings are addressed</strong> in the architecture doc (epoch-1-happy-path.md). Items 1, 2, and 3 are the most critical and have specific backend fixes. Items 4–8 are implementation conventions documented in the epoch.
+  </div>
+</div>
+
+<!-- SLIDE 13: CONVERGENCE CHECK + NEXT STEPS -->
+<div class="slide">
+  <div class="slide-title">Convergence Check</div>
+  <h2>Architecture Status + Next Steps</h2>
+
+  <table>
+    <thead>
+      <tr><th>Criterion</th><th>Status</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>All flows have documented handling</td><td class="status-pass">✅</td><td>14 flows documented including all error branches</td></tr>
+      <tr><td>No unresolved failure modes</td><td class="status-pass">✅</td><td>17 failure modes — all mitigated or explicitly accepted risk</td></tr>
+      <tr><td>Delta from previous epoch</td><td class="status-pending">N/A</td><td>First epoch</td></tr>
+      <tr><td>Staff engineer checklist passes</td><td class="status-pass">✅</td><td>No circular deps, no unbounded loops, every external dep has failure handler, simplest solution that works</td></tr>
+      <tr><td>Human sign-off</td><td class="status-pending">⬜ Pending</td><td>This deck is the checkpoint</td></tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <h3>Next steps on approval</h3>
+  <div class="phase">
+    <div class="phase-num">1</div>
+    <div class="phase-title">Initialize the project repository</div>
+    <div class="phase-desc">Create directory structure: Express server skeleton, SQLite schema, project docs directory with git init, Golden Eagle seed data (real floor plan, people, one seeded proposed-edits.json).</div>
+  </div>
+  <div class="phase">
+    <div class="phase-num">2</div>
+    <div class="phase-title">Build Phase 1 API endpoints</div>
+    <div class="phase-desc">GET/POST file endpoints, accept/skip edit endpoints, versions and diff endpoints, direct-edit save endpoint. All returning real data from files + SQLite.</div>
+  </div>
+  <div class="phase">
+    <div class="phase-num">3</div>
+    <div class="phase-title">Wire frontend to real API</div>
+    <div class="phase-desc">Replace hardcoded mockup data with fetch() calls. Preserve all CSS and layout. Add section-based script organization from the start.</div>
+  </div>
+  <div class="phase">
+    <div class="phase-num">4</div>
+    <div class="phase-title">Dogfood with real Golden Eagle data</div>
+    <div class="phase-desc">Ana uses the app for real project management. Feedback informs Phase 2 scope document. <span class="checkpoint">⏸ Phase 2 checkpoint before AI is added</span></div>
+  </div>
+</div>
+
+<!-- SLIDE 14: CONFIRMATION -->
+<div class="slide">
+  <div class="slide-title">Your Call</div>
+  <h2>Review Epoch 1 — Approve or Request Changes</h2>
+  <p>The architecture is converged. Phase 1 can begin immediately on approval. Phases 2 and 3 will each get their own scope document before any implementation starts.</p>
+
+  <div class="two-col">
+    <div class="card green">
+      <strong>✅ Approve — proceed to Phase 1 build</strong>
+      <span>Initialize the Express server, SQLite schema, and Golden Eagle seed data. Wire the mockup frontend to real API endpoints. Target: Phase 1 dogfood-ready in one sprint.</span>
+    </div>
+    <div class="card amber">
+      <strong>✏️ Request Changes</strong>
+      <span>Note specific sections to revise. This epoch file will be versioned (epoch-1-happy-path-v2.md) — the original is never overwritten. The deck will be regenerated from the revised epoch.</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Files for this epoch:</strong>
+    epochs/01-EPOCHS/epoch-1-happy-path.md — full architecture document<br>
+    epochs/01-EPOCHS/epoch-1-deck.html — this deck<br>
+    epochs/04-STATE.md — current project state<br>
+    epochs/05-DECISION-LOG.md — architecture decision records
+  </div>
+</div>
+
+</div>
+</body>
+</html>
