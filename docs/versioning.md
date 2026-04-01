@@ -62,3 +62,49 @@ See `ai_file_editing.md` for how the AI decides what to edit, the two triggers (
 - On AI extraction completing: commit immediately, label with call name
 - Store versions as append-only JSON array in the project file — never rewrite history
 - "Restore this version" = write that snapshot as a new current version (not overwrite — always append)
+
+---
+
+## Current implementation plan (dogfood server)
+
+### Two-layer model
+
+| Layer | Trigger | Git commit? | Visible in history? |
+|-------|---------|-------------|---------------------|
+| **Autosave** | 2s after last keystroke | No | No — just data safety |
+| **Checkpoint** | Cmd+S, pre-AI, post-AI, named | Yes | Yes |
+
+### Checkpoint triggers
+
+| Event | Commit message | Protected? |
+|-------|---------------|------------|
+| AI batch about to apply | `snapshot: before <call name>` | Yes — rollback point |
+| AI batch finishes | `call: <call name> — N edits applied` | Yes |
+| User hits Cmd+S | `checkpoint: <file>` | No (prunable) |
+| User names a version | user-supplied label | Yes — forever |
+
+### Retention policy (not yet implemented)
+- Auto-checkpoints: up to **100 revisions** or **90 days**, whichever is greater
+- Named/protected versions: **kept forever**
+- Every entry shows age (e.g. "3d ago") so approaching-90-day entries are visible
+
+### Named versions
+Stored in `test-data/named-versions.json`:
+```json
+[{ "hash": "abc1234", "name": "Post-discovery call", "created": "2026-04-01T..." }]
+```
+
+### Implementation order
+1. ✅ Post-AI git commit (already in `applyBatch`)
+2. [ ] Pre-AI snapshot — commit in `/api/apply` before `applyBatch` runs
+3. [ ] Autosave — debounced disk write in edit mode, no git
+4. [ ] Cmd+S checkpoint — git commit, replaces Save button
+5. [ ] Structured `/api/history` — age, type, named flag per entry
+6. [ ] Named versions — `/api/protect-version` + `named-versions.json`
+7. [ ] Age display in version history panel
+8. [ ] Pruning (future)
+
+### Research basis
+Figma (30-min autosave checkpoints, named versions forever), Notion (10-min active /
+2-min idle session end), Cursor (checkpoint before every AI edit), Google Drive
+(100 revisions / 30 days — we use 90 days).
