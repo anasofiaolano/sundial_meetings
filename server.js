@@ -199,6 +199,7 @@ app.post('/api/apply', async (req, res) => {
         call.status = 'applied'
         call.applied_at = new Date().toISOString()
         call.commit_hash = result.commitHash
+        call.applied_edits = edits  // the exact edits that were accepted and applied
         saveCallsLog(calls)
       }
     }
