@@ -226,6 +226,7 @@ let currentCallId = null
 let peFileStates = {}     // filePath → 'pending' | 'accepted' | 'skipped'
 let allCalls = []         // full calls log
 let selectedVersionId = null
+let autosaveTimer = null  // debounce handle
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
@@ -349,22 +350,19 @@ function renderFileContent(rel) {
 }
 
 function enterEditMode(rel) {
+  clearTimeout(autosaveTimer)
   const content = files[rel] || ''
   document.getElementById('content').innerHTML = `
     <div style="max-width:640px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div style="font-size:11px;color:#9ca3af;">${rel}</div>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <div id="save-status" style="font-size:12px;color:#9ca3af;"></div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div id="save-status" style="font-size:11px;color:#d1d5db;">—</div>
           <button onclick="renderFileContent('${rel}')"
             style="font-size:12px;color:#6b7280;background:none;border:1px solid #e5e7eb;border-radius:5px;padding:3px 10px;cursor:pointer;"
-            onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background='none'">Cancel</button>
-          <button onclick="saveFile('${rel}')"
-            style="font-size:12px;color:white;background:#111827;border:none;border-radius:5px;padding:3px 12px;cursor:pointer;"
-            onmouseenter="this.style.background='#374151'" onmouseleave="this.style.background='#111827'">Save</button>
+            onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background='none'">Done</button>
         </div>
       </div>
-      <!-- Section toolbar -->
       <div style="display:flex;gap:6px;margin-bottom:8px;">
         <button onclick="insertSection()"
           style="font-size:11px;color:#6b7280;background:#f9fafb;border:1px solid #e5e7eb;border-radius:4px;padding:3px 10px;cursor:pointer;"
@@ -375,10 +373,47 @@ function enterEditMode(rel) {
       </div>
       <textarea id="edit-textarea" spellcheck="false">${escapeHtml(content)}</textarea>
     </div>`
-  document.getElementById('edit-textarea').focus()
-  document.getElementById('edit-textarea').addEventListener('keydown', e => {
-    if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); saveFile(rel) }
+
+  const ta = document.getElementById('edit-textarea')
+  ta.focus()
+
+  // Autosave: write to disk 2s after last keystroke, no git
+  ta.addEventListener('input', () => {
+    document.getElementById('save-status').textContent = 'Unsaved'
+    document.getElementById('save-status').style.color = '#f59e0b'
+    clearTimeout(autosaveTimer)
+    autosaveTimer = setTimeout(() => autosave(rel), 2000)
   })
+
+  // Cmd/Ctrl+S — will become a checkpoint commit in step 4
+  ta.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+      e.preventDefault()
+      clearTimeout(autosaveTimer)
+      autosave(rel)
+    }
+  })
+}
+
+async function autosave(rel) {
+  const ta = document.getElementById('edit-textarea')
+  if (!ta) return
+  const content = ta.value
+  const status = document.getElementById('save-status')
+  if (status) { status.textContent = 'Saving…'; status.style.color = '#9ca3af' }
+
+  try {
+    const res = await fetch('/api/save-file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file_path: rel, content })
+    })
+    if (!res.ok) throw new Error((await res.json()).error)
+    files[rel] = content
+    if (status) { status.textContent = 'Saved'; status.style.color = '#22c55e' }
+  } catch (err) {
+    if (status) { status.textContent = 'Save failed'; status.style.color = '#ef4444' }
+  }
 }
 
 function insertSection() {
@@ -408,29 +443,6 @@ function insertBullet() {
   ta.focus()
 }
 
-async function saveFile(rel) {
-  const content = document.getElementById('edit-textarea').value
-  const status = document.getElementById('save-status')
-  status.textContent = 'Saving…'
-
-  try {
-    const res = await fetch('/api/save-file', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ file_path: rel, content })
-    })
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.error)
-
-    files[rel] = content
-    status.innerHTML = `<span style="color:#16a34a;">✓ Saved${data.commitHash ? ` · ${data.commitHash}` : ''}</span>`
-    await loadCalls()
-    // Switch back to read view after a beat
-    setTimeout(() => renderFileContent(rel), 800)
-  } catch (err) {
-    status.textContent = `Error: ${err.message}`
-  }
-}
 
 // ── New file ──────────────────────────────────────────────────────────────────
 function toggleNewFileForm() {
