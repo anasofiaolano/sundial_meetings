@@ -110,7 +110,34 @@
     <div style="width:220px; flex-shrink:0; border-right:1px solid #e5e7eb; overflow-y:auto; padding:12px 8px;">
       <div class="nav-section">Calls</div>
       <div id="calls-nav" style="padding:4px 0 8px;"></div>
-      <div class="nav-section" style="margin-top:8px;">Project Files</div>
+      <div class="nav-section" style="margin-top:8px;display:flex;align-items:center;justify-content:space-between;padding-right:4px;">
+        <span>Project Files</span>
+        <button onclick="toggleNewFileForm()" title="New file"
+          style="background:none;border:none;font-size:16px;color:#9ca3af;cursor:pointer;line-height:1;padding:0 2px;border-radius:3px;"
+          onmouseenter="this.style.color='#374151'" onmouseleave="this.style.color='#9ca3af'">+</button>
+      </div>
+      <!-- Inline new-file form -->
+      <div id="new-file-form" style="display:none;padding:8px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;margin:4px 0 6px;">
+        <input id="new-file-name" type="text" placeholder="Name (e.g. Lucas Eichinger)"
+          style="width:100%;border:1px solid #e5e7eb;border-radius:4px;padding:5px 8px;font-size:12px;outline:none;margin-bottom:6px;"
+          onfocus="this.style.borderColor='#93c5fd'" onblur="this.style.borderColor='#e5e7eb'"
+          onkeydown="if(event.key==='Enter')createFile();if(event.key==='Escape')toggleNewFileForm()">
+        <div style="display:flex;gap:6px;margin-bottom:6px;">
+          <label style="font-size:12px;color:#374151;display:flex;align-items:center;gap:4px;cursor:pointer;">
+            <input type="radio" name="file-location" value="people" checked style="margin:0;"> Person
+          </label>
+          <label style="font-size:12px;color:#374151;display:flex;align-items:center;gap:4px;cursor:pointer;">
+            <input type="radio" name="file-location" value="root" style="margin:0;"> General
+          </label>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="createFile()"
+            style="flex:1;background:#111827;color:white;border:none;border-radius:4px;padding:4px 8px;font-size:12px;cursor:pointer;">Create</button>
+          <button onclick="toggleNewFileForm()"
+            style="background:none;border:1px solid #e5e7eb;border-radius:4px;padding:4px 8px;font-size:12px;cursor:pointer;color:#6b7280;">Cancel</button>
+        </div>
+        <div id="new-file-error" style="font-size:11px;color:#ef4444;margin-top:4px;display:none;"></div>
+      </div>
       <div id="files-nav"></div>
     </div>
 
@@ -325,7 +352,7 @@ function enterEditMode(rel) {
   const content = files[rel] || ''
   document.getElementById('content').innerHTML = `
     <div style="max-width:640px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div style="font-size:11px;color:#9ca3af;">${rel}</div>
         <div style="display:flex;gap:8px;align-items:center;">
           <div id="save-status" style="font-size:12px;color:#9ca3af;"></div>
@@ -337,13 +364,48 @@ function enterEditMode(rel) {
             onmouseenter="this.style.background='#374151'" onmouseleave="this.style.background='#111827'">Save</button>
         </div>
       </div>
+      <!-- Section toolbar -->
+      <div style="display:flex;gap:6px;margin-bottom:8px;">
+        <button onclick="insertSection()"
+          style="font-size:11px;color:#6b7280;background:#f9fafb;border:1px solid #e5e7eb;border-radius:4px;padding:3px 10px;cursor:pointer;"
+          onmouseenter="this.style.background='#f3f4f6'" onmouseleave="this.style.background='#f9fafb'">+ Section</button>
+        <button onclick="insertBullet()"
+          style="font-size:11px;color:#6b7280;background:#f9fafb;border:1px solid #e5e7eb;border-radius:4px;padding:3px 10px;cursor:pointer;"
+          onmouseenter="this.style.background='#f3f4f6'" onmouseleave="this.style.background='#f9fafb'">+ Bullet</button>
+      </div>
       <textarea id="edit-textarea" spellcheck="false">${escapeHtml(content)}</textarea>
     </div>`
   document.getElementById('edit-textarea').focus()
-  // Cmd/Ctrl+S to save
   document.getElementById('edit-textarea').addEventListener('keydown', e => {
     if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); saveFile(rel) }
   })
+}
+
+function insertSection() {
+  const ta = document.getElementById('edit-textarea')
+  const pos = ta.selectionStart
+  const before = ta.value.slice(0, pos)
+  const after = ta.value.slice(pos)
+  const insert = '\n\n## New Section\n\n'
+  ta.value = before + insert + after
+  const newPos = before.length + insert.length
+  ta.setSelectionRange(newPos, newPos)
+  ta.focus()
+  // Select "New Section" so user can immediately type the name
+  const sectionStart = before.length + 4  // after '\n\n## '
+  ta.setSelectionRange(sectionStart, sectionStart + 'New Section'.length)
+}
+
+function insertBullet() {
+  const ta = document.getElementById('edit-textarea')
+  const pos = ta.selectionStart
+  const before = ta.value.slice(0, pos)
+  const after = ta.value.slice(pos)
+  const insert = '\n- '
+  ta.value = before + insert + after
+  const newPos = before.length + insert.length
+  ta.setSelectionRange(newPos, newPos)
+  ta.focus()
 }
 
 async function saveFile(rel) {
@@ -367,6 +429,46 @@ async function saveFile(rel) {
     setTimeout(() => renderFileContent(rel), 800)
   } catch (err) {
     status.textContent = `Error: ${err.message}`
+  }
+}
+
+// ── New file ──────────────────────────────────────────────────────────────────
+function toggleNewFileForm() {
+  const form = document.getElementById('new-file-form')
+  const visible = form.style.display !== 'none'
+  form.style.display = visible ? 'none' : 'block'
+  if (!visible) {
+    document.getElementById('new-file-name').focus()
+    document.getElementById('new-file-error').style.display = 'none'
+  }
+}
+
+async function createFile() {
+  const name = document.getElementById('new-file-name').value.trim()
+  const location = document.querySelector('input[name="file-location"]:checked').value
+  const errEl = document.getElementById('new-file-error')
+  errEl.style.display = 'none'
+
+  if (!name) { errEl.textContent = 'Name is required.'; errEl.style.display = 'block'; return }
+
+  try {
+    const res = await fetch('/api/new-file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, location })
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error)
+
+    files[data.relPath] = data.content
+    document.getElementById('new-file-name').value = ''
+    toggleNewFileForm()
+    renderFilesNav()
+    selectFile(data.relPath)
+    enterEditMode(data.relPath)
+  } catch (err) {
+    errEl.textContent = err.message
+    errEl.style.display = 'block'
   }
 }
 

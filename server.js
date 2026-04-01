@@ -222,6 +222,39 @@ app.post('/api/apply', async (req, res) => {
   }
 })
 
+// POST /api/new-file — create a new project markdown file
+// Body: { name: string, location: 'people' | 'root' }
+app.post('/api/new-file', (req, res) => {
+  const { name, location } = req.body
+  if (!name?.trim()) return res.status(400).json({ error: 'name is required' })
+
+  const slug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  const relPath = location === 'people' ? `people/${slug}.md` : `${slug}.md`
+  const absolutePath = path.join(PROJECT_DIR, relPath)
+
+  if (!absolutePath.startsWith(PROJECT_DIR)) return res.status(400).json({ error: 'Invalid path' })
+  if (fs.existsSync(absolutePath)) return res.status(409).json({ error: 'File already exists' })
+
+  const title = name.trim()
+  const starter = location === 'people'
+    ? `# ${title}\nGolden Eagle Log Homes\n\n(no notes yet)\n`
+    : `# ${title}\n\n(no notes yet)\n`
+
+  try {
+    fs.mkdirSync(path.dirname(absolutePath), { recursive: true })
+    fs.writeFileSync(absolutePath, starter, 'utf8')
+
+    try {
+      execSync(`git -C "${PROJECT_DIR}" add "${absolutePath}"`, { stdio: 'pipe' })
+      execSync(`git -C "${PROJECT_DIR}" commit -m "new file: ${relPath}"`, { stdio: 'pipe' })
+    } catch (_) {}
+
+    res.json({ relPath, content: starter })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
 // POST /api/save-file — save direct edits to a project file
 // Body: { file_path: string, content: string }
 app.post('/api/save-file', (req, res) => {
