@@ -100,8 +100,8 @@ Stored in `test-data/named-versions.json`:
 3. ✅ Autosave — debounced disk write in edit mode, no git
 4. ✅ Cmd+S checkpoint — git commit, replaces Save button
 5. ✅ Structured `/api/history` — age, type, named flag per entry
-6. [ ] Named versions — `/api/protect-version` + `named-versions.json`
-7. [ ] Age display in version history panel
+6. ✅ Milestone versions — auto for ai-post/ai-pre; user can name any version
+7. ✅ Age display in version history panel
 8. [ ] Pruning (future)
 
 ### Research basis

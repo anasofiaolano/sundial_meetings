@@ -326,6 +326,23 @@ app.post('/api/commit-checkpoint', (req, res) => {
   }
 })
 
+// POST /api/protect-version — user names a version (protects it forever)
+// Body: { hash: string, name: string }
+app.post('/api/protect-version', (req, res) => {
+  const { hash, name } = req.body
+  if (!hash || !name?.trim()) return res.status(400).json({ error: 'hash and name are required' })
+
+  const named = loadNamedVersions()
+  const existing = named.findIndex(n => n.hash === hash)
+  const entry = { hash, name: name.trim(), created: new Date().toISOString() }
+
+  if (existing !== -1) named[existing] = entry
+  else named.push(entry)
+
+  fs.writeFileSync(NAMED_VERSIONS_FILE, JSON.stringify(named, null, 2))
+  res.json({ ok: true })
+})
+
 // GET /api/history — structured git log with age, type, named flag
 const NAMED_VERSIONS_FILE = path.join(__dirname, 'test-data/named-versions.json')
 
@@ -368,13 +385,16 @@ app.get('/api/history', (req, res) => {
 
     const entries = raw.split('\n').map(line => {
       const [hash, shortHash, subject, date] = line.split('|')
+      const type = classifyCommit(subject)
+      const autoMilestone = type === 'ai-post' || type === 'ai-pre'
       return {
         hash,
         shortHash,
         subject,
         date,
         age: formatAge(date),
-        type: classifyCommit(subject),
+        type,
+        milestone: autoMilestone,   // protected forever without user action
         named: namedByHash[hash] || null
       }
     })

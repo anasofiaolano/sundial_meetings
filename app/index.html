@@ -289,14 +289,13 @@ function renderCallsNav(calls) {
   }).join('')
 }
 
-// type → display config
-const VERSION_TYPE = {
-  'ai-post':    { label: 'AI edit',     dot: '#22c55e', protect: true  },
-  'ai-pre':     { label: 'snapshot',    dot: '#94a3b8', protect: true  },
-  'checkpoint': { label: 'checkpoint',  dot: '#3b82f6', protect: false },
-  'new-file':   { label: 'new file',    dot: '#a78bfa', protect: false },
-  'manual':     { label: 'manual edit', dot: '#f59e0b', protect: false },
-  'other':      { label: '',            dot: '#d1d5db', protect: false },
+const VERSION_DOT = {
+  'ai-post':    '#22c55e',
+  'ai-pre':     '#94a3b8',
+  'checkpoint': '#3b82f6',
+  'new-file':   '#a78bfa',
+  'manual':     '#f59e0b',
+  'other':      '#d1d5db',
 }
 
 function renderVersionHistory(entries) {
@@ -307,27 +306,95 @@ function renderVersionHistory(entries) {
   }
 
   panel.innerHTML = entries.map((e, i) => {
-    const cfg = VERSION_TYPE[e.type] || VERSION_TYPE.other
-    const label = e.named ? e.named.name : e.subject
+    const dot = VERSION_DOT[e.type] || '#d1d5db'
+    const displayLabel = e.named ? e.named.name : e.subject
     const isSelected = selectedVersionId === e.hash
+
     const currentBadge = i === 0
-      ? `<span style="font-size:9px;font-weight:600;padding:1px 5px;border-radius:8px;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;">CURRENT</span> `
+      ? `<span style="font-size:9px;font-weight:600;padding:1px 5px;border-radius:8px;background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;margin-right:3px;">CURRENT</span>`
       : ''
-    const namedPin = e.named
-      ? `<span style="font-size:10px;color:#6b7280;" title="${e.named.name}">📌</span> `
+
+    // Milestone badge — auto for ai-post/ai-pre, also shown if user-named
+    const milestoneBadge = (e.milestone || e.named)
+      ? `<span style="font-size:9px;font-weight:600;padding:1px 5px;border-radius:8px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;margin-right:3px;" title="${e.named ? 'Named version — kept forever' : 'Auto-milestone — kept forever'}">${e.named ? '📌' : '◆'}</span>`
       : ''
 
     return `
-      <div class="ver-item ${isSelected ? 'selected' : ''}" onclick="selectVersionEntry('${e.hash}')">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
-          <span style="width:7px;height:7px;border-radius:50%;background:${cfg.dot};flex-shrink:0;display:inline-block;"></span>
-          <span class="ver-label" style="font-size:12px;">${namedPin}${label}</span>
+      <div class="ver-item ${isSelected ? 'selected' : ''}" id="ver-${e.hash}"
+        onclick="selectVersionEntry('${e.hash}')"
+        onmouseenter="showNameAction('${e.hash}')"
+        onmouseleave="hideNameAction('${e.hash}')">
+        <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:2px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:${dot};flex-shrink:0;margin-top:3px;display:inline-block;"></span>
+          <span style="font-size:12px;font-weight:500;color:#111827;line-height:1.4;">${displayLabel}</span>
         </div>
-        <div class="ver-meta" style="padding-left:13px;">
-          ${currentBadge}${e.age} · <span style="font-family:monospace;">${e.shortHash}</span>
+        <div style="padding-left:13px;font-size:11px;color:#9ca3af;">
+          ${currentBadge}${milestoneBadge}${e.age} · <span style="font-family:monospace;">${e.shortHash}</span>
+          <span id="name-action-${e.hash}" style="display:none;margin-left:6px;">
+            · <a href="#" onclick="event.stopPropagation();startNaming('${e.hash}',\`${(e.named?.name||'').replace(/`/g,"'")}\`)" style="color:#6b7280;font-size:11px;text-decoration:none;" onmouseenter="this.style.color='#1d4ed8'" onmouseleave="this.style.color='#6b7280'">${e.named ? 'rename' : 'name'}</a>
+          </span>
         </div>
       </div>`
   }).join('')
+}
+
+function showNameAction(hash) {
+  const el = document.getElementById(`name-action-${hash}`)
+  if (el) el.style.display = 'inline'
+}
+function hideNameAction(hash) {
+  const el = document.getElementById(`name-action-${hash}`)
+  if (el) el.style.display = 'none'
+}
+
+function startNaming(hash, currentName) {
+  const panel = document.getElementById('history-panel')
+  // Insert inline input at top of panel
+  const existing = document.getElementById('naming-form')
+  if (existing) existing.remove()
+
+  const form = document.createElement('div')
+  form.id = 'naming-form'
+  form.style.cssText = 'padding:8px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;margin-bottom:6px;'
+  form.innerHTML = `
+    <div style="font-size:11px;color:#1d4ed8;margin-bottom:5px;font-weight:500;">Name this version</div>
+    <input id="naming-input" type="text" value="${currentName}"
+      placeholder="e.g. Post-discovery call"
+      style="width:100%;border:1px solid #93c5fd;border-radius:4px;padding:4px 7px;font-size:12px;outline:none;margin-bottom:5px;"
+      onkeydown="if(event.key==='Enter')submitName('${hash}');if(event.key==='Escape')cancelNaming()">
+    <div style="display:flex;gap:5px;">
+      <button onclick="submitName('${hash}')"
+        style="flex:1;background:#1d4ed8;color:white;border:none;border-radius:4px;padding:3px 8px;font-size:11px;cursor:pointer;">Save</button>
+      <button onclick="cancelNaming()"
+        style="background:none;border:1px solid #bfdbfe;border-radius:4px;padding:3px 8px;font-size:11px;cursor:pointer;color:#6b7280;">Cancel</button>
+    </div>`
+  panel.prepend(form)
+  document.getElementById('naming-input').focus()
+  document.getElementById('naming-input').select()
+}
+
+function cancelNaming() {
+  const el = document.getElementById('naming-form')
+  if (el) el.remove()
+}
+
+async function submitName(hash) {
+  const name = document.getElementById('naming-input')?.value.trim()
+  if (!name) { cancelNaming(); return }
+
+  try {
+    await fetch('/api/protect-version', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hash, name })
+    })
+    cancelNaming()
+    const history = await fetch('/api/history').then(r => r.json())
+    renderVersionHistory(history)
+    showToast(`Version named: "${name}"`)
+  } catch (err) {
+    showToast('Failed to save name', true)
+  }
 }
 
 function selectVersionEntry(hash) {
