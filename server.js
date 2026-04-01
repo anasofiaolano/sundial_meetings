@@ -222,6 +222,41 @@ app.post('/api/apply', async (req, res) => {
   }
 })
 
+// POST /api/save-file — save direct edits to a project file
+// Body: { file_path: string, content: string }
+app.post('/api/save-file', (req, res) => {
+  const { file_path, content } = req.body
+  if (!file_path || content === undefined) {
+    return res.status(400).json({ error: 'file_path and content are required' })
+  }
+
+  // Prevent path traversal
+  const absolutePath = path.join(PROJECT_DIR, file_path)
+  if (!absolutePath.startsWith(PROJECT_DIR)) {
+    return res.status(400).json({ error: 'Invalid file path' })
+  }
+  if (!fs.existsSync(absolutePath)) {
+    return res.status(404).json({ error: 'File not found' })
+  }
+
+  try {
+    fs.writeFileSync(absolutePath, content, 'utf8')
+
+    let commitHash = null
+    try {
+      execSync(`git -C "${PROJECT_DIR}" add "${absolutePath}"`, { stdio: 'pipe' })
+      execSync(`git -C "${PROJECT_DIR}" commit -m "manual edit: ${file_path}"`, { stdio: 'pipe' })
+      commitHash = execSync(`git -C "${PROJECT_DIR}" rev-parse --short HEAD`, { stdio: 'pipe' }).toString().trim()
+    } catch (err) {
+      // git not available or nothing to commit — non-fatal
+    }
+
+    res.json({ ok: true, commitHash })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
 // GET /api/history — recent git log
 app.get('/api/history', (req, res) => {
   try {

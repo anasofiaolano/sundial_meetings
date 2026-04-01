@@ -42,6 +42,10 @@
     .pe-invalid { background: #fffbeb; }
     .pe-invalid .pe-file-name { color: #92400e; }
 
+    /* Edit mode */
+    #edit-textarea { width:100%; border:1px solid #e5e7eb; border-radius:6px; padding:12px; font-size:13px; font-family:ui-monospace,'SF Mono',monospace; line-height:1.6; resize:vertical; outline:none; min-height:320px; }
+    #edit-textarea:focus { border-color:#93c5fd; box-shadow:0 0 0 2px #dbeafe; }
+
     /* Markdown content */
     .md-content h1 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
     .md-content h2 { font-size: 15px; font-weight: 600; margin: 16px 0 6px; }
@@ -307,9 +311,67 @@ function renderFileContent(rel) {
   const html = marked.parse(content)
   document.getElementById('content').innerHTML = `
     <div style="max-width:640px;">
-      <div style="font-size:11px;color:#9ca3af;margin-bottom:16px;">${rel}</div>
-      <div class="md-content">${html}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div style="font-size:11px;color:#9ca3af;">${rel}</div>
+        <button onclick="enterEditMode('${rel}')"
+          style="font-size:12px;color:#6b7280;background:none;border:1px solid #e5e7eb;border-radius:5px;padding:3px 10px;cursor:pointer;"
+          onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background='none'">Edit</button>
+      </div>
+      <div class="md-content" id="md-rendered">${html}</div>
     </div>`
+}
+
+function enterEditMode(rel) {
+  const content = files[rel] || ''
+  document.getElementById('content').innerHTML = `
+    <div style="max-width:640px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div style="font-size:11px;color:#9ca3af;">${rel}</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div id="save-status" style="font-size:12px;color:#9ca3af;"></div>
+          <button onclick="renderFileContent('${rel}')"
+            style="font-size:12px;color:#6b7280;background:none;border:1px solid #e5e7eb;border-radius:5px;padding:3px 10px;cursor:pointer;"
+            onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background='none'">Cancel</button>
+          <button onclick="saveFile('${rel}')"
+            style="font-size:12px;color:white;background:#111827;border:none;border-radius:5px;padding:3px 12px;cursor:pointer;"
+            onmouseenter="this.style.background='#374151'" onmouseleave="this.style.background='#111827'">Save</button>
+        </div>
+      </div>
+      <textarea id="edit-textarea" spellcheck="false">${escapeHtml(content)}</textarea>
+    </div>`
+  document.getElementById('edit-textarea').focus()
+  // Cmd/Ctrl+S to save
+  document.getElementById('edit-textarea').addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); saveFile(rel) }
+  })
+}
+
+async function saveFile(rel) {
+  const content = document.getElementById('edit-textarea').value
+  const status = document.getElementById('save-status')
+  status.textContent = 'Saving…'
+
+  try {
+    const res = await fetch('/api/save-file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file_path: rel, content })
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error)
+
+    files[rel] = content
+    status.innerHTML = `<span style="color:#16a34a;">✓ Saved${data.commitHash ? ` · ${data.commitHash}` : ''}</span>`
+    await loadCalls()
+    // Switch back to read view after a beat
+    setTimeout(() => renderFileContent(rel), 800)
+  } catch (err) {
+    status.textContent = `Error: ${err.message}`
+  }
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
 }
 
 function showCallDetail(call) {
