@@ -96,7 +96,7 @@ Stored in `test-data/named-versions.json`:
 
 ### Implementation order
 1. ✅ Post-AI git commit (already in `applyBatch`)
-2. [ ] Pre-AI snapshot — commit in `/api/apply` before `applyBatch` runs
+2. ✅ Pre-AI snapshot — commit in `/api/apply` before `applyBatch` runs
 3. [ ] Autosave — debounced disk write in edit mode, no git
 4. [ ] Cmd+S checkpoint — git commit, replaces Save button
 5. [ ] Structured `/api/history` — age, type, named flag per entry
