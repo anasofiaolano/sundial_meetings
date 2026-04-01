@@ -184,6 +184,19 @@ app.post('/api/apply', async (req, res) => {
   if (!edits?.length) return res.status(400).json({ error: 'edits array is required' })
 
   try {
+    // Pre-AI snapshot — commit current state before touching anything
+    // This is the rollback point if the AI edits need to be undone
+    const callName = (() => {
+      const calls = loadCallsLog()
+      return calls.find(c => c.id === callId)?.name || callId || 'unknown'
+    })()
+    try {
+      execSync(`git -C "${PROJECT_DIR}" add -A`, { stdio: 'pipe' })
+      execSync(`git -C "${PROJECT_DIR}" commit -m "snapshot: before ${callName}"`, { stdio: 'pipe' })
+    } catch (_) {
+      // Nothing to commit (no unsaved changes) — that's fine, snapshot isn't needed
+    }
+
     // Track all files as read before applying
     const projectFiles = loadProjectFiles()
     for (const relPath of Object.keys(projectFiles)) {
