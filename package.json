@@ -4,9 +4,11 @@
   "description": "Sundial Meetings CRM — AI extraction test scripts",
   "type": "commonjs",
   "scripts": {
+    "start": "node server.js",
     "test-extraction": "node scripts/test-extraction.js"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.39.0"
+    "@anthropic-ai/sdk": "^0.39.0",
+    "express": "^5.2.1"
   }
 }

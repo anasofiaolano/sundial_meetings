@@ -4,6 +4,8 @@ Validates the core AI loop in isolation. Given a set of free-form markdown proje
 
 **Status:** Complete and working. All 5 Golden Eagle transcripts extract cleanly with zero validation failures.
 
+**Language note:** This project is currently in Node.js by default, not by deliberate choice. The Anthropic SDK, the apply logic, and the server are all JS. The intended migration target is **Python** (FastAPI + Anthropic Python SDK) — Python is the better long-term fit for AI projects due to ecosystem (LangChain, LlamaIndex, vector DBs, eval frameworks) and the talent pool. Migrate at a natural stopping point.
+
 ---
 
 ## What was built

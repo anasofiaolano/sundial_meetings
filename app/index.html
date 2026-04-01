@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sundial — Golden Eagle</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; color: #111827; }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+
+    /* Nav items */
+    .nav-item { padding: 4px 10px; font-size: 13px; color: #374151; cursor: pointer; border-radius: 4px; }
+    .nav-item:hover { background: #f3f4f6; }
+    .nav-item.active { background: #dbeafe; color: #1d4ed8; }
+    .nav-section { font-size: 11px; font-weight: 600; color: #9ca3af; letter-spacing: .05em; text-transform: uppercase; padding: 8px 10px 4px; }
+
+    /* Proposed edits module */
+    .pe-module { border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; margin-bottom: 24px; }
+    .pe-module-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #f9fafb; border-bottom: 1px solid #e5e7eb; }
+    .pe-file-block { border-bottom: 1px solid #f3f4f6; }
+    .pe-file-block:last-child { border-bottom: none; }
+    .pe-file-header { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: white; }
+    .pe-file-name { font-size: 13px; font-weight: 500; color: #111827; flex: 1; }
+    .pe-edit-label { font-size: 10px; font-weight: 600; color: #9ca3af; letter-spacing: .05em; text-transform: uppercase; padding: 6px 14px 2px; display: block; }
+    .pe-edit-removed { background: #fef2f2; color: #991b1b; padding: 4px 14px 4px 28px; display: block; font-family: monospace; font-size: 12px; white-space: pre-wrap; word-break: break-word; }
+    .pe-edit-added   { background: #f0fdf4; color: #166534; padding: 4px 14px 4px 28px; display: block; font-family: monospace; font-size: 12px; white-space: pre-wrap; word-break: break-word; }
+    .pe-accept-btn { font-size: 11px; font-weight: 500; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; padding: 2px 9px; cursor: pointer; }
+    .pe-accept-btn:hover { background: #dcfce7; }
+    .pe-skip-btn   { font-size: 11px; color: #9ca3af; background: none; border: 1px solid #e5e7eb; border-radius: 4px; padding: 2px 9px; cursor: pointer; }
+    .pe-skip-btn:hover { background: #f9fafb; color: #6b7280; }
+    .pe-file-accepted .pe-file-name { color: #9ca3af; }
+    .pe-file-accepted .pe-file-header { background: #f9fafb; }
+    .pe-file-accepted .pe-edits-body { display: none; }
+    .pe-file-skipped { opacity: 0.4; }
+    .pe-file-skipped .pe-edits-body { display: none; }
+    .pe-invalid { background: #fffbeb; }
+    .pe-invalid .pe-file-name { color: #92400e; }
+
+    /* Markdown content */
+    .md-content h1 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+    .md-content h2 { font-size: 15px; font-weight: 600; margin: 16px 0 6px; }
+    .md-content h3 { font-size: 13px; font-weight: 600; margin: 12px 0 4px; }
+    .md-content p  { margin-bottom: 8px; line-height: 1.6; color: #374151; }
+    .md-content ul { padding-left: 18px; margin-bottom: 8px; }
+    .md-content li { margin-bottom: 3px; line-height: 1.5; color: #374151; }
+
+    /* Call history */
+    .call-item { padding: 8px 10px; border-radius: 6px; cursor: pointer; }
+    .call-item:hover { background: #f9fafb; }
+    .call-item.active { background: #dbeafe; }
+
+    /* Modal */
+    #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 50; display: none; align-items: center; justify-content: center; }
+    #modal-overlay.open { display: flex; }
+    #modal-box { background: white; border-radius: 12px; width: 600px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+
+    /* Confidence badge */
+    .conf-high   { background: #dcfce7; color: #15803d; }
+    .conf-medium { background: #fef9c3; color: #92400e; }
+    .conf-low    { background: #fee2e2; color: #991b1b; }
+
+    /* Spinner */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { width: 18px; height: 18px; border: 2px solid #e5e7eb; border-top-color: #6b7280; border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; }
+  </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden bg-white">
+
+  <!-- TOP BAR -->
+  <div style="height:48px; border-bottom:1px solid #e5e7eb; background:white; display:flex; align-items:center; padding:0 16px; gap:12px; flex-shrink:0; z-index:10;">
+    <div style="font-weight:600; font-size:15px;">Sundial</div>
+    <div style="font-size:13px; color:#9ca3af;">Golden Eagle Log Homes</div>
+    <div style="flex:1;"></div>
+    <button onclick="openModal()"
+      style="background:#111827; color:white; border:none; border-radius:6px; padding:6px 14px; font-size:13px; font-weight:500; cursor:pointer; display:flex; align-items:center; gap:6px;"
+      onmouseenter="this.style.background='#374151'" onmouseleave="this.style.background='#111827'">
+      ↑ Process Call
+    </button>
+    <div style="width:30px;height:30px;border-radius:50%;background:#dbeafe;border:2px solid #93c5fd;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#1d4ed8;">AO</div>
+  </div>
+
+  <!-- THREE-COLUMN LAYOUT -->
+  <div class="flex flex-1 overflow-hidden">
+
+    <!-- LEFT PANEL -->
+    <div style="width:220px; flex-shrink:0; border-right:1px solid #e5e7eb; overflow-y:auto; padding:12px 8px;">
+      <div class="nav-section">Project Files</div>
+      <div id="files-nav"></div>
+      <div class="nav-section" style="margin-top:16px;">Recent Calls</div>
+      <div id="calls-nav"></div>
+    </div>
+
+    <!-- CENTER: CONTENT -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+
+      <!-- State: idle / extracting / review / applying / done -->
+      <div id="content" class="flex-1 overflow-y-auto px-8 py-6">
+        <div style="color:#9ca3af; font-size:13px; margin-top:40px; text-align:center;">
+          Select a file from the left, or click <strong>Process Call</strong> to analyze a transcript.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL: VERSION HISTORY -->
+    <div style="width:220px; flex-shrink:0; border-left:1px solid #e5e7eb; overflow-y:auto; padding:12px 8px; background:#fafafa;">
+      <div class="nav-section">Version History</div>
+      <div id="history-panel" style="font-size:12px; color:#6b7280; font-family:monospace; white-space:pre-wrap; padding:4px;"></div>
+    </div>
+
+  </div>
+
+  <!-- MODAL: Paste Transcript -->
+  <div id="modal-overlay">
+    <div id="modal-box">
+      <div style="padding:16px 20px; border-bottom:1px solid #e5e7eb; display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <div style="font-weight:600; font-size:15px;">Process Call</div>
+          <div style="font-size:12px; color:#9ca3af; margin-top:2px;">Paste a transcript — Claude will extract proposed edits</div>
+        </div>
+        <button onclick="closeModal()" style="background:none;border:none;font-size:20px;color:#9ca3af;cursor:pointer;line-height:1;">×</button>
+      </div>
+      <div style="padding:16px 20px; display:flex; flex-direction:column; gap:12px; flex:1; overflow:hidden;">
+        <div>
+          <label style="font-size:12px; font-weight:500; color:#374151; display:block; margin-bottom:4px;">Call name (optional)</label>
+          <input id="call-name-input" type="text" placeholder="e.g. Sean Flaherty — Discovery"
+            style="width:100%; border:1px solid #e5e7eb; border-radius:6px; padding:7px 10px; font-size:13px; outline:none;"
+            onfocus="this.style.borderColor='#93c5fd'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+        <div style="flex:1; display:flex; flex-direction:column; min-height:0;">
+          <label style="font-size:12px; font-weight:500; color:#374151; display:block; margin-bottom:4px;">Transcript</label>
+          <textarea id="transcript-input"
+            placeholder="Paste the full call transcript here..."
+            style="flex:1; min-height:280px; border:1px solid #e5e7eb; border-radius:6px; padding:10px; font-size:13px; resize:none; outline:none; font-family:inherit; line-height:1.5;"
+            onfocus="this.style.borderColor='#93c5fd'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
+        </div>
+      </div>
+      <div style="padding:12px 20px; border-top:1px solid #e5e7eb; display:flex; align-items:center; justify-content:space-between;">
+        <div id="modal-status" style="font-size:12px; color:#9ca3af;"></div>
+        <div style="display:flex; gap:8px;">
+          <button onclick="closeModal()" style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:6px 14px;font-size:13px;cursor:pointer;color:#374151;">Cancel</button>
+          <button id="extract-btn" onclick="runExtraction()"
+            style="background:#111827;color:white;border:none;border-radius:6px;padding:6px 16px;font-size:13px;font-weight:500;cursor:pointer;">
+            Extract edits
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+let files = {}          // relPath → content
+let currentFile = null  // relPath of selected file
+let pendingEdits = []   // edits from last extraction
+let currentCallId = null
+let peFileStates = {}   // peId → 'pending' | 'accepted' | 'skipped'
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+async function init() {
+  await Promise.all([loadFiles(), loadCalls(), loadHistory()])
+}
+
+async function loadFiles() {
+  const res = await fetch('/api/files')
+  files = await res.json()
+  renderFilesNav()
+}
+
+async function loadCalls() {
+  const res = await fetch('/api/calls')
+  const calls = await res.json()
+  renderCallsNav(calls)
+}
+
+async function loadHistory() {
+  const res = await fetch('/api/history')
+  const { log } = await res.json()
+  document.getElementById('history-panel').textContent = log || '(no commits yet)'
+}
+
+// ── Left nav ─────────────────────────────────────────────────────────────────
+function renderFilesNav() {
+  const container = document.getElementById('files-nav')
+  // Sort: project-overview first, then people/
+  const sorted = Object.keys(files).sort((a, b) => {
+    if (a.includes('project-overview')) return -1
+    if (b.includes('project-overview')) return 1
+    return a.localeCompare(b)
+  })
+  container.innerHTML = sorted.map(rel => {
+    const label = rel.replace('people/', '').replace('.md', '')
+    return `<div class="nav-item ${currentFile === rel ? 'active' : ''}" onclick="selectFile('${rel}')">${label}</div>`
+  }).join('')
+}
+
+function renderCallsNav(calls) {
+  const container = document.getElementById('calls-nav')
+  if (!calls.length) {
+    container.innerHTML = `<div style="font-size:12px;color:#d1d5db;padding:4px 10px;">No calls yet</div>`
+    return
+  }
+  container.innerHTML = [...calls].reverse().slice(0, 10).map(c => {
+    const date = new Date(c.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    const statusColor = c.status === 'applied' ? '#16a34a' : '#d97706'
+    return `
+      <div class="call-item" onclick="selectCall('${c.id}')">
+        <div style="font-size:13px;font-weight:500;">${c.name}</div>
+        <div style="font-size:11px;color:#9ca3af;margin-top:1px;">${date} · <span style="color:${statusColor}">${c.status}</span></div>
+      </div>`
+  }).join('')
+}
+
+function selectFile(rel) {
+  currentFile = rel
+  renderFilesNav()
+  renderFileContent(rel)
+}
+
+function selectCall(callId) {
+  // Show the extraction review for this call from history (read-only)
+  fetch('/api/calls').then(r => r.json()).then(calls => {
+    const call = calls.find(c => c.id === callId)
+    if (!call) return
+    showCallDetail(call)
+  })
+}
+
+// ── File content view ─────────────────────────────────────────────────────────
+function renderFileContent(rel) {
+  const content = files[rel] || ''
+  const html = marked.parse(content)
+  document.getElementById('content').innerHTML = `
+    <div style="max-width:640px;">
+      <div style="font-size:11px;color:#9ca3af;margin-bottom:16px;">${rel}</div>
+      <div class="md-content">${html}</div>
+    </div>`
+}
+
+function showCallDetail(call) {
+  const validEdits  = call.edits.filter(e => e._valid)
+  const invalidEdits = call.edits.filter(e => !e._valid)
+  const date = new Date(call.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+
+  document.getElementById('content').innerHTML = `
+    <div style="max-width:640px;">
+      <h2 style="font-size:20px;font-weight:400;margin-bottom:4px;">${call.name}</h2>
+      <div style="font-size:12px;color:#9ca3af;margin-bottom:24px;">${date} · ${call.edits.length} proposed edits · status: <strong>${call.status}</strong>${call.commit_hash ? ` · commit ${call.commit_hash}` : ''}</div>
+      ${validEdits.length ? renderPEModuleReadOnly(validEdits) : ''}
+      ${invalidEdits.length ? `<div style="font-size:12px;color:#9ca3af;margin-top:12px;">${invalidEdits.length} edit(s) had validation issues (old_value not found / hallucinated path)</div>` : ''}
+    </div>`
+}
+
+function renderPEModuleReadOnly(edits) {
+  const byFile = groupByFile(edits)
+  const fileBlocksHtml = Object.entries(byFile).map(([filePath, fileEdits]) => {
+    const editsHtml = fileEdits.map(e => `
+      <span class="pe-edit-label">${e.field_label}</span>
+      <span class="pe-edit-removed">- ${e.old_value}</span>
+      <span class="pe-edit-added">+ ${e.new_value}</span>
+    `).join('')
+    return `
+      <div class="pe-file-block">
+        <div class="pe-file-header">
+          <span class="pe-file-name">${filePath}</span>
+          <span style="font-size:11px;color:#9ca3af;">${fileEdits.length} edit(s)</span>
+        </div>
+        <div class="pe-edits-body">${editsHtml}</div>
+      </div>`
+  }).join('')
+  return `<div class="pe-module">${fileBlocksHtml}</div>`
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────────
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open')
+  document.getElementById('transcript-input').focus()
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open')
+  document.getElementById('modal-status').textContent = ''
+}
+
+// Close on backdrop click
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal()
+})
+
+// ── Extraction ────────────────────────────────────────────────────────────────
+async function runExtraction() {
+  const transcript = document.getElementById('transcript-input').value.trim()
+  const callName   = document.getElementById('call-name-input').value.trim()
+  if (!transcript) {
+    document.getElementById('modal-status').textContent = 'Please paste a transcript first.'
+    return
+  }
+
+  const btn = document.getElementById('extract-btn')
+  const status = document.getElementById('modal-status')
+
+  btn.disabled = true
+  btn.innerHTML = '<span class="spinner"></span>'
+  status.textContent = 'Analyzing transcript...'
+
+  try {
+    const res = await fetch('/api/extract', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ transcript, callName })
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'Extraction failed')
+
+    closeModal()
+    document.getElementById('transcript-input').value = ''
+    document.getElementById('call-name-input').value = ''
+
+    pendingEdits   = data.edits
+    currentCallId  = data.callId
+    peFileStates   = {}
+
+    await loadCalls()
+    renderReviewScreen(data)
+
+  } catch (err) {
+    status.textContent = `Error: ${err.message}`
+  } finally {
+    btn.disabled = false
+    btn.textContent = 'Extract edits'
+  }
+}
+
+// ── Review screen ─────────────────────────────────────────────────────────────
+function groupByFile(edits) {
+  const byFile = {}
+  for (const edit of edits) {
+    if (!byFile[edit.file_path]) byFile[edit.file_path] = []
+    byFile[edit.file_path].push(edit)
+  }
+  return byFile
+}
+
+function renderReviewScreen(data) {
+  const validEdits   = data.edits.filter(e => e._valid)
+  const invalidEdits = data.edits.filter(e => !e._valid)
+
+  if (!validEdits.length && !invalidEdits.length) {
+    document.getElementById('content').innerHTML = `
+      <div style="max-width:640px;margin-top:40px;text-align:center;color:#9ca3af;font-size:13px;">
+        No edits proposed for this transcript.
+      </div>`
+    return
+  }
+
+  const byFile = groupByFile(validEdits)
+  const fileIds = Object.keys(byFile)
+
+  // Initialize all file states as pending
+  fileIds.forEach(f => { if (!peFileStates[f]) peFileStates[f] = 'pending' })
+
+  const fileBlocksHtml = fileIds.map(filePath => renderFileBlock(filePath, byFile[filePath])).join('')
+
+  document.getElementById('content').innerHTML = `
+    <div style="max-width:640px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+        <h2 style="font-size:20px;font-weight:400;">Proposed Edits</h2>
+        <span style="font-size:12px;color:#9ca3af;">${data.token_count?.toLocaleString()} tokens</span>
+      </div>
+      <div style="font-size:12px;color:#9ca3af;margin-bottom:24px;">${fileIds.length} file(s) · ${validEdits.length} edit(s)</div>
+
+      <div class="pe-module" id="pe-module">
+        <div class="pe-module-header">
+          <div style="font-size:12px;color:#6b7280;">AI extracted changes from this call</div>
+          <div style="display:flex;gap:6px;">
+            <button class="pe-accept-btn" style="padding:4px 12px;font-size:12px;" onclick="acceptAll()">Accept all</button>
+            <button class="pe-skip-btn"   style="padding:4px 10px;font-size:12px;" onclick="dismissAll()">Dismiss all</button>
+          </div>
+        </div>
+        <div id="pe-file-blocks">${fileBlocksHtml}</div>
+      </div>
+
+      <div id="apply-bar" style="display:flex;align-items:center;gap:10px;margin-top:16px;">
+        <button id="apply-btn" onclick="applyAccepted()"
+          style="background:#16a34a;color:white;border:none;border-radius:6px;padding:8px 20px;font-size:13px;font-weight:500;cursor:pointer;">
+          Apply accepted edits
+        </button>
+        <div id="apply-status" style="font-size:12px;color:#9ca3af;"></div>
+      </div>
+
+      ${invalidEdits.length ? `
+        <div style="margin-top:24px;padding:12px 14px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;font-size:12px;color:#92400e;">
+          <strong>${invalidEdits.length} edit(s) skipped</strong> — old_value not found in file or hallucinated path:
+          <ul style="margin-top:6px;padding-left:16px;">
+            ${invalidEdits.map(e => `<li>${e.file_path} — "${e.old_value?.slice(0, 60)}…"</li>`).join('')}
+          </ul>
+        </div>` : ''}
+    </div>`
+}
+
+function renderFileBlock(filePath, edits) {
+  const state = peFileStates[filePath] || 'pending'
+  const editsHtml = edits.map(e => {
+    const confClass = `conf-${e.confidence}`
+    return `
+      <span class="pe-edit-label">
+        ${e.field_label}
+        <span class="badge ${confClass}" style="display:inline-flex;align-items:center;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:500;margin-left:6px;">${e.confidence}</span>
+      </span>
+      <span class="pe-edit-removed">- ${e.old_value}</span>
+      <span class="pe-edit-added">+ ${e.new_value}</span>
+      ${e.source_quote ? `<span style="display:block;padding:4px 14px 6px;font-size:11px;color:#9ca3af;font-style:italic;">"${e.source_quote}"</span>` : ''}`
+  }).join('')
+
+  const badge = state === 'accepted'
+    ? `<span style="font-size:11px;color:#16a34a;font-weight:500;">✓ Accepted</span>`
+    : state === 'skipped'
+    ? `<span style="font-size:11px;color:#9ca3af;">Skipped</span>`
+    : `<button class="pe-accept-btn" onclick="peAccept('${filePath}')">Accept</button>
+       <button class="pe-skip-btn"   onclick="peSkip('${filePath}')">Skip</button>`
+
+  return `
+    <div class="pe-file-block pe-file-${state}" id="pe-block-${CSS.escape(filePath)}">
+      <div class="pe-file-header">
+        <span class="pe-file-name">${filePath}</span>
+        ${badge}
+      </div>
+      <div class="pe-edits-body">${state === 'pending' ? editsHtml : ''}</div>
+    </div>`
+}
+
+function peAccept(filePath) {
+  peFileStates[filePath] = 'accepted'
+  rerenderFileBlock(filePath)
+}
+
+function peSkip(filePath) {
+  peFileStates[filePath] = 'skipped'
+  rerenderFileBlock(filePath)
+}
+
+function acceptAll() {
+  const validEdits = pendingEdits.filter(e => e._valid)
+  groupByFile(validEdits)
+  Object.keys(groupByFile(validEdits)).forEach(f => { peFileStates[f] = 'accepted' })
+  rerenderAllBlocks()
+}
+
+function dismissAll() {
+  const validEdits = pendingEdits.filter(e => e._valid)
+  Object.keys(groupByFile(validEdits)).forEach(f => { peFileStates[f] = 'skipped' })
+  rerenderAllBlocks()
+}
+
+function rerenderFileBlock(filePath) {
+  const validEdits = pendingEdits.filter(e => e._valid)
+  const byFile = groupByFile(validEdits)
+  const el = document.getElementById(`pe-block-${CSS.escape(filePath)}`)
+  if (el) el.outerHTML = renderFileBlock(filePath, byFile[filePath])
+}
+
+function rerenderAllBlocks() {
+  const validEdits = pendingEdits.filter(e => e._valid)
+  const byFile = groupByFile(validEdits)
+  document.getElementById('pe-file-blocks').innerHTML =
+    Object.keys(byFile).map(f => renderFileBlock(f, byFile[f])).join('')
+}
+
+// ── Apply ─────────────────────────────────────────────────────────────────────
+async function applyAccepted() {
+  const acceptedFilePaths = Object.entries(peFileStates)
+    .filter(([, s]) => s === 'accepted')
+    .map(([f]) => f)
+
+  if (!acceptedFilePaths.length) {
+    document.getElementById('apply-status').textContent = 'Accept at least one file first.'
+    return
+  }
+
+  const editsToApply = pendingEdits.filter(e => e._valid && acceptedFilePaths.includes(e.file_path))
+  // Strip internal _valid/_error fields before sending
+  const cleanEdits = editsToApply.map(({ _valid, _error, ...rest }) => rest)
+
+  const btn = document.getElementById('apply-btn')
+  const status = document.getElementById('apply-status')
+  btn.disabled = true
+  btn.innerHTML = '<span class="spinner"></span> Applying...'
+  status.textContent = ''
+
+  try {
+    const res = await fetch('/api/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ callId: currentCallId, edits: cleanEdits })
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'Apply failed')
+
+    // Refresh local file cache
+    files = data.files
+
+    const commitMsg = data.commitHash ? ` · commit ${data.commitHash}` : ''
+    status.innerHTML = `<span style="color:#16a34a;">✓ ${data.applied} edit(s) applied${commitMsg}</span>`
+    btn.style.display = 'none'
+
+    await Promise.all([loadCalls(), loadHistory()])
+    renderFilesNav()
+
+    // If a file is currently open, refresh it
+    if (currentFile) renderFileContent(currentFile)
+
+  } catch (err) {
+    status.textContent = `Error: ${err.message}`
+  } finally {
+    btn.disabled = false
+    if (btn.style.display !== 'none') btn.textContent = 'Apply accepted edits'
+  }
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+init()
+</script>
+</body>
+</html>
