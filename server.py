@@ -186,7 +186,7 @@ async def extract(req: ExtractRequest):
     messages = [{"role": "user", "content": user_message}]
 
     count = await client.messages.count_tokens(
-        model="claude-opus-4-6", system=SYSTEM_PROMPT, messages=messages
+        model="claude-sonnet-4-6", system=SYSTEM_PROMPT, messages=messages
     )
 
     if count.input_tokens > 160_000:
@@ -196,7 +196,7 @@ async def extract(req: ExtractRequest):
         )
 
     response = await client.messages.create(
-        model="claude-opus-4-6",
+        model="claude-sonnet-4-6",
         max_tokens=4096,
         system=SYSTEM_PROMPT,
         messages=messages,
