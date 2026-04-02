@@ -100,4 +100,4 @@ Path traversal check: `Path(absolute_path).resolve().is_relative_to(PROJECT_DIR.
 - [x] Step 1 — `requirements.txt`
 - [x] Step 2 — `scripts/phase-2/apply_edits.py`
 - [x] Step 3 — `server.py`
-- [ ] Step 4 — deployment update
+- [x] Step 4 — deployment update
