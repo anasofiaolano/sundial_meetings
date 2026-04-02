@@ -362,6 +362,42 @@ def commit_checkpoint(req: CommitCheckpointRequest):
 
     return {"ok": True, "commitHash": commit_hash}
 
+@app.post("/api/retry-call/{call_id}")
+async def retry_call(call_id: str):
+    """Re-sends the Inngest extract event for a single call (queued or failed)."""
+    calls = load_calls_log()
+    call  = next((c for c in calls if c["id"] == call_id), None)
+    if not call:
+        raise HTTPException(status_code=404, detail="Call not found")
+    if not call.get("transcript"):
+        raise HTTPException(status_code=400, detail="No transcript stored for this call")
+
+    await inngest_client.send(inngest.Event(
+        name="sundial/extract.requested",
+        data={
+            "call_id":    call["id"],
+            "transcript": call["transcript"],
+            "call_name":  call.get("name", call["id"]),
+            "call_date":  call.get("date"),
+        },
+    ))
+    # Reset status to queued so polling works again
+    call["status"] = "queued"
+    save_calls_log(calls)
+    log.info("retry-call: re-sent event for callId=%s name=%s", call["id"], call.get("name"))
+    return {"ok": True, "call_id": call_id}
+
+@app.delete("/api/calls/{call_id}")
+def delete_call(call_id: str):
+    calls = load_calls_log()
+    before = len(calls)
+    calls  = [c for c in calls if c["id"] != call_id]
+    if len(calls) == before:
+        raise HTTPException(status_code=404, detail="Call not found")
+    save_calls_log(calls)
+    log.info("delete-call: removed callId=%s", call_id)
+    return {"ok": True}
+
 @app.post("/api/retry-queued")
 async def retry_queued():
     """Re-sends Inngest extract events for all calls stuck in 'queued' status.
