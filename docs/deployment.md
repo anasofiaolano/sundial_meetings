@@ -20,25 +20,30 @@ Accessible from any device on Ana's Tailscale network.
 
 ---
 
-## Mac Mini setup (one-time, Python)
+## Mac Mini setup (one-time, Python + Inngest)
 
 ```bash
 git clone git@github.com:anasofiaolano/sundial_meetings.git
 cd sundial_meetings
 pip3 install -r requirements.txt
 export ANTHROPIC_API_KEY=sk-...   # add to ~/.zshrc to persist
-npm install -g pm2
-pm2 start "uvicorn server:app --port 3001" --name sundial
+npm install -g pm2 inngest-cli
+pm2 delete sundial 2>/dev/null || true   # remove old single-process if exists
+pm2 start ecosystem.config.js
 pm2 save
 pm2 startup   # run the command it prints to enable auto-start on boot
 ```
+
+This starts two processes:
+- `sundial` — FastAPI server on port 3001
+- `sundial-inngest` — Inngest dev server on port 8288 (Inngest dashboard)
 
 ---
 
 ## Updating after a push
 
 ```bash
-cd sundial_meetings && git pull && pm2 restart sundial
+cd sundial_meetings && git pull && pm2 restart all
 ```
 
 ---

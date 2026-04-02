@@ -48,11 +48,11 @@ Frontend:
 
 ## Steps
 
-- [ ] Step 1 — `requirements.txt` — add inngest
-- [ ] Step 2 — `inngest_functions.py` — client + 4-step function
-- [ ] Step 3 — `server.py` — mount Inngest, rewrite /api/extract, add /api/call-status
-- [ ] Step 4 — `app/index.html` — polling, queued/failed states
-- [ ] Step 5 — `ecosystem.config.js` — pm2 two-process setup
+- [x] Step 1 — `requirements.txt` — add inngest
+- [x] Step 2 — `inngest_functions.py` — client + 4-step function
+- [x] Step 3 — `server.py` — mount Inngest, rewrite /api/extract, add /api/call-status
+- [x] Step 4 — `app/index.html` — polling, queued/failed states
+- [x] Step 5 — `ecosystem.config.js` — pm2 two-process setup
 
 ---
 
