@@ -11,11 +11,21 @@
 
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 import regex  # PyPI 'regex' package — needed for \p{L} Unicode property escapes
 from anthropic import AsyncAnthropic
 
+# Logging — import from project root if available, else fallback to stdlib
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+    from logging_config import get_logger
+except ImportError:
+    import logging
+    def get_logger(name): return logging.getLogger(name)
+
+log = get_logger("apply_edits")
 client = AsyncAnthropic()
 
 # ---------------------------------------------------------------------------
@@ -205,14 +215,22 @@ async def apply_single_edit(
     retrying: bool = False,
     skip_retry: bool = False,
 ) -> dict:
+    label = edit.get("field_label", "?")
+    file  = edit.get("file_path", "?")
+    old_snippet = repr(edit["old_value"][:60])
+
     actual_old_value = find_actual_string(current_content, edit["old_value"])
 
     if not actual_old_value:
         if retrying or skip_retry:
+            log.warning("OLD_VALUE_NOT_FOUND (no retry left) — %s in %s, old_value=%s", label, file, old_snippet)
             return {"success": False, "error": "OLD_VALUE_NOT_FOUND", "edit": edit}
+        log.info("OLD_VALUE_NOT_FOUND — attempting clarify retry via Haiku — %s in %s", label, file)
         revised = await clarify_old_value(current_content, edit, "OLD_VALUE_NOT_FOUND", transcript)
         if not revised:
+            log.warning("clarify_old_value returned nothing — giving up on %s in %s", label, file)
             return {"success": False, "error": "OLD_VALUE_NOT_FOUND", "edit": edit}
+        log.info("clarify_old_value succeeded — retrying with revised old_value — %s in %s", label, file)
         return await apply_single_edit(
             current_content, {**edit, "old_value": revised}, transcript, retrying=True, skip_retry=skip_retry
         )
@@ -220,7 +238,9 @@ async def apply_single_edit(
     match_count = current_content.count(actual_old_value)
     if match_count > 1:
         if retrying or skip_retry:
+            log.warning("AMBIGUOUS_MATCH (%d occurrences, no retry left) — %s in %s", match_count, label, file)
             return {"success": False, "error": "AMBIGUOUS_MATCH", "count": match_count, "edit": edit}
+        log.info("AMBIGUOUS_MATCH (%d occurrences) — attempting clarify retry — %s in %s", match_count, label, file)
         revised = await clarify_old_value(current_content, edit, "AMBIGUOUS_MATCH", transcript)
         if not revised:
             return {"success": False, "error": "AMBIGUOUS_MATCH", "edit": edit}
@@ -260,19 +280,25 @@ async def apply_batch(
     options: dict | None = None,
 ) -> dict:
     skip_retry = (options or {}).get("skip_retry", False)
+    log.info("apply_batch START — %d edits, call=%s", len(proposed_edits), transcript_name)
 
     # 1. Load all files
     project_files = load_project_files(project_dir)
     known_paths = set(project_files.keys())
+    log.info("loaded %d project files from %s", len(project_files), project_dir)
 
     # Separate valid edits from hallucinated file paths upfront
     valid_edits = []
     skipped = []
     for edit in proposed_edits:
         if edit["file_path"] not in known_paths:
+            log.warning("UNKNOWN_FILE_PATH — hallucinated path: %s", edit["file_path"])
             skipped.append({"edit": edit, "reason": "UNKNOWN_FILE_PATH"})
         else:
             valid_edits.append(edit)
+
+    if skipped:
+        log.warning("skipped %d edits with unknown file paths", len(skipped))
 
     # 2. Group by file
     by_file: dict[str, list] = {}
@@ -286,15 +312,18 @@ async def apply_batch(
 
     for rel_path, edits in by_file.items():
         absolute_path = str(Path(project_dir) / rel_path)
+        log.info("processing %s — %d edit(s)", rel_path, len(edits))
         running_content = read_file_state[absolute_path]["content"]
         applied_new_values = []
 
         for edit in edits:
+            label = edit.get("field_label", "?")
             # Claude Code multi-edit safety: old_value must not be ⊂ a previous new_value
             if any(
                 edit["old_value"] != "" and prev.find(edit["old_value"]) != -1
                 for prev in applied_new_values
             ):
+                log.warning("SUBSET_OF_PREVIOUS_NEW_VALUE — skipping %s in %s", label, rel_path)
                 failed.append({"edit": edit, "error": "OLD_VALUE_SUBSET_OF_PREVIOUS_NEW_VALUE"})
                 continue
 
@@ -303,11 +332,19 @@ async def apply_batch(
                 running_content = result["content"]
                 applied_new_values.append(edit["new_value"])
                 applied.append({"edit": edit, "file": rel_path})
+                log.info("  ✓ applied: %s in %s", label, rel_path)
             else:
+                log.warning("  ✗ failed:  %s in %s — %s", label, rel_path, result["error"])
                 failed.append({"edit": edit, "error": result["error"]})
 
         if running_content != read_file_state[absolute_path]["content"]:
             pending_writes[absolute_path] = running_content
+            log.info("  queued write for %s", rel_path)
+        else:
+            log.info("  no changes to write for %s", rel_path)
+
+    log.info("in-memory phase complete — pending_writes=%d applied=%d failed=%d",
+             len(pending_writes), len(applied), len(failed))
 
     # 4 + 5 + 6. Staleness check + synchronous write — no awaits in this block
     commit_hash = None
@@ -318,14 +355,18 @@ async def apply_batch(
             if current_mtime > state["mtime"]:
                 # File changed on disk since we read it — abort this file
                 rel = str(Path(absolute_path).relative_to(project_dir))
+                log.error("FILE_MODIFIED_SINCE_READ — aborting write for %s (disk mtime %.3f > read mtime %.3f)",
+                          rel, current_mtime, state["mtime"])
                 failed.append({"file": rel, "error": "FILE_MODIFIED_SINCE_READ"})
                 del pending_writes[absolute_path]
 
         # Synchronous writes — no awaits between reads and writes (atomicity)
         for absolute_path, updated_content in pending_writes.items():
+            rel = str(Path(absolute_path).relative_to(project_dir))
             Path(absolute_path).write_text(updated_content, encoding="utf-8")
             new_mtime = Path(absolute_path).stat().st_mtime
             read_file_state[absolute_path] = {"content": updated_content, "mtime": new_mtime}
+            log.info("wrote %s (%d bytes)", rel, len(updated_content))
 
         # 7. Git commit
         try:
@@ -344,9 +385,22 @@ async def apply_batch(
                 capture_output=True, check=True
             )
             commit_hash = result.stdout.decode().strip()
+            log.info("git commit %s — %s", commit_hash, msg)
         except subprocess.CalledProcessError as e:
-            # Git not available or no changes to commit — non-fatal
-            print(f"  git commit skipped: {e.stderr.decode().split(chr(10))[0]}")
+            err_msg = e.stderr.decode().split("\n")[0]
+            log.warning("git commit skipped: %s", err_msg)
+
+    log.info("apply_batch DONE — applied=%d failed=%d skipped=%d commit=%s",
+             len(applied), len(failed), len(skipped), commit_hash)
+
+    if failed:
+        for f in failed:
+            edit_info = f.get("edit", {})
+            log.error("FAILED EDIT — file=%s label=%s error=%s old_value=%s",
+                      edit_info.get("file_path", f.get("file", "?")),
+                      edit_info.get("field_label", "?"),
+                      f.get("error"),
+                      repr(str(edit_info.get("old_value", ""))[:80]))
 
     return {"applied": applied, "failed": failed, "skipped": skipped, "commit_hash": commit_hash}
 

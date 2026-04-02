@@ -98,6 +98,15 @@
     <div style="font-weight:600; font-size:15px;">Sundial</div>
     <div style="font-size:13px; color:#9ca3af;">Golden Eagle Log Homes</div>
     <div style="flex:1;"></div>
+    <div id="inngest-warning" style="display:none;align-items:center;gap:6px;background:#fef3c7;border:1px solid #fde68a;border-radius:6px;padding:4px 10px;font-size:12px;color:#92400e;">
+      ⚠ Inngest not running — jobs stuck.
+      <a id="inngest-link" href="#" target="_blank" style="color:#92400e;font-weight:600;text-decoration:underline;">Open dashboard ↗</a>
+    </div>
+    <a id="inngest-dashboard-btn" href="#" target="_blank"
+      style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:5px 12px;font-size:12px;color:#6b7280;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:5px;"
+      title="Open Inngest dashboard">
+      ⚙ Inngest
+    </a>
     <button onclick="openModal()"
       style="background:#111827; color:white; border:none; border-radius:6px; padding:6px 14px; font-size:13px; font-weight:500; cursor:pointer; display:flex; align-items:center; gap:6px;"
       onmouseenter="this.style.background='#374151'" onmouseleave="this.style.background='#111827'">
@@ -234,8 +243,30 @@ let pollingInterval = null  // handle for status polling after queue
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
+  // Set Inngest dashboard link to port 8288 on same host
+  const inngestUrl = `http://${window.location.hostname}:8288`
+  document.getElementById('inngest-dashboard-btn').href = inngestUrl
+  document.getElementById('inngest-link').href = inngestUrl
+
   await Promise.all([loadFiles(), loadCalls()])
-  // loadCalls already fetches history — nothing extra needed
+  checkInngestStatus()
+  setInterval(checkInngestStatus, 15000)  // recheck every 15s
+}
+
+async function checkInngestStatus() {
+  try {
+    const res  = await fetch('/api/inngest-status')
+    if (!res.ok) return
+    const data = await res.json()
+    const warn = document.getElementById('inngest-warning')
+    if (data.stuck_count > 0) {
+      warn.style.display = 'flex'
+      warn.querySelector('span') && (warn.querySelector('span').textContent =
+        `⚠ Inngest not running — ${data.stuck_count} job(s) stuck.`)
+    } else {
+      warn.style.display = 'none'
+    }
+  } catch (_) {}
 }
 
 async function loadFiles() {

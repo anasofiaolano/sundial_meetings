@@ -11,6 +11,10 @@ import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
+from logging_config import setup_logging, get_logger
+setup_logging()
+log = get_logger("server")
+
 import inngest
 import inngest.fast_api
 from fastapi import FastAPI, HTTPException
@@ -162,6 +166,8 @@ async def extract(req: ExtractRequest):
             "call_date":  req.callDate,
         },
     ))
+    log.info("queued extraction — callId=%s name=%s transcript_len=%d",
+             call_id, req.callName or "unnamed", len(req.transcript))
 
     return {"callId": call_id, "status": "queued"}
 
@@ -191,6 +197,9 @@ async def apply(req: ApplyRequest):
     call_name = (call_record or {}).get("name", req.callId or "unknown")
     transcript = (call_record or {}).get("transcript", "")
 
+    log.info("apply START — callId=%s name=%s edits=%d transcript_present=%s",
+             req.callId, call_name, len(req.edits), bool(transcript))
+
     # Pre-AI snapshot — commit current state before touching anything
     try:
         subprocess.run(
@@ -201,15 +210,21 @@ async def apply(req: ApplyRequest):
             ["git", "-C", str(PROJECT_DIR), "commit", "-m", f"snapshot: before {call_name}"],
             capture_output=True, check=True
         )
-    except subprocess.CalledProcessError:
-        pass  # Nothing to commit — that's fine
+        log.info("git snapshot created before apply")
+    except subprocess.CalledProcessError as e:
+        log.info("git snapshot skipped (nothing to commit): %s", e.stderr.decode().split('\n')[0])
 
     # Track all files as read before applying
     project_files = load_project_files()
     for rel_path in project_files:
         track_read(str(PROJECT_DIR / rel_path))
+    log.info("tracked %d project files for staleness check", len(project_files))
 
-    result = await apply_batch(req.edits, str(PROJECT_DIR), transcript, call_name)
+    try:
+        result = await apply_batch(req.edits, str(PROJECT_DIR), transcript, call_name)
+    except Exception as e:
+        log.exception("apply_batch raised an exception — callId=%s", req.callId)
+        raise HTTPException(status_code=500, detail=f"apply_batch failed: {e}")
 
     # Update call status — only 'applied' if at least one edit landed
     if req.callId:
@@ -221,8 +236,12 @@ async def apply(req: ApplyRequest):
                 call["applied_at"] = datetime.now(timezone.utc).isoformat()
                 call["commit_hash"] = result["commit_hash"]
                 call["applied_edits"] = req.edits
+                log.info("apply SUCCESS — callId=%s applied=%d commit=%s",
+                         req.callId, len(result["applied"]), result["commit_hash"])
             else:
                 call["last_apply_attempt"] = datetime.now(timezone.utc).isoformat()
+                log.error("apply ZERO_APPLIED — callId=%s failed=%d skipped=%d — ALL EDITS FAILED",
+                          req.callId, len(result["failed"]), len(result["skipped"]))
                 call["last_apply_failures"] = [
                     {"file": f.get("file") or f.get("edit", {}).get("file_path"), "error": f.get("error")}
                     for f in result["failed"]
@@ -243,6 +262,31 @@ async def apply(req: ApplyRequest):
         "commitHash": result["commit_hash"],
         "files": updated_files,
     }
+
+@app.get("/api/inngest-status")
+def inngest_status():
+    """Returns whether Inngest appears to be processing jobs.
+    If calls have been stuck in 'queued' for >60s, Inngest dev server is likely not running."""
+    calls = load_calls_log()
+    now = datetime.now(timezone.utc)
+    stuck = []
+    for c in calls:
+        if c.get("status") != "queued":
+            continue
+        try:
+            ts = datetime.fromisoformat(c["timestamp"])
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=timezone.utc)
+            age_secs = (now - ts).total_seconds()
+            if age_secs > 60:
+                stuck.append({"id": c["id"], "name": c["name"], "age_secs": int(age_secs)})
+        except Exception:
+            pass
+    connected = len(stuck) == 0
+    if stuck:
+        log.warning("inngest-status: %d call(s) stuck in queued — Inngest dev server may not be running: %s",
+                    len(stuck), [s["id"] for s in stuck])
+    return {"connected": connected, "stuck_count": len(stuck), "stuck_calls": stuck}
 
 @app.post("/api/new-file")
 def new_file(req: NewFileRequest):

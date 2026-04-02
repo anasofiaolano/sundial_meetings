@@ -18,6 +18,9 @@ from pathlib import Path
 
 import inngest
 from anthropic import AsyncAnthropic
+from logging_config import get_logger
+
+log = get_logger("inngest_functions")
 
 # ── Constants (mirrors server.py) ────────────────────────────────────────────
 
@@ -116,7 +119,7 @@ async def handle_extract_failure(ctx: inngest.Context, step: inngest.Step) -> No
         call["failed_at"] = datetime.now(timezone.utc).isoformat()
         call["error"]     = error
         save_calls_log(calls)
-    print(f"[inngest] extraction permanently failed for {call_id}: {error}")
+    log.error("EXTRACTION PERMANENTLY FAILED — callId=%s error=%s", call_id, error)
 
 # ── Main extraction function ──────────────────────────────────────────────────
 
@@ -130,6 +133,7 @@ async def extract_transcript(ctx: inngest.Context, step: inngest.Step) -> dict:
     data       = ctx.event.data
     call_id    = data["call_id"]
     transcript = data["transcript"]
+    log.info("extract_transcript START — callId=%s transcript_len=%d", call_id, len(transcript))
 
     # ── Step 1: count tokens ────────────────────────────────────────────────
     # Raises NonRetriableError if transcript is too large — no point retrying.
@@ -141,12 +145,16 @@ async def extract_transcript(ctx: inngest.Context, step: inngest.Step) -> dict:
             model="claude-sonnet-4-6", system=SYSTEM_PROMPT, messages=messages
         )
         if count.input_tokens > TOKEN_LIMIT:
+            log.error("TOKEN_LIMIT_EXCEEDED — callId=%s tokens=%d limit=%d",
+                      call_id, count.input_tokens, TOKEN_LIMIT)
             raise inngest.NonRetriableError(
                 f"Token budget exceeded: {count.input_tokens:,} (limit {TOKEN_LIMIT:,})"
             )
+        log.info("token count OK — callId=%s tokens=%d", call_id, count.input_tokens)
         return {"token_count": count.input_tokens, "user_message": user_message}
 
     token_result = await step.run("count-tokens", count_tokens)
+    log.info("step count-tokens complete — callId=%s", call_id)
 
     # ── Step 2: call Claude extraction ─────────────────────────────────────
     # Memoized on retry — if this step succeeds, subsequent retries skip it
@@ -167,10 +175,14 @@ async def extract_transcript(ctx: inngest.Context, step: inngest.Step) -> dict:
         )
         tool_use = next((b for b in response.content if b.type == "tool_use"), None)
         if not tool_use:
+            log.error("NO_TOOL_USE_BLOCK in Claude response — callId=%s", call_id)
             raise ValueError("No tool_use block in Claude response")
-        return tool_use.input.get("edits", [])
+        edits = tool_use.input.get("edits", [])
+        log.info("Claude extracted %d raw edits — callId=%s", len(edits), call_id)
+        return edits
 
     raw_edits = await step.run("claude-extract", claude_extract)
+    log.info("step claude-extract complete — callId=%s raw_edits=%d", call_id, len(raw_edits))
 
     # ── Step 3: validate edits against live file content ────────────────────
     async def validate_edits() -> list:
@@ -206,5 +218,5 @@ async def extract_transcript(ctx: inngest.Context, step: inngest.Step) -> dict:
         return {"ok": True, "edit_count": len(edits)}
 
     result = await step.run("save-call", save_call)
-    print(f"[inngest] extraction complete for {call_id}: {result['edit_count']} edits")
+    log.info("extract_transcript DONE — callId=%s edits=%d status=pending", call_id, result["edit_count"])
     return {"call_id": call_id, "edit_count": result["edit_count"]}
