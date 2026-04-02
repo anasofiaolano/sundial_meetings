@@ -106,7 +106,7 @@ inngest_client = inngest.Inngest(app_id="sundial", is_production=False)
 
 # ── Failure handler ───────────────────────────────────────────────────────────
 
-async def handle_extract_failure(ctx: inngest.Context, step: inngest.Step) -> None:
+async def handle_extract_failure(ctx: inngest.Context) -> None:
     """Called by Inngest after all retries are exhausted. Marks the call as failed."""
     call_id = ctx.event.data.get("call_id")
     error   = str(ctx.event.data.get("error", {}).get("message", "unknown error"))
@@ -129,7 +129,8 @@ async def handle_extract_failure(ctx: inngest.Context, step: inngest.Step) -> No
     retries=3,
     on_failure=handle_extract_failure,
 )
-async def extract_transcript(ctx: inngest.Context, step: inngest.Step) -> dict:
+async def extract_transcript(ctx: inngest.Context) -> dict:
+    step       = ctx.step
     data       = ctx.event.data
     call_id    = data["call_id"]
     transcript = data["transcript"]
