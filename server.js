@@ -165,6 +165,7 @@ app.post('/api/extract', async (req, res) => {
       timestamp: new Date().toISOString(),
       token_count: count.input_tokens,
       edits,
+      transcript,  // stored so apply has context for clarifyOldValue retries
       status: 'pending'
     })
     saveCallsLog(calls)
@@ -186,10 +187,10 @@ app.post('/api/apply', async (req, res) => {
   try {
     // Pre-AI snapshot — commit current state before touching anything
     // This is the rollback point if the AI edits need to be undone
-    const callName = (() => {
-      const calls = loadCallsLog()
-      return calls.find(c => c.id === callId)?.name || callId || 'unknown'
-    })()
+    const callRecord = callId ? loadCallsLog().find(c => c.id === callId) : null
+    const callName = callRecord?.name || callId || 'unknown'
+    const transcript = callRecord?.transcript || ''
+
     try {
       execSync(`git -C "${PROJECT_DIR}" add -A`, { stdio: 'pipe' })
       execSync(`git -C "${PROJECT_DIR}" commit -m "snapshot: before ${callName}"`, { stdio: 'pipe' })
@@ -203,23 +204,35 @@ app.post('/api/apply', async (req, res) => {
       trackRead(path.join(PROJECT_DIR, relPath))
     }
 
-    const result = await applyBatch(edits, PROJECT_DIR, 'dogfood', callId || 'manual')
+    const result = await applyBatch(edits, PROJECT_DIR, transcript, callName)
 
-    // Update call status in log
+    // Update call status — only 'applied' if at least one edit landed
     if (callId) {
       const calls = loadCallsLog()
       const call = calls.find(c => c.id === callId)
       if (call) {
-        call.status = 'applied'
-        call.applied_at = new Date().toISOString()
-        call.commit_hash = result.commitHash
-        call.applied_edits = edits  // the exact edits that were accepted and applied
+        if (result.applied.length > 0) {
+          call.status = 'applied'
+          call.applied_at = new Date().toISOString()
+          call.commit_hash = result.commitHash
+          call.applied_edits = edits  // the exact edits that were accepted and applied
+        } else {
+          // Apply ran but nothing landed — record the attempt so it's visible
+          call.last_apply_attempt = new Date().toISOString()
+          call.last_apply_failures = result.failed.map(f => ({ file: f.file || f.edit?.file_path, error: f.error }))
+          console.error('[apply] 0 edits applied — failures:', JSON.stringify(result.failed, null, 2))
+        }
         saveCallsLog(calls)
       }
     }
 
     // Return updated file content so UI can refresh
     const updatedFiles = loadProjectFiles()
+
+    if (result.failed.length) {
+      console.warn('[apply] failed edits:', JSON.stringify(result.failed, null, 2))
+    }
+    console.log(`[apply] applied=${result.applied.length} failed=${result.failed.length} skipped=${result.skipped.length} commit=${result.commitHash}`)
 
     res.json({
       applied: result.applied.length,
@@ -230,8 +243,8 @@ app.post('/api/apply', async (req, res) => {
     })
 
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: err.message })
+    console.error('[apply] ERROR:', err)
+    res.status(500).json({ error: err.message, stack: err.stack })
   }
 })
 

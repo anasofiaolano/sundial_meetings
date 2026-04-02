@@ -235,20 +235,33 @@ async function init() {
 }
 
 async function loadFiles() {
-  const res = await fetch('/api/files')
-  files = await res.json()
-  renderFilesNav()
+  try {
+    const res = await fetch('/api/files')
+    if (!res.ok) throw new Error(`Server error ${res.status}`)
+    files = await res.json()
+    renderFilesNav()
+  } catch (err) {
+    document.getElementById('files-nav').innerHTML =
+      `<div style="padding:8px 10px;font-size:12px;color:#ef4444;">Failed to load files: ${err.message}</div>`
+  }
 }
 
 async function loadCalls() {
-  const [callsRes, historyRes] = await Promise.all([
-    fetch('/api/calls'),
-    fetch('/api/history')
-  ])
-  allCalls = await callsRes.json()
-  const history = await historyRes.json()
-  renderCallsNav(allCalls)
-  renderVersionHistory(history)
+  try {
+    const [callsRes, historyRes] = await Promise.all([
+      fetch('/api/calls'),
+      fetch('/api/history')
+    ])
+    if (!callsRes.ok) throw new Error(`Calls fetch failed ${callsRes.status}`)
+    if (!historyRes.ok) throw new Error(`History fetch failed ${historyRes.status}`)
+    allCalls = await callsRes.json()
+    const history = await historyRes.json()
+    renderCallsNav(allCalls)
+    renderVersionHistory(history)
+  } catch (err) {
+    document.getElementById('calls-nav').innerHTML =
+      `<div style="padding:8px 10px;font-size:12px;color:#ef4444;">Failed to load: ${err.message}</div>`
+  }
 }
 
 // ── Left nav ─────────────────────────────────────────────────────────────────
@@ -401,6 +414,7 @@ function selectVersionEntry(hash) {
   selectedVersionId = hash
   // Re-fetch history to re-render with selection
   fetch('/api/history').then(r => r.json()).then(renderVersionHistory)
+    .catch(err => showToast(`Failed to load history: ${err.message}`, true))
   // If it's an AI-post entry, find the matching call and show its detail
   const call = allCalls.find(c => c.commit_hash === hash)
   if (call) showCallDetail(call)
@@ -418,7 +432,7 @@ function selectCall(callId) {
     const call = calls.find(c => c.id === callId)
     if (!call) return
     showCallDetail(call)
-  })
+  }).catch(err => showToast(`Failed to load call: ${err.message}`, true))
 }
 
 // ── File content view ─────────────────────────────────────────────────────────
@@ -624,6 +638,12 @@ function showCallDetail(call) {
   const appliedEdits = call.applied_edits || []
   const byFile = groupByFile(appliedEdits)
 
+  const failureNote = call.last_apply_failures?.length
+    ? `<div style="margin-top:8px;padding:10px 12px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:12px;color:#991b1b;">
+        Last apply attempt failed: ${call.last_apply_failures.map(f => `${f.file || '?'} — ${f.error}`).join('; ')}
+       </div>`
+    : ''
+
   const changesHtml = appliedEdits.length
     ? `<div style="margin-bottom:24px;">
         <div style="font-weight:700;font-size:14px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #d1d5db;">Changes Applied</div>
@@ -640,7 +660,14 @@ function showCallDetail(call) {
           </div>`).join('')}
       </div>`
     : call.status === 'pending'
-    ? `<div style="font-size:13px;color:#9ca3af;margin-bottom:24px;">Proposed — not yet applied.</div>`
+    ? `<div style="margin-bottom:24px;">
+        <div style="font-size:13px;color:#9ca3af;margin-bottom:12px;">Proposed — not yet applied.</div>
+        ${failureNote}
+        <button onclick="reopenCallForReview('${call.id}')"
+          style="margin-top:12px;background:#2563eb;color:white;border:none;border-radius:6px;padding:7px 16px;font-size:13px;cursor:pointer;">
+          Re-open for review
+        </button>
+      </div>`
     : `<div style="font-size:13px;color:#9ca3af;margin-bottom:24px;">No changes recorded.</div>`
 
   document.getElementById('content').innerHTML = `
@@ -655,6 +682,21 @@ function showCallDetail(call) {
       </div>
       ${changesHtml}
     </div>`
+}
+
+async function reopenCallForReview(callId) {
+  try {
+    const calls = await fetch('/api/calls').then(r => r.json())
+    const call = calls.find(c => c.id === callId)
+    if (!call?.edits?.length) { showToast('No edits found for this call', true); return }
+
+    pendingEdits  = call.edits
+    currentCallId = callId
+    peFileStates  = {}
+    renderReviewScreen({ edits: call.edits, token_count: call.token_count })
+  } catch (err) {
+    showToast(`Failed to reopen call: ${err.message}`, true)
+  }
 }
 
 function renderPEModuleReadOnly(edits) {
@@ -955,9 +997,19 @@ async function applyAccepted() {
     // Refresh local file cache
     files = data.files
 
-    const commitMsg = data.commitHash ? ` · commit ${data.commitHash}` : ''
-    status.innerHTML = `<span style="color:#16a34a;">✓ ${data.applied} edit(s) applied${commitMsg}</span>`
-    btn.style.display = 'none'
+    if (data.applied === 0) {
+      // Nothing applied — surface this as a failure, not a success
+      const failDetail = data.failed?.length
+        ? data.failed.map(f => f.error || 'unknown').join(', ')
+        : 'all edits failed'
+      status.innerHTML = `<span style="color:#ef4444;">✗ 0 edits applied — ${failDetail}</span>`
+      showToast('Apply failed: no edits were applied. Check the error below.', true)
+    } else {
+      const commitMsg = data.commitHash ? ` · commit ${data.commitHash}` : ''
+      const failNote = data.failed?.length ? ` (${data.failed.length} failed)` : ''
+      status.innerHTML = `<span style="color:#16a34a;">✓ ${data.applied} edit(s) applied${commitMsg}</span>${failNote ? `<span style="color:#f59e0b;margin-left:8px;">${failNote}</span>` : ''}`
+      btn.style.display = 'none'
+    }
 
     await loadCalls()
     renderFilesNav()
@@ -966,7 +1018,8 @@ async function applyAccepted() {
     if (currentFile) renderFileContent(currentFile)
 
   } catch (err) {
-    status.textContent = `Error: ${err.message}`
+    status.innerHTML = `<span style="color:#ef4444;">Error: ${err.message}</span>`
+    showToast(`Apply error: ${err.message}`, true)
   } finally {
     btn.disabled = false
     if (btn.style.display !== 'none') btn.textContent = 'Apply accepted edits'
