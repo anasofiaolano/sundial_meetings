@@ -362,6 +362,32 @@ def commit_checkpoint(req: CommitCheckpointRequest):
 
     return {"ok": True, "commitHash": commit_hash}
 
+@app.post("/api/retry-queued")
+async def retry_queued():
+    """Re-sends Inngest extract events for all calls stuck in 'queued' status.
+    Use when Inngest dev server was restarted and events were lost."""
+    calls = load_calls_log()
+    queued = [c for c in calls if c.get("status") == "queued"]
+    if not queued:
+        return {"retried": 0, "call_ids": []}
+
+    retried = []
+    for call in queued:
+        await inngest_client.send(inngest.Event(
+            name="sundial/extract.requested",
+            data={
+                "call_id":    call["id"],
+                "transcript": call.get("transcript", ""),
+                "call_name":  call.get("name", call["id"]),
+                "call_date":  call.get("date"),
+            },
+        ))
+        retried.append(call["id"])
+        log.info("retry-queued: re-sent event for callId=%s name=%s", call["id"], call.get("name"))
+
+    log.info("retry-queued: re-sent %d events", len(retried))
+    return {"retried": len(retried), "call_ids": retried}
+
 @app.post("/api/protect-version")
 def protect_version(req: ProtectVersionRequest):
     name = req.name.strip()

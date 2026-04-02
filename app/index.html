@@ -101,6 +101,7 @@
     <div id="inngest-warning" style="display:none;align-items:center;gap:6px;background:#fef3c7;border:1px solid #fde68a;border-radius:6px;padding:4px 10px;font-size:12px;color:#92400e;">
       ⚠ Inngest not running — jobs stuck.
       <a id="inngest-link" href="#" target="_blank" style="color:#92400e;font-weight:600;text-decoration:underline;">Open dashboard ↗</a>
+      <button onclick="retryQueued()" style="background:#92400e;color:white;border:none;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;font-weight:600;">Retry all</button>
     </div>
     <a id="inngest-dashboard-btn" href="#" target="_blank"
       style="background:none;border:1px solid #e5e7eb;border-radius:6px;padding:5px 12px;font-size:12px;color:#6b7280;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:5px;"
@@ -697,6 +698,14 @@ function showCallDetail(call) {
               </div>`).join('')}
           </div>`).join('')}
       </div>`
+    : call.status === 'queued'
+    ? `<div style="margin-bottom:24px;">
+        <div style="font-size:13px;color:#9ca3af;margin-bottom:12px;">Waiting for Inngest to pick up this job.</div>
+        <div style="font-size:12px;color:#d97706;margin-bottom:12px;">If this is stuck, Inngest dev server may not be running or the event was lost on restart.</div>
+        <button onclick="retryQueued()" style="background:#d97706;color:white;border:none;border-radius:6px;padding:7px 16px;font-size:13px;cursor:pointer;font-weight:600;">
+          Retry — resend to queue
+        </button>
+      </div>`
     : call.status === 'pending'
     ? `<div style="margin-bottom:24px;">
         <div style="font-size:13px;color:#9ca3af;margin-bottom:12px;">Proposed — not yet applied.</div>
@@ -720,6 +729,21 @@ function showCallDetail(call) {
       </div>
       ${changesHtml}
     </div>`
+}
+
+async function retryQueued() {
+  try {
+    const res  = await fetch('/api/retry-queued', { method: 'POST' })
+    const data = await res.json()
+    if (data.retried === 0) {
+      showToast('No queued calls to retry')
+    } else {
+      showToast(`Re-sent ${data.retried} call(s) to Inngest queue`)
+      await loadCalls()
+    }
+  } catch (err) {
+    showToast(`Retry failed: ${err.message}`, true)
+  }
 }
 
 async function reopenCallForReview(callId) {
