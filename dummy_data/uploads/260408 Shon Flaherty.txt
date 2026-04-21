@@ -1,0 +1,189 @@
+Here is the verbatim transcript of the uploaded audio file. 
+
+## **Meeting Transcript: Sales Enablement System Pitch**
+**Date:** April 8, 2026
+**Participants:** [Speaker 1 - Pitcher], [Speaker 2 - Technology Lead/Stakeholder]
+
+---
+
+**Speaker 1:** Is that what you said, busy day? 
+
+**Speaker 2:** Yeah. 
+
+**Speaker 1:** Got it. Yeah. No, I feel you. Well, luckily this will be a real quick one.
+
+**Speaker 2:** Sure.
+
+**Speaker 1:** Yeah, I appreciate you. Cool. So, um, yeah, so essentially to just dive right in, we're building towards on Friday showing, basically what we've heard from talking to the sales team in terms of, you know, what their biggest kind of overhead throughout the day is and what we propose building to solve that. So, since you are technology czar, I wanted to show you some of the things that we're thinking of and ask you a couple questions. So, if that sounds good, I will just dive right in and do a little screen share here. Um, one second.
+
+*(Sound of typing and mouse clicks)*
+
+**Speaker 1:** Okay. So, imagine here that we have the sales reps log onto a page. And what they're met with—I'll talk about this in a second—but they're met with a list of their active clients, right? So these are the people who are qualified that they're talking to maybe on a weekly basis, right? Um, and is this big enough? Do you want me to—?
+
+**Speaker 2:** Yeah, I can see it now that I’ve got my glasses on. 
+
+**Speaker 1:** Okay, great. Yeah. Um, I can—I can adjust the sizing, I’m just now realizing it’s kind of small. So the—what we heard from—from most sales reps is just kind of what—what we expected, right? Is like, we’re having these long meetings, these long conversations over the phone, and there's a lot that we have to remember and type into the notes after a call, after a meeting, and then we go and we set the reminders manually. And, you know, so there’s just a lot of input that can just be low-hanging fruit to automate that away, right? So, and then not only that, but then, you know, they’re juggling a pipeline of 100 people and they need to keep fresh, you know, who it is that I’m talking to, sift back through the notes, etc. So these are some of the things that we can address. 
+
+**Speaker 1:** Let’s say that we are going to dive into one of these people. So if you're just kind of looking at the pipeline just at a glance, it will be great to just be able to work through imagine like your aging report or your active clients. You click on it, it says, you know, you have your reminder due today. And over here you have a log of all the communications that you've had with them. So at a glance, you can understand what is everything that has happened and what’s kind of a quick summary of where this client is at. 
+
+**Speaker 1:** Okay, so this—still kind of developing. I think the real magic is when we go into the record for this one person, right? And so what you showed me that you guys have is this place where you put in notes on the client, right? And so here's what this can look like, right? Let's say that we dive into this Mark Davidson client, right? So what we're going to have here is after every call, let's say that it gets recorded and as soon as you hang up the call, you get the transcript for the call. And based on that transcript, you have the summary, you have the topics covered, the key items. 
+
+**Speaker 1:** And then here's what's cool: it gives you the suggested follow-ups, the suggested reminders. “You should follow up in a week from now.” So you just click accept and it gets sent over to the CRM, you don't have to worry about it, right? It also is going to give you the follow-up email draft, right? And the cool thing is we want to make this based off of the actual sales rep’s voice, right? So can we take those emails and figure out what is the way that they like to communicate? We want to make sure to have templates, right? And so we’re just going to eliminate that email overhead. They just have to go in here, make a couple tweaks and—either depending on what we're able to do—just copy it and paste it into your email and send it, or even better if we're able to integrate with Outlook and just hit send when you're ready, right? 
+
+**Speaker 1:** Then you have—this is for—for that one conversation you just had. What we can also do is send an email, right? So, “Hey, you just had this conversation. Here’s like the full report,” right? So this would be the same thing you just saw, the summary and all this, but in an email format. So just kind of depends where the team wants to take it. So here's a summary of the call, details to remember, recommend the next steps. Click here to view—
+
+**Speaker 2:** Is this going to the salesperson or the customer?
+
+**Speaker 1:** To the salesperson. To the salesperson. Yeah. And then click to view the full transcript, takes you here, etc. So kind of some architectural decisions that we'll present to the team and say, “Do you want this? Do you want that?” 
+
+**Speaker 2:** Question for you. 
+
+**Speaker 1:** Yeah.
+
+**Speaker 2:** Could, you know, the follow-up email, could that have kind of an overview of what you did—the person discussed—along with that in the follow-up email as well too? That way the customer sees, “Oh, they—they caught onto this, they actually paid attention to what I was saying,” you know, give that impression that all those things were captured, you know?
+
+**Speaker 1:** So, let me feed that back. You’re saying in—in the email to the sales rep, that’s where we like have, “Here’s the email to send,” and it captures little details about the call? Or are you also saying like an automatic email to the client?
+
+**Speaker 2:** Yeah, I think it would be kind of cool, like the follow-up email sent to the customer after the first conversation. Like, “Hey, thanks for calling blah blah blah,” in the salesperson’s tone, which I really like that idea too. Because we have—in the past our salespeople have copied, pasted generic responses, right? And customers, oddly enough, have called in and talked to another salesperson and pretend like they're the first-time customer, you know, and they never talked to anybody, hope they can get a better price, a better this, better that, you know? And they get the same carbon-copied “Thank you” email and they've called us on that, you know? And actually one guy said, “I'm never buying from somebody who's just going to copy and paste the same crap to me,” you know, and it—it’s really bad and build out of the system. So Jay's like, “Personalize this stuff. Don’t just paste it.” So that's something to keep in mind as you're developing things too, it can’t just come out the same way. 
+
+**Speaker 2:** So I like the idea that you’re kind of capturing the tone of that person because that’s—that’s unbeatable as far as—I think that solves a problem completely. But what I’m saying though, that it would be nice if I, the customer, received this email, a synopsis of what I just talked about, you know?
+
+**Speaker 1:** Mmm. Mmm. That could be cool. Yeah. 
+
+**Speaker 2:** And, “Oh yeah, they caught onto the fact that my dog’s name is Biscuit,” you know, or whatever detail they want to—just could be a really short summary too, not—not anything too wordy, but man, it would really—these guys really listened to me and understand me, you know, this kind of thing. 
+
+**Speaker 1:** Awesome.
+
+**Speaker 2:** That's me wearing my marketing hat, but—
+
+**Speaker 1:** I love that idea. I love that idea. So the idea is like not just send like a, “Hey Mark, like great chatting today,” but also at the bottom, like a, “Here’s a quick recap of our thing,” right? And like send them, like you’re saying. I love that. Okay, so I'll add that in. I like that. 
+
+**Speaker 1:** Um, so going back to what the system looks like. Over here, you're going to have all the calls you've ever had with the person, right? Everything is logged, every transcript is here. The intro call, you know, across time. And so what you can do is you have an AI with just access to all of that, right? So you can ask something like, you know, “What was—what was the conversation where we discussed, like the foundation they were building on?” Or, “What’s—what's the timeline that they said about their, like buying property?” right? Ask any question that you want, sort of deal. So I think that’s great. 
+
+**Speaker 1:** And then the other aspect is, let's say that there's kind of like multiple things to keep track of for this one client, right? So let’s say again, this Mark Davidson guy is like wanting to engage you guys building a home, and then his wife is called Karen Mills and sometimes she's on the calls too. And then you have this Robert is the dad, right? And let’s say that you want to have running notes about each of these people over time. So the cool thing is that as you have these calls, let’s imagine that these files, these project files get automatically updated with the new information we’re learning about—like per person, right? Or per thing to consider. So for example, you can imagine just like the project overview, or like discussions on floor plans, or discussion about kitchen, right? Discussion about family needs and all of that will kind of in a segmented way get fleshed out. 
+
+**Speaker 1:** So, that's kind of what we’re thinking about here. So the problems that this solves is like, number one, just the summary, thing of the past because the transcript and the summary are going to take care of adding all those notes. Number two, the setting the follow-up reminders. This automatically is going to do that for you. Just click accept, always a human in the loop to verify. Number three is like the email busy work, right? In their tone, we're going to draft that out for them. I like your idea of adding kind of like the additional, “Here’s what we captured from your conversation.” 
+
+**Speaker 2:** Key takeaways. 
+
+**Speaker 1:** Yeah, key takeaways. And so then before any next meeting, you know, the sales reps are juggling 20 active clients, 100 people they’re nurturing. Be able to—maybe similarly to this sort of email—have a pre-meeting brief, right? So, “Hey, this email—this meeting is coming up. Here's a refresher,” right? At a glance, right? So you don't have to go and dig through your notes, it's like, “Here’s what to know about this person right before your call.” So, that’s kind of what we're thinking about here. So let me pause there. I'd love to get any other thoughts from you and then I'll ask a few questions.
+
+**Speaker 2:** Yeah, that’s—I think that’s good. Um, the key thing—like, I'll take myself as a good example in a lot of cases because I’m a really bad—really bad at certain things, right? One of the things I’m bad—I’m horribly color-blind by the way, I work with graphics for a living. So…
+
+**Speaker 1:** *(Laughs)*
+
+**Speaker 2:** But also the other thing is I’m not a fast reader. I read structured code really fast, but actually English language it just takes me time to read because I—I’ve got to literally have a reading deficiency, right? So when notes come to me like pre-meeting type stuff and they’re like an encyclopedia of stuff, I’m just going to not pay attention to it, just out of poor human tactics, right? So I’m thinking about other users around here, would they actually read too much data—if it was a little bit overwhelming or took too much time for them to go through that—that might be a challenge. 
+
+**Speaker 2:** But on the other hand, um, just being a realist. Like the CRM that I wrote, the—the biggest problem was them just keeping data in it and keeping up. Like we've—I’ve had some contacts in the CRM that were listed new in—new contact and they are living in their home. 
+
+**Speaker 1:** Wow.
+
+**Speaker 2:** You know? So they went through the whole process and nobody around here thought to advance the stage, you know, which was just nuts. So we're going to have such a variety of people involved in this. Some are going to be really good and some are going to be horrible at this stuff. So I like the check-off thing that I just saw a moment ago where they’re just—it’s the matter accept, accept, accept, done. Meaning they don't have to do too much. Um, I use the word “feed the monster,” you know, you build this code that makes people have to do stuff and they have to go through all these steps. Before you know it, they're doing more busy work to keep the software happy than they are doing work. Um, so that flow felt real nice to me when you were going through that, so I like that. Um, but then that was my only thing. 
+
+**Speaker 2:** Um, as far as capturing this phone data and stuff, um, how I did things in the past. It was kind of cool. They would—salespeople would have a window open on their PC that’s a—CRM generated window that when the phone rings, it would just automatically look up that phone number, kick back, “Oh, this is somebody we know and it’s so-and-so’s customer.” And so they knew, “Oh, if that's Jeff's, let it ring to Jeff and I’m not even going to pick up that call,” you know, um, unless it rings a lot then they’ll pick up, you know? But they could see, “Oh, this is new to us, we don't know this phone number.” “Yes, we do know this phone number.” That was kind of a neat little—
+
+**Speaker 1:** That’s so cool. Is that still in place?
+
+**Speaker 2:** Um, it's not anymore because we just went to this new Elevate phone system and I didn't tie into that API yet. 
+
+**Speaker 1:** Got it. 
+
+**Speaker 2:** Um, so—but all it knew was the phone number’s ringing and it’s going to this extension and then in the background I’d match the extension with the phone number against the contact database and good, you know. So, um, that's one possibility if the phone system kicks it—if the phone—system when the phone rings can send a URL request that’s got data embedded in it in terms of what extension they’re calling to and what phone number they’re calling from and the caller ID information, all that stuff like that, then we could write something, you know, that captures that. And it kicks back to the phone—what you’re supposed to do is kick back to the API that, “Yes, it’s been accepted, I got—I got your data.” In that way it won't try to re-send it again, it’ll keep trying like 10 times until it succeeds if I remember right. So it has to get a callback saying, “Yeah, I received the data, good, don't worry about it.” 
+
+**Speaker 1:** Got it. Okay. So, interesting with—with this new like Elevate, that’s—that’s what I wanted to talk to you about, right? So first of all, just want to say, super helpful notes. Um, I agree with you on the encyclopedia part, don't want to be kind of adding mental load. And the kind of make it real easy with the kind of accept, accept, accept—so I love those two, thank you. I’ll make the modifications. 
+
+**Speaker 1:** Now, on this phone thing. We want to make sure to capture meetings, like online meetings—so that's with Teams, that should be like easy enough because you can just like either, you know, hit record or we just have, you know, the—the computer system capturing the audio data. We want to be able to get the calls, right? Both from their desk and then I want to figure out on the cell. And so from the desk, I think there we could just kind of have like a—also the recording going on the phone, make it real easy for it to start or even automatic like with a CRM-generated window like you’re saying to record what’s being said. I think that the concern there is like if they're kind of on the phone like this then getting the audio from the phone itself from the person talking. So I wanted to ask about the Elevate system there and if you know of APIs to get that. Same deal with the cell phone, right? Is there a way to just get that call recording? Um, and then email, I think we can connect to Outlook relatively straight—in a straightforward way. You guys use Outlook, right? Or—?
+
+**Speaker 2:** Yes.
+
+**Speaker 1:** Okay. And then I imagine they're not doing text too much, right? And like that’s—that’s probably going to be like trivial to like enter into the CRM if they had a text here and there with—?
+
+**Speaker 2:** Well, they kind of are because that's the thing that Elevate added for us because our direct-to-desk extensions also is a SMS capable system and they’ve been starting to use that. And even customers will text pictures of things they like and so on and so forth and they’ll grab it out of Elevate and stick it in their file and whatnot. So yeah, there's something there, you know, as far as that's concerned. Um, and it’s getting used more and more as we go. But like I said, the—the Elevate API, I’m not sure of the deep end of things, you know, I don't think we’ll be able to grab audio directly from it. Their system’s a little more closed than that. 
+
+**Speaker 1:** Got it. 
+
+**Speaker 2:** Um, but—in my perfect world it would be great to just capture it somehow right off—
+
+**Speaker 1:** Right off the phone, right?
+
+**Speaker 2:** From the talking, you know? But I don't—I don't see an easy way of doing that. Um, the other thing is—and it’s—Jay might be disappointed to hear it—but on the other hand, we just bought the phone system, so he just laid out a fair amount of money for it and signed a contract and all that fun stuff. So we’re kind of stuck with it. 
+
+**Speaker 1:** Oh, no. 
+
+**Speaker 2:** But if—if the sales side of things, if we really need to do something then come up with a workaround where sales phone calls go into a different provider, if you will, um, that is more friendly with what you're trying to do, that can be within the realm of possibility because a person could just say to Jay, “Listen, I know we spent—I don’t know the number, let’s say $50,000—on this. However, one more home sale a year and you just paid for your whole system, you know? So let’s not worry about how much this cost and whether you're out this hardware because we wanted to switch to something different that’s more friendly with what you’re doing,” you know what I mean? So don't rule that out, it would just be a matter of selling it right if with proper justification, you know.
+
+**Speaker 1:** Okay, that’s interesting. I mean, I'll think a little bit about—about workarounds. I’m also looking into like Elevate and whether, you know, for a client like you guys, maybe they'd be willing to give a custom endpoint even. And so um—so I think that maybe there's like a little bit more digging that we can do there. I'm kind of—I'm undercover calling them to and kind of like—for—for our holding company and saying, “Hey, we're interested in kind of digging into what can be done.” So, I'll look into that. Okay.
+
+**Speaker 2:** Now the other thing is, um, have you ever heard of any kind of hardware solution where a person could put in line on the phone cord? Because I’ve seen—like I remember the old days, me being old-old-old school, having devices that can go on your phone cord itself and dump to a tape recorder. There's got to be some way to capture that audio possibly with a low-tech solution, so to speak, but you know, if it has to be this weird workaround. But I don’t know—it sure would be nice if the system can actually do it. I know Elevate has like AI transcription and stuff like that built into their voicemail system where it’s actually sending a transcribed message that came from voicemail. 
+
+**Speaker 1:** But just their voicemail?
+
+**Speaker 2:** What’s that?
+
+**Speaker 1:** Just their voicemail, not actual calls?
+
+**Speaker 2:** Just the voicemail so far that I’ve seen. Um, but—of course along that—it’s—their—I’ve seen a few of these transcriptions, they’re pretty poor, you know? Entry-level, you know. But—you know there's a lot of systems that are way past that that could do fill-in-the-blanks better. 
+
+**Speaker 1:** Yeah.
+
+**Speaker 2:** But um, so yeah, that—the automatically transcribing the voice conversation that happens is the toughest one, you know, and we solve that—that’s—that’s big, you know. 
+
+**Speaker 1:** That will be big. Okay. So, super helpful, super helpful context. Thank you and thank you for the thoughts. Um, yeah, if you have any other thoughts on this now or kind of in the next couple of days, on Friday is when I’m going to walk all of you guys and Jay and management through it, um, and kind of get like their priority order of build-out. Um, so between today and tomorrow, if I’m able to discover either an Elevate solution or a hardware solution, I’ll kind of touch base with you. Um, yeah, do the same with anything on your side. 
+
+**Speaker 1:** And yeah, so there's a couple other things that we're considering and I’m going to raise them kind of like as options, just like, “Is this useful for the sales team?” Like one of the cool features might be something like—I’ve heard that it requires very deep like technical expertise to answer some of the questions. So for example, like, “Hey, we're in Montana and like we have like all this bedrock, to what depth do we need to build the foundation?” And for example, I’ve heard that Jody is new on the sales team and so that might not be something that she has, you know, ready in her mind, right? And so a co-pilot that is listening in and as soon as one of those questions come in, like within one to two seconds, bloop, you get a card that answers that question based on your entire corpus of transcribed calls and emails and everything. So all your sales reps, no matter like how new, are brought up to the same level of like technical expertise with the system. 
+
+**Speaker 1:** So, just a couple things that, you know, we're going to flow to—to management and kind of see what's priority for them. But yeah, anything else kind of come to mind for you just on what I'm showing you or other—?
+
+**Speaker 2:** Yeah, the only danger I see—challenge—that could happen is if—if it's going off of previous conversations and, you know, trying to come up with recommendations that it's listening and saying, “Okay, this—this foundation example of yours.” Um, if previous foundation data is no longer accurate, you know, codes change, things get weird, you know. And it’s one of those things where—but that might be just training on our side telling people don't quote it as a literal, but say, “This is from what I understand, maybe this is the case,” you know. Because if data is no longer accurate and it's regurgitating something back at us saying, “This is what you said in the past,” but it’s not accurate at all. Or say, we drop a certain product line—we add and drop stuff a lot, you know. So all of a sudden we don't sell fireplaces and then next year maybe we do. So if it’s in there saying, “Well, the fireplaces we sell,” and then a new salesperson is talking about fireplaces and doesn't have a clue that they've been removed from our system. 
+
+**Speaker 2:** So, super helpful call-out, yeah, and your correction. But you know, it’s something to think about as far as that's concerned because the accuracy level of this is a lot higher in terms of what the is expected that we tell our customers and stuff. Um, even the website, we go over every single word, you know, right down to a T because there’s so many people who will quote us on the simplest littlest thing and try to rub it in our nose about it. So we try to be accurate as possible because this is a very passionate purchase on the salesperson's side, you know? You're only going to buy one or two homes in your lifetime usually. And they get very, very detailed and very passionate about these. And if we misquote them or tell them we could do something that we can't or something like that. 
+
+**Speaker 2:** That's why I kind of like these human authorizations in terms of what things to send out so we—they got a chance to read it first and not let a customer get misled into something, you know. But yeah, um, I guess it’s been decided around here to try to stay in the Microsoft realm of software and stuff like that, not to go to the Google Docs and Google this and Google that, you know. It’s tomato-tomato, you know, in a lot of ways, but you know, I don't like the idea of them saying that they’re only going to communicate via Teams to customers because some customers won't be able to connect for some reason or another, you know, Team versus Zoom versus whatever, you know. Got it. But I think the primary platform, but we need to kind of keep in mind that yeah, we’ll be using backup systems—processes—also sometimes. 
+
+**Speaker 1:** Got it. And then I think—I think a system that just captures system audio is probably going to be just the simplest. It captures anything. 
+
+**Speaker 2:** Yeah. Lightbulb went off because he said that. This is good news. So Elevate also has a PC phone app. 
+
+**Speaker 1:** Huh. Okay. Tell me about that. 
+
+**Speaker 2:** So on your—so you just install their Elevate app and you wear a headset and you can communicate because one of the things told us, you don't even have to buy extensions, you could just put the app on your PC and wear a headset and go. If our salespeople use that—I wouldn't say everybody around here would be comfortable or convenient for them to be using headsets and stuff like that. I mean, we got a lot of old-school people who just want to grab a phone and dial the extension, you know. But at least the sales team and the service team, if they’ve got headset-operated phones—softphones, we’ll say—then there's the possibility we could capture audio right off the PC. 
+
+**Speaker 1:** Yeah. Yeah! That’s awesome. Okay, so we got—we got a number of routes here. I’m not—I'm not super worried about it. That's a great idea. 
+
+**Speaker 2:** No, alright. Yeah. I mean, a combination of just getting the API call and response in terms of when the phone’s ringing for us to be aware of what hap—the phone’s—a call’s happening. That could trigger the system to do a lot of things, you know. Um, are you going to get back online this—this generated screen, like, “Oh, this person is calling,” or are you working on doing that? Or not yet?
+
+**Speaker 2:** Um, I could, but I put a lot of CRM development stuff on the backburner. 
+
+**Speaker 1:** Okay, cool. So that might—that might be something that like we can just do. And so um, yeah, what—if that was kind of being really helpful, is that something that maybe you've like talked to my dad about or that kind of we should be looking at replicating? Like, “Oh, here's like the caller ID”? 
+
+**Speaker 2:** I don’t think we've brought it up yet. This is just something that I’ve known. And of course when we demoed and showed you—you know, you and your dad and so and so forth, we showed those tie-ins that have happened on our—in the CRM right now. Um, that call log has come in handy at times where a customer goes and calls Jay and says, “Listen, I talked to your guy 15 times this month and he hasn't called me back,” and we see in the call logs he called once. You know? 
+
+**Speaker 1:** Yeah. 
+
+**Speaker 2:** That really helps keep Jay from getting angry at his salesperson for not—here Jay thinks they dropped the ball and it really wasn't dropped, you know. And um, and so there's a lot of things where we could read back to the customer, “Yes, you called and you left a voicemail twice and you did this, you did that.” You know, it just ends that whole blame game thing if things go awry, you know? 
+
+**Speaker 1:** Yeah. Wow. Um, these specific anecdotes are so helpful, like—like the people being really nitpicky about the site or, you know, “the we called 15 times,” um, and okay, super helpful insight. 
+
+**Speaker 2:** Key to our success a lot of times is the fact that we actually care and pay attention to those details where some providers or other competitors in our industry, they're just, you know, doing flannel shirts with saws, you know, and they don't care about being accurate about anything, you know. Where we’re dealing with a more upscale market, a little better smarter clientele because they're buying more luxurious versions of log homes, not the pulp onion style. So that person understands what it’s like to be a successful business person and if we behave that way, that’s the—the impression we want to give, right? 
+
+**Speaker 1:** Yeah. Perfect. 
+
+**Speaker 2:** But yeah, the—the phone API thing, I think you'll—you'll probably want to use a combination of things. But you know, like capturing that softphone audio could be a real—a real kick. 
+
+**Speaker 1:** Yeah. 
+
+**Speaker 2:** You know? It's a big deal. Because the one things when you guys were talking about this stuff I was sitting here thinking to myself, my gears are always turning like, alright, how we going to capture that data? How are we going to capture the audio? and so on and so forth. But that—that’s a revelation right there. 
+
+**Speaker 1:** Yeah, that could be great. Um, and with—with cell phones, there—there are these like open-source programmable hardware devices. It's—it's kind of like a little—a little card that you can put on the back of your cell phone. So when you have a call, it automatically is recording that. So there's things that we could—there’s things we could play with. 
+
+**Speaker 2:** Yeah, and if you really think about it, the number of calls that a salesperson takes via their cell phone is relatively small by comparison. I’d say less than 20% of calls, even maybe even far less than that. Um, because they’re—they’re in their office all the time, you know. But—and generally the phones aren’t ringing too much after hours and stuff. But knowing if their API allows us to tap in and get that SMS data back and forth too, that would be super cool, you know. 
+
+**Speaker 1:** That would be great. 
+
+**Speaker 2:** More and more. I did a—on our old-old system we had before that, um, there was a—a trigger that they would show that the likelihood that it was an SMS capable phone call versus a—somehow it reverse look up the phone number and find out if it was SMS capable. And we would see—and that would tell me if—it just ends that whole blame game thing if things go awry, you know? 
+
+**Speaker 1:** Yeah. Are you—are you going to get back online this—this generated screen like, “Oh, this person is calling,” or are you working on doing that? Or not yet? 
+
+**Speaker 2:** I could, but I put a lot of CRM development stuff on the backburner. 
+
+**Speaker 1:** Okay, cool. So that might be something that like we can just do.

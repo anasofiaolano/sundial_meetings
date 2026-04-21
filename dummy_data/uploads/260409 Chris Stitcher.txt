@@ -1,0 +1,157 @@
+Speaker 1: ...would be in Juan's software, not a – an add-on. But I guess that’s fine. A couple of questions, like the – the client fields. Are they going to be the – are they going to be current to who you’re dealing with for that week? You know, is this just a list of the last – the last 30 days, or is it the entire – entire client field, or it can be either, or – or how’s that going to –?
+
+Speaker 2: Yeah, well what – what would be most helpful?
+
+Speaker 1: I don’t know. I guess that’s a question for the sales guys. I – I would think that – I would think that – I don’t want to see – so the salesmen right now have active leads, and they have disqualified leads.
+
+Speaker 2: Mm-hm.
+
+Speaker 1: A disqualified lead doesn’t mean it’s not a qualified lead. That sounds stupid, but – so, if Anna calls in and says, “I’m interested in a Golden Eagle log home, but I’m going to build in seven years.” I might get you pricing and all that information today, what – where you’re at price-wise, but I’m probably going to disqualify you because you’re not an im – a hot lead, right?
+
+Speaker 2: Mm-hm.
+
+Speaker 1: So I – you’re still going to be mine because I – because I put you in the CRM and I disqualified you, so you stay under my lead. Uh, and maybe disqualified’s the wrong name for it. Uh, you know, where you got nurturing, maybe there’s a – a nurturing-one and a nurturing-two lead, I don’t know. But I think I’d want to see who I’m working with in a 30-day window, and maybe the salesmen would want to see something different. But we want – we want somewhere either in the CRM or this system – the guys work off an aging report, so they got to touch people every so often. So it’d be nice to be able to see maybe – maybe this list, right, this 30-day list or active list pulls from the CRM anybody that hasn’t been touched in a – in a – in a time period and adds them to their to-do list, right?
+
+Speaker 2: Yep. Yeah. So –
+
+Speaker 1: And – and then I was – when we were talking with Juan and I was describing some of this to some other departments like uh, selections, right? Selections is where the people come in and – and pick all their exterior, interior appointments. I’m assuming if we lead the conversation and confirm decisions and – and confirm decisions that were not made, that the AI would recap the decisions made for that – that day, you know, in that meeting. And what the to-do list of decisions would be for – for –.
+
+Speaker 2: Yep.
+
+Speaker 1: I think – you kind of touched that on this, right?
+
+Speaker 2: Mm-hm.
+
+Speaker 1: But I’m hoping it would like bullet point, you know, in a – in a synopsis of the conversation here or the highlights, right? This is what we decided, this is what we still need to work on, and – and go from there.
+
+Speaker 2: Yeah, that’s – that’s exactly kind of the hope, right, is this is going to – what – whatever – whatever is most useful after a meeting, that’s what we’re going to have here, right? So it’s – it’s helpful to hear from you like, let’s frame it as decisions and things still to do, right? So those are the literal things we can call them.
+
+Speaker 1: Right. And – and I don’t know if it has the ability to like pick up important key events that the customer’s talking about, right?
+
+Speaker 2: Mm-hm.
+
+Speaker 1: Maybe – I don’t know what the people do, maybe they show horses, or they ride horses, or whatever the case may be, he’s a hunter and he’s going to go on a trip. Maybe it can capture those personal events and put them in as a reminder to say, “Hey, you know, ask John about hunting,” or – or whatever the case may be.
+
+Speaker 2: Right, everything down to like, you know, their pet’s name is Biscuit, you know, it’s a golden retriever. Yeah, th – that’s the level of attention to show clients that you’re paying them. So –
+
+Speaker 1: Okay.
+
+Speaker 2: Yeah, that’s – that’s a very small change. Yeah, I love it.
+
+Speaker 1: Yeah, I get the pet thing, but it has to – I’m hoping it can do it like – because you’re going to talk to these people – I don’t know what you – from the day we meet a person to the day we first deliver product is – on average is 18 months.
+
+Speaker 2: Mm-hm.
+
+Speaker 1: So you could – you know what I mean, it’s a long, drawn-out relationship with the customer, so a lot of events could be happening in their life whether they get a grandchild born or whatever, and uh, just giving the salesman a key to say these are the events that are going on in your customer’s life right now.
+
+Speaker 2: Mm-hm. Mm-hm. Those are all things that we can extract, totally. Okay, so we’ve talked about kind of what you would hope this post-call summary would look like, the important things to pull out including details about the client, right? And here we’ve talked about let’s pull from the CRM in the aging report and show them, you know, like people who need to be touched. So perfect, that’s the idea here. Something that you touched on was, you know, what belongs in the CRM versus what’s here, right? And so I want to make that kind of a little bit clearer, um, and – and maybe get your thoughts too. But the idea is that this is a sales co-pilot. And so we’re going to have something that you can click to instantly start recording, right? And this is going to be the system that is going to connect to Elevate and get all those recordings in there, connect to your text messages and get all of those in there um, and give you all the transcripts and give you all the summary, like, breakdowns and all these kind of action items. So this is more of like a – a co-pilot, this is like what you’re like working from.
+
+Speaker 1: Yeah. So it – it really – you’d have both systems open on your desktop.
+
+Speaker 2: Yeah, or, you know, the – the good thing is that these are custom builds, right? So if the optimal thing is for me to – to take this and bake it into the CRM as like a different view, that’s something we can do, you know?
+
+Speaker 1: Yeah. And – and we have something similar to this – not really with all the functionality – but on our CRM there’s a – there’s a most-recently-contacted list that sits on a sidebar. So if you’re working with five people over the last couple weeks, they’re all – all their contact information’s there, you just click on it and it opens it up, takes you right into their – into their file drawer, we call it.
+
+Speaker 2: Mm-hm, cool. So that’s very helpful. In the file drawer, what – what are kind of those most important properties that you’re usually working on?
+
+Speaker 1: Yeah, in – in the file drawer it’s our complete CRM essentially.
+
+Speaker 2: Okay.
+
+Speaker 1: It looks like a file cabinet, but it has folders in it, you know, it’s a – a graphical representation and they can go from anything from engineering documents to – to last messages. So in – in there there’s tabs for each department, so there’s sales notes, there’s service notes, there’s purchasing notes, there’s engineering notes. So you could re – you know, you could refer back to a conversation your customer had with one of the engineering guys and – and, you know, be on it right there.
+
+Speaker 2: Okay, perfect. All right, well that’s – that’s super helpful. Um, so let me just jump into uh, the – the some of the questions I had for you, um, and then we can just end on kind of any other notes on what you would want to see here. So, I did a little bit of digging and spoke with uh, Elevate, and it seems like they’re able to expose uh, an API so that we can take the recordings and transcribe them directly here. So presumably you have a customer success representative from their team that you’re in touch with?
+
+Speaker 1: Yeah, we have – we have somebody that can help us for sure.
+
+Speaker 2: Okay, great. So what would be really helpful is if we could start a conversation there. Um, we’re just going to ask them to give us that endpoint. If it’s helpful, I can just send you the – the email for you to copy-paste and send, or if you want to just like loop me in with that person um, that, you know.
+
+Speaker 1: Yeah, so I sent you an email probably 30 seconds before we started.
+
+Speaker 2: Oh, great.
+
+Speaker 1: So that is the brochures and sales garbage from – from Elevate, those attachments. And then Damian Sweeney is the owner of Netpro.
+
+Speaker 2: All right.
+
+Speaker 1: So that’s my contact guy. Uh, if – if you want to – you can – you’re welcome to call him directly and tell him we had a conversation, or if you want to send me your information and I can introduce you to him, I can do either, whatever – whatever you’re most comfortable with.
+
+Speaker 2: Okay, perfect. Um...
+
+Speaker 1: But this kind of breaks down the features of the – of the two. We – we bought Pro and there’s also a – a Elite.
+
+Speaker 2: Perfect, Pro – Pro is perfect, that – that will give us the webhooks that we need.
+
+Speaker 1: Okay.
+
+Speaker 2: Um, amazing.
+
+Speaker 1: ‘Cause if you look at the Elite, you go down, there’s a lot of AI stuff, and I didn’t know if that would make a difference or not, but – but take a look at it.
+
+Speaker 2: Yeah, I’ll take a look at it. Really the only thing that we are going to need here is the ability to get either the raw recordings or the transcript. This works with either. The – the last thing I want to show you, and it’s – it’s a little bit messy, so um, maybe I’ll – I’ll just describe it now and show you the cleaned-up version later. But the idea is um, you know, your – your reps are constantly kind of drafting the same sort of email, right? Either to clients or to the team, to move a project along. And something that I heard was um, you know, at some point templates were tried, but then, you know, like at some point uh, a customer said, “Oh, I feel like I got kind of the same generic email twice,” right? And so, you know, kind of the – the decision was everything needs to be personalized, right? And so what we want to do here is kind of a best-of-both-worlds where we’re going to have templates for each kind of trigger. So let’s say that um, you know, you’re ready to send something to – you’re ready to um, let’s say move to the next phase with a client, right? And you have all these phases, kind of all these standard emails you tend to send. And we’re going to say like if in the transcript of the conversation this is discussed, then it’s time to send this sort of email. And here are the general guidelines for this sort of email: we want to make sure that we touch on this, touch on that, blah blah blah. And for each sales rep, it’s going to have a full analysis of two things: of their voice, so it’s going to read all the emails that they’ve sent and understand how they talk in their language. And it’s going to have the full information of all emails ever sent to that client. And so it’s going to be able to say, “Okay, based on your prior conversation, your voice, and this template, here is a good email to send,” right? And we’re going to do that for kind of each phase that typically you would send an email so that those are really easily templatized. Also to the internal teams, right? So for example, like any communication with the pricing team, with the selections team, right? Like, it’s going to just be able to say here’s usually what I say to pricing, here’s usually what I say to the selections team, just take what we talked about in the transcript and write that email for me, right? So that’s kind of another feature that we’re looking at. Um, so that’s – that’s kind of one there. Um, how does that sound? Does that sound helpful?
+
+Speaker 1: Yeah, that – that sounds great because it – it’s clear when certain people in the company if they use AI to clean up their email, that it didn’t come from them, you know? And a lot of times if I write one and I clean it up with AI, if it sounds too good I ask it to write it in layman’s terms or something to – to bring it – throw it back down a little bit. So yeah, I – I like that very much.
+
+Speaker 2: Okay, perfect.
+
+Speaker 1: So I have a question for you on the – the texting in – in Elevate. Like our log-hom-art guys and – and shipping, they are also our first line in our service, uh, so they do a lot of texting because they’re texting to the – to the builder. So I’m assuming we’ll be able to capture all that texting and then import that into the – into the CRM under their tab or whatever.
+
+Speaker 2: Yeah. So are they on the Elevate system?
+
+Speaker 1: Yeah.
+
+Speaker 2: Okay, great. So what I’m showing you now is more focused entirely on the sales team, right? So we haven’t touched that side yet. Um, and to clarify kind of like what me and Daniel are working on is – is this for the sales team first, and what my dad is working on is the full CRM build that’s like used across the company, right? So um, that might be something where you know, if we want to – to talk to him, and I can mention to him that you know, this kind of text capture is helpful not just for the sales org but also for the log-hom-art – sorry if I said it wrong – or kind of other teams, you know, we can use this same kind of connection for the CRM, make sure everything’s logged. Would that be helpful?
+
+Speaker 1: Yeah, ‘cause Log-hom-art, they’re essentially sales people, right? I don’t know if you know anything about Log-hom-art, they’re – it’s a – it’s a cash-and-carry store as well. So they’re dealing with people all the time where they’re texting them. We also all of our service people, including myself and the – in the design department, could be texting or talking to builders where we need to capture this – this audio, you know.
+
+Speaker 2: Okay, noted. Great. And this – this is kind of what we’re thinking should be prioritized. There’s other kind of pain points that we’ve heard that could be addressed down the line, right, or everything is kind of like a tradeoff, right? But for example, right – oh sorry, are you – were you going to say something?
+
+Speaker 1: No, go ahead.
+
+Speaker 2: No. Um, so a couple of things that we’ve heard is also like a lot of these sales calls require obviously really deep technical expertise, right? So if someone is asking, “Hey, like we’re building in Montana and – and, you know, we’ve got this like bedrock on the ground, so like to what depth do we need to build like the foundation to?” right? And for example, we were talking to like Jody and I know that she’s about a month into being a sales rep, and so her context isn’t like as built up as someone who has been having these conversations for years, right? So wouldn’t it be great if we could have let’s say like a call co-pilot that is caching all that is – is storing in memory all those standard responses so that as soon as for example Jody or a new salesperson gets that sort of question, within seconds the AI is saying, “Here might be the correct answer,” right, “based on recent conversations.” Now the issue with something like that is you would want to make sure that it has extreme recency because I know that a lot of the information is constantly changing, there are things that you guys don’t offer anymore, you know, like laws and – and statutes change, right? And so that’s an example of something that we could build, but it’s probably going to be deprioritized relative to this, right? And so, you know, I want to like make you aware that kind of everything is possible, so it’s just a matter of like what’s highest priority. Uh, yeah.
+
+Speaker 1: So probably I’m just letting you know J, the owner, is going to tell you that the sales guys, we got – we got five of them now, he’s going to tell you that the Log-hom-art people are sales people too.
+
+Speaker 2: Mm-hm.
+
+Speaker 1: Which they technically are. So I’m just saying they’ll probably fall right into this same category in the initial – in the initial spin-up.
+
+Speaker 2: Gotcha. Okay, perfect. So is there – is there someone that you recommend I speak to in the Log-hom-art department to start getting that conversation early?
+
+Speaker 1: No, I mean everything we’re doing in the sales side for the Golden Eagle side is relevant to the – to the Log-hom-art people.
+
+Speaker 2: Okay, perfect, perfect. Are they typically also going into the CRM and kind of seeing the same like aging report and seeing the conversations with the clients and all of that, or –?
+
+Speaker 1: They probably have less of a – they probably have less of a need for an aging report. They do have some clients that don’t give information too, so aging report would help, but their aging’s going to be a lot shorter. Their – their turnaround on a sale is quicker. What – what we lose today is there’s two of them that are active sales guys and uh, all their – all their contact information is kept in their email. So Scott out for lunch and the guy calls back in and talks to Ian, Ian doesn’t have access to Scott’s email, so Ian doesn’t know where the – the conversation was left off, see what I’m saying? Where if he had this, whether he’s on vacation or lunch or whatever, he could say, “Hey, I see Scott – Scott quoted you the material, but you’re waiting on a freight bid, let me see if he got the freight bid back,” and then we could continue on that process.
+
+Speaker 2: Got it, okay. Sounds good. Sounds good. So from what I’m – from what I’m showing you, what sounds like the most helpful features and what seems like not quite right or something that you’d want to change? And here I’ll – I’ll –.
+
+Speaker 1: I – until I see it actually capture it, I like – I like – would the sidebar that – that view we were on before with all the information on the sidebar?
+
+Speaker 2: Mm-hm.
+
+Speaker 1: And uh, its ability to capture the – the information because I know we’re not getting the transcripts into the CRM accurately, you know? They – they might have a 45-minute phone conversation and they – and they capture the – the top three items that they can remember. So being able to capture the whole thing and having it to do a synopsis of the important parts, right? What was decided, what was not decided, here’s your follow-up, I think that’s fantastic, and even sending uh, a follow-up email that says just that, right? To show the customer that we are listening to them. I think that’s where we – where we lose a lot of it. So for instance, there’s a – we’re drawing a house right now that got drawn a thousand square feet too big.
+
+Speaker 2: Mm-hm.
+
+Speaker 1: Okay? Which doesn’t sound like a problem to – my wife wouldn’t think it’s a problem, but it’s paying for it’s another issue. So um, you know, it would – they do these pre-meetings with the customer and the customer talks about all their wishes, and hopefully that’s where this would help them capture all those – all those wants and needs, right?
+
+Speaker 2: Yeah. Okay, sounds great.
+
+Speaker 1: And then that’s done, just so you know, I’m assuming I’m a sales guy, this is – this is – we call it a kickoff meeting, right? A design kickoff meeting. It’s going to be in a – in a public area in the showroom, and we’re going to have members from each department there. But I’m assuming they can pull up you know this – this AI interface and record that information from – from that point, right?
+
+Speaker 2: Yes, yeah. Exactly, just start recording. Yes.
+
+Speaker 1: Okay. Yeah, that – that looks awesome.
+
+Speaker 2: Cool. Well, um, thank you – thank you very much for uh, the input. Super helpful stuff. If you think of anything else, uh, do just like shoot me an email. Um, and I’ll be reaching out to uh, Damian, or maybe shooting your way just like an intro email you can forward.
+
+Speaker 1: Sure, that’d be great.
+
+Speaker 2: All right, thanks [Speaker 1].
+
+Speaker 1: All right, thanks [Speaker 2], yep.
+
+Speaker 2: Bye.
+
+Speaker 1: Bye-bye.

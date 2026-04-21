@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Call Review — Sundial Pipeline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          colors: {
+            page: '#fafaf9',
+            card: '#ffffff',
+            border: '#e7e5e4',
+            health: { green: '#10b981', amber: '#f59e0b', red: '#ef4444' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #fafaf9; }
+
+    .section-card {
+      background: #ffffff;
+      border: 1px solid #e7e5e4;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: box-shadow 0.2s;
+    }
+    .section-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .collapse-content {
+      max-height: 2000px;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 1;
+    }
+    .collapse-content.collapsed {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    .approve-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid #d6d3d1;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .approve-btn svg { color: #d6d3d1; transition: color 0.2s; }
+    .approve-btn.approved {
+      border-color: #10b981;
+      background: #10b981;
+    }
+    .approve-btn.approved svg { color: #ffffff; }
+
+    .editable-bullet:hover { background: #fafaf9; border-radius: 6px; }
+    .editable-bullet:focus { outline: none; background: #f5f5f4; border-radius: 6px; }
+
+    .placeholder-highlight {
+      background: #fef3c7;
+      border-radius: 4px;
+      padding: 1px 4px;
+      font-weight: 500;
+      color: #92400e;
+    }
+
+    .toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: #10b981;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 14px;
+      box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+    .toast.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @keyframes pulse-green {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+    }
+    .pulse-green { animation: pulse-green 2s infinite; }
+
+    .transcript-line { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 13px; line-height: 1.7; }
+    .transcript-line .timestamp { color: #a8a29e; margin-right: 12px; min-width: 60px; display: inline-block; }
+    .transcript-line .speaker-rep { color: #2563eb; font-weight: 600; }
+    .transcript-line .speaker-client { color: #7c3aed; font-weight: 600; }
+
+    .drag-handle { cursor: grab; color: #d6d3d1; transition: color 0.15s; }
+    .drag-handle:hover { color: #78716c; }
+
+    .sticky-footer {
+      position: sticky;
+      bottom: 0;
+      background: rgba(250,250,249,0.92);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid #e7e5e4;
+    }
+  </style>
+</head>
+<body class="bg-page min-h-screen pb-24">
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast">All sections approved and saved to CRM</div>
+
+  <!-- Header -->
+  <header class="bg-white border-b border-border sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="/pipeline/frontend/pipeline.html" class="text-stone-400 hover:text-stone-600 transition-colors flex items-center gap-1.5 text-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          Back to Pipeline
+        </a>
+        <div class="w-px h-6 bg-stone-200"></div>
+        <h1 class="text-lg font-semibold text-stone-800">Call Review</h1>
+      </div>
+      <div class="flex items-center gap-5 text-sm text-stone-500">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center text-xs font-semibold">MR</div>
+          <span class="font-medium text-stone-700">Mike Richardson</span>
+        </div>
+        <span class="text-stone-300">|</span>
+        <span>32 min</span>
+        <span class="text-stone-300">|</span>
+        <span>Apr 4, 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-6 py-8 space-y-6">
+
+    <!-- ================================================================== -->
+    <!-- Section 1: Call Summary -->
+    <!-- ================================================================== -->
+    <div class="section-card" data-section="summary">
+      <div class="flex items-center justify-between px-6 py-4 cursor-pointer select-none" onclick="toggleSection(this)">
+        <div class="flex items-center gap-3">
+          <button class="approve-btn" onclick="event.stopPropagation(); toggleApproval(this)" title="Approve section">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          </button>
+          <h2 class="text-base font-semibold text-stone-800">Call Summary</h2>
+        </div>
+        <svg class="w-5 h-5 text-stone-400 section-chevron transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <div class="collapse-content px-6 pb-5">
+        <!-- Topics Discussed -->
+        <div class="mb-5">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2">Topics Discussed</h3>
+          <ul id="topics-list" class="space-y-1.5">
+            <li class="flex items-start gap-2 group">
+              <span class="text-stone-300 mt-0.5 text-sm">&#8226;</span>
+              <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">Discussed timber frame construction options for a 3,500 sqft custom home on the prospect's Montana lot</span>
+              <button class="opacity-0 group-hover:opacity-100 text-stone-300 hover:text-red-400 transition-all mt-0.5" onclick="removeBullet(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </li>
+            <li class="flex items-start gap-2 group">
+              <span class="text-stone-300 mt-0.5 text-sm">&#8226;</span>
+              <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">Reviewed Golden Eagle floor plan variants including the loft option and wraparound porch</span>
+              <button class="opacity-0 group-hover:opacity-100 text-stone-300 hover:text-red-400 transition-all mt-0.5" onclick="removeBullet(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </li>
+            <li class="flex items-start gap-2 group">
+              <span class="text-stone-300 mt-0.5 text-sm">&#8226;</span>
+              <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">Covered foundation requirements for sloped terrain and frost depth considerations in Montana</span>
+              <button class="opacity-0 group-hover:opacity-100 text-stone-300 hover:text-red-400 transition-all mt-0.5" onclick="removeBullet(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Client Questions -->
+        <div class="mb-5">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2">Client Questions</h3>
+          <ul id="questions-list" class="space-y-1.5">
+            <li class="flex items-start gap-2 group">
+              <span class="text-stone-300 mt-0.5 text-sm">&#8226;</span>
+              <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">What is the ballpark per-sqft cost for the Golden Eagle with timber frame upgrade?</span>
+              <button class="opacity-0 group-hover:opacity-100 text-stone-300 hover:text-red-400 transition-all mt-0.5" onclick="removeBullet(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </li>
+            <li class="flex items-start gap-2 group">
+              <span class="text-stone-300 mt-0.5 text-sm">&#8226;</span>
+              <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">Does the standard foundation package work on a 15% grade slope, or is an engineered foundation needed?</span>
+              <button class="opacity-0 group-hover:opacity-100 text-stone-300 hover:text-red-400 transition-all mt-0.5" onclick="removeBullet(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </li>
+            <li class="flex items-start gap-2 group">
+              <span class="text-stone-300 mt-0.5 text-sm">&#8226;</span>
+              <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">Can the build timeline start in spring 2027 to align with their relocation from Denver?</span>
+              <button class="opacity-0 group-hover:opacity-100 text-stone-300 hover:text-red-400 transition-all mt-0.5" onclick="removeBullet(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Client Details Captured -->
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-stone-400 mb-2">Client Details Captured</h3>
+          <ul id="details-list" class="space-y-1.5">
+            <li class="flex items-start gap-2 group">
+              <span class="text-stone-300 mt-0.5 text-sm">&#8226;</span>
+              <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">Owns 40-acre lot near Bozeman, MT with south-facing slope and year-round creek access</span>
+              <button class="opacity-0 group-hover:opacity-100 text-stone-300 hover:text-red-400 transition-all mt-0.5" onclick="removeBullet(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </li>
+            <li class="flex items-start gap-2 group">
+              <span class="text-stone-300 mt-0.5 text-sm">&#8226;</span>
+              <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">Budget range $650K-$800K for shell and finish; wife Sarah prefers open-concept kitchen</span>
+              <button class="opacity-0 group-hover:opacity-100 text-stone-300 hover:text-red-400 transition-all mt-0.5" onclick="removeBullet(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </li>
+            <li class="flex items-start gap-2 group">
+              <span class="text-stone-300 mt-0.5 text-sm">&#8226;</span>
+              <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">Currently in Denver, planning full-time relocation once home is built; two kids (ages 8 and 11)</span>
+              <button class="opacity-0 group-hover:opacity-100 text-stone-300 hover:text-red-400 transition-all mt-0.5" onclick="removeBullet(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- Section 2: Action Items -->
+    <!-- ================================================================== -->
+    <div class="section-card" data-section="actions">
+      <div class="flex items-center justify-between px-6 py-4 cursor-pointer select-none" onclick="toggleSection(this)">
+        <div class="flex items-center gap-3">
+          <button class="approve-btn" onclick="event.stopPropagation(); toggleApproval(this)" title="Approve section">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          </button>
+          <h2 class="text-base font-semibold text-stone-800">Action Items</h2>
+        </div>
+        <svg class="w-5 h-5 text-stone-400 section-chevron transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <div class="collapse-content px-6 pb-5">
+        <ul id="action-items-list" class="space-y-3">
+          <li class="flex items-center gap-3 group" draggable="true" ondragstart="dragItem(event)" ondragover="dragOver(event)" ondrop="dropItem(event)">
+            <span class="drag-handle text-lg leading-none" title="Drag to reorder">&#8942;&#8942;</span>
+            <input type="checkbox" class="w-4 h-4 rounded border-stone-300 text-emerald-600 focus:ring-emerald-500 accent-emerald-600 mt-0.5">
+            <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">Send Golden Eagle floor plan PDF and 3D walkthrough video link</span>
+            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">Sarah Chen</span>
+            <input type="date" value="2026-04-07" class="text-xs text-stone-500 border border-stone-200 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+          </li>
+          <li class="flex items-center gap-3 group" draggable="true" ondragstart="dragItem(event)" ondragover="dragOver(event)" ondrop="dropItem(event)">
+            <span class="drag-handle text-lg leading-none" title="Drag to reorder">&#8942;&#8942;</span>
+            <input type="checkbox" class="w-4 h-4 rounded border-stone-300 text-emerald-600 focus:ring-emerald-500 accent-emerald-600 mt-0.5">
+            <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">Request site assessment quote from Bridger Foundations for the Montana lot (15% slope)</span>
+            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">Sarah Chen</span>
+            <input type="date" value="2026-04-09" class="text-xs text-stone-500 border border-stone-200 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+          </li>
+          <li class="flex items-center gap-3 group" draggable="true" ondragstart="dragItem(event)" ondragover="dragOver(event)" ondrop="dropItem(event)">
+            <span class="drag-handle text-lg leading-none" title="Drag to reorder">&#8942;&#8942;</span>
+            <input type="checkbox" class="w-4 h-4 rounded border-stone-300 text-emerald-600 focus:ring-emerald-500 accent-emerald-600 mt-0.5">
+            <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">Prepare preliminary pricing estimate for 3,500 sqft Golden Eagle with timber frame package</span>
+            <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">Sarah Chen</span>
+            <input type="date" value="2026-04-11" class="text-xs text-stone-500 border border-stone-200 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+          </li>
+        </ul>
+        <button onclick="addActionItem()" class="mt-3 text-sm text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+          Add item
+        </button>
+      </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- Section 3: Follow-Up Email Draft -->
+    <!-- ================================================================== -->
+    <div class="section-card" data-section="email">
+      <div class="flex items-center justify-between px-6 py-4 cursor-pointer select-none" onclick="toggleSection(this)">
+        <div class="flex items-center gap-3">
+          <button class="approve-btn" onclick="event.stopPropagation(); toggleApproval(this)" title="Approve section">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          </button>
+          <h2 class="text-base font-semibold text-stone-800">Follow-Up Email Draft</h2>
+        </div>
+        <svg class="w-5 h-5 text-stone-400 section-chevron transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <div class="collapse-content px-6 pb-5">
+        <div class="space-y-4">
+          <div>
+            <label class="text-xs font-medium text-stone-500 uppercase tracking-wider mb-1 block">Subject</label>
+            <input id="email-subject" type="text" value="Great chatting today, Mike — Golden Eagle details inside" class="w-full border border-stone-200 rounded-lg px-4 py-2.5 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+          </div>
+          <div>
+            <label class="text-xs font-medium text-stone-500 uppercase tracking-wider mb-1 block">Body</label>
+            <textarea id="email-body" rows="8" class="w-full border border-stone-200 rounded-lg px-4 py-3 text-sm text-stone-700 leading-relaxed focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-y">Hi Mike,
+
+It was great speaking with you today about your plans for the Bozeman property. Sounds like an incredible spot — 40 acres with that south-facing slope and creek access is hard to beat.
+
+As promised, here are the resources we discussed:
+
+- Golden Eagle floor plan with the loft option and wraparound porch: [FLOOR_PLAN_LINK]
+- 3D walkthrough video of a recently completed Golden Eagle build: [YOUTUBE_VIDEO_LINK]
+
+I'm pulling together a preliminary cost estimate for the 3,500 sqft layout with the timber frame upgrade and will have that to you by end of next week. I'll also reach out to our foundation partner in the Bozeman area to get a site assessment quote for your lot's grade.
+
+Please say hi to Sarah — and if she has questions about the open-concept kitchen options, I'm happy to set up a quick call with our design team.
+
+Talk soon,
+Sarah Chen
+Sundial Homes | Senior Sales Consultant
+(406) 555-0172</textarea>
+          </div>
+          <div class="flex items-center justify-between">
+            <p class="text-xs text-stone-400 italic">Suggested send: tomorrow morning</p>
+            <div class="flex items-center gap-2">
+              <button onclick="copyEmail()" class="px-4 py-2 text-sm font-medium text-stone-600 border border-stone-300 rounded-lg hover:bg-stone-50 transition-colors">
+                Copy to clipboard
+              </button>
+              <button class="px-5 py-2 text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors">
+                Send
+              </button>
+            </div>
+          </div>
+          <!-- Placeholder callout -->
+          <div class="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-800 flex items-start gap-2">
+            <svg class="w-4 h-4 mt-0.5 flex-shrink-0 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>This draft contains placeholders: <span class="placeholder-highlight">[FLOOR_PLAN_LINK]</span> and <span class="placeholder-highlight">[YOUTUBE_VIDEO_LINK]</span> — replace before sending.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- Section 4: CRM Preview -->
+    <!-- ================================================================== -->
+    <div class="section-card" data-section="crm">
+      <div class="flex items-center justify-between px-6 py-4 cursor-pointer select-none" onclick="toggleSection(this)">
+        <div class="flex items-center gap-3">
+          <button class="approve-btn" onclick="event.stopPropagation(); toggleApproval(this)" title="Approve section">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          </button>
+          <h2 class="text-base font-semibold text-stone-800">CRM Preview</h2>
+        </div>
+        <svg class="w-5 h-5 text-stone-400 section-chevron transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <div class="collapse-content px-6 pb-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="md:col-span-2">
+            <label class="text-xs font-medium text-stone-500 uppercase tracking-wider mb-1 block">Contact Notes</label>
+            <textarea rows="4" class="w-full border border-stone-200 rounded-lg px-4 py-2.5 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-y">Discussed Golden Eagle timber frame build for 3,500 sqft home on 40-acre lot near Bozeman, MT. Slope ~15%, needs engineered foundation assessment. Budget $650K-$800K. Interested in loft option and wraparound porch. Wife Sarah wants open-concept kitchen. Targeting spring 2027 build start. Currently in Denver, planning full relocation.</textarea>
+          </div>
+          <div>
+            <label class="text-xs font-medium text-stone-500 uppercase tracking-wider mb-1 block">Follow-Up Reminder</label>
+            <div class="flex gap-2">
+              <input type="date" value="2026-04-11" class="flex-1 border border-stone-200 rounded-lg px-4 py-2.5 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+              <input type="text" value="Send pricing estimate and foundation quote" class="flex-[2] border border-stone-200 rounded-lg px-4 py-2.5 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-medium text-stone-500 uppercase tracking-wider mb-1 block">Lead Status</label>
+            <select class="w-full border border-stone-200 rounded-lg px-4 py-2.5 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white">
+              <option value="new-inquiry">New Inquiry</option>
+              <option value="discovery">Discovery Call</option>
+              <option value="proposal" selected>Proposal / Estimate</option>
+              <option value="site-visit">Site Visit Scheduled</option>
+              <option value="negotiation">Negotiation</option>
+              <option value="closed-won">Closed Won</option>
+              <option value="closed-lost">Closed Lost</option>
+            </select>
+            <p class="text-xs text-emerald-600 mt-1 flex items-center gap-1">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+              Suggested: advance from Discovery Call to Proposal / Estimate
+            </p>
+          </div>
+          <div class="md:col-span-2">
+            <label class="text-xs font-medium text-stone-500 uppercase tracking-wider mb-1 block">Rapport Notes</label>
+            <textarea rows="3" class="w-full border border-stone-200 rounded-lg px-4 py-2.5 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-y">Two kids ages 8 and 11 — mentioned wanting space for them to explore outdoors. Wife Sarah is the design decision-maker, especially kitchen layout. Mike is a remote software engineer, needs dedicated home office. Avid fly fisherman — excited about the creek on the property. Family visited Bozeman area last summer and "fell in love with it."</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- Section 5: Full Transcript (collapsed by default) -->
+    <!-- ================================================================== -->
+    <div class="section-card" data-section="transcript">
+      <div class="flex items-center justify-between px-6 py-4 cursor-pointer select-none" onclick="toggleSection(this)">
+        <div class="flex items-center gap-3">
+          <h2 class="text-base font-semibold text-stone-800">Full Transcript</h2>
+        </div>
+        <svg class="w-5 h-5 text-stone-400 section-chevron transition-transform rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <div class="collapse-content collapsed px-6 pb-5">
+        <div class="mb-4">
+          <input id="transcript-search" type="text" placeholder="Search transcript..." oninput="searchTranscript()" class="w-full border border-stone-200 rounded-lg px-4 py-2.5 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+        </div>
+        <div id="transcript-body" class="space-y-2 max-h-[500px] overflow-y-auto pr-2">
+          <div class="transcript-line"><span class="timestamp">00:00</span><span class="speaker-rep">Sarah Chen:</span> Hi Mike, thanks for taking the time today. How's it going out in Denver?</div>
+          <div class="transcript-line"><span class="timestamp">00:08</span><span class="speaker-client">Mike Richardson:</span> Hey Sarah, doing well! Just got back from a weekend trip out to the property actually, so perfect timing.</div>
+          <div class="transcript-line"><span class="timestamp">00:18</span><span class="speaker-rep">Sarah Chen:</span> Oh that's great! How's the lot looking? Last we spoke you mentioned it was about 40 acres near Bozeman.</div>
+          <div class="transcript-line"><span class="timestamp">00:28</span><span class="speaker-client">Mike Richardson:</span> Yeah, it's incredible. 40 acres, south-facing slope, and there's a year-round creek running through the lower section. The kids absolutely loved it.</div>
+          <div class="transcript-line"><span class="timestamp">00:42</span><span class="speaker-rep">Sarah Chen:</span> That sounds beautiful. So you mentioned you were interested in the Golden Eagle plan — specifically the timber frame option?</div>
+          <div class="transcript-line"><span class="timestamp">00:52</span><span class="speaker-client">Mike Richardson:</span> Right. We've been looking at timber frame homes for a while now. Sarah — my wife — she really wants that open great room feel with exposed beams. The Golden Eagle layout caught our eye because of the loft and that wraparound porch.</div>
+          <div class="transcript-line"><span class="timestamp">01:12</span><span class="speaker-rep">Sarah Chen:</span> The Golden Eagle is one of our most popular plans for exactly those reasons. At 3,500 square feet it gives you plenty of room. The loft variant adds about 400 sqft of flexible space up top.</div>
+          <div class="transcript-line"><span class="timestamp">01:28</span><span class="speaker-client">Mike Richardson:</span> That would be perfect for my home office. I work remote full time so having a dedicated space is a big deal.</div>
+          <div class="transcript-line"><span class="timestamp">01:40</span><span class="speaker-rep">Sarah Chen:</span> Absolutely. A lot of our clients use the loft for exactly that. Now, you mentioned the lot has a south-facing slope — do you know roughly what the grade is?</div>
+          <div class="transcript-line"><span class="timestamp">01:55</span><span class="speaker-client">Mike Richardson:</span> The survey says about 15 percent where we want to place the house. Is that an issue for your standard foundation?</div>
+          <div class="transcript-line"><span class="timestamp">02:06</span><span class="speaker-rep">Sarah Chen:</span> Fifteen percent is definitely workable, but we'd want to go with an engineered foundation rather than our standard package. We work with Bridger Foundations in the Bozeman area — they do excellent work on sloped sites. I can get you a site assessment quote from them.</div>
+          <div class="transcript-line"><span class="timestamp">02:25</span><span class="speaker-client">Mike Richardson:</span> That would be great. And what about frost depth? Montana winters are no joke.</div>
+          <div class="transcript-line"><span class="timestamp">02:32</span><span class="speaker-rep">Sarah Chen:</span> Good question. In the Bozeman area you're looking at about 48 inches frost depth. All our Montana builds go to at least 54 inches as standard. The engineered foundation will account for both the slope and the frost requirements.</div>
+          <div class="transcript-line"><span class="timestamp">02:50</span><span class="speaker-client">Mike Richardson:</span> OK, good to know. Now the big question — what are we looking at cost-wise? Ballpark for the 3,500 sqft Golden Eagle with the timber frame upgrade?</div>
+          <div class="transcript-line"><span class="timestamp">03:05</span><span class="speaker-rep">Sarah Chen:</span> So the Golden Eagle timber frame package typically runs in the range of $185 to $220 per square foot for shell and finish, depending on selections. For 3,500 square feet you're roughly in the $650K to $770K range. The foundation and site work would be on top of that.</div>
+          <div class="transcript-line"><span class="timestamp">03:28</span><span class="speaker-client">Mike Richardson:</span> That's right in our budget range. We were thinking $650 to $800K total for the home itself. Obviously we know site work and foundation add to that.</div>
+          <div class="transcript-line"><span class="timestamp">03:42</span><span class="speaker-rep">Sarah Chen:</span> That's a solid budget for this build. I'll put together a more detailed preliminary estimate and have it to you by end of next week. What's your target timeline for breaking ground?</div>
+          <div class="transcript-line"><span class="timestamp">03:55</span><span class="speaker-client">Mike Richardson:</span> We're hoping for spring 2027. We need to sell the Denver house and get the kids set up with schools out there. Is spring realistic for a build start?</div>
+          <div class="transcript-line"><span class="timestamp">04:10</span><span class="speaker-rep">Sarah Chen:</span> Spring 2027 is very doable. That actually gives us a nice runway for design finalization and permitting over the fall and winter. Montana county permits can take 8 to 12 weeks depending on the jurisdiction.</div>
+          <div class="transcript-line"><span class="timestamp">04:28</span><span class="speaker-client">Mike Richardson:</span> Perfect. Oh, one more thing — Sarah, my wife, she's really particular about the kitchen. She wants a fully open concept. Is that something you can do with the Golden Eagle plan?</div>
+          <div class="transcript-line"><span class="timestamp">04:42</span><span class="speaker-rep">Sarah Chen:</span> Absolutely. The Golden Eagle actually lends itself really well to open-concept kitchens. The timber frame structure means fewer load-bearing interior walls, so we have a lot of flexibility. I'd love to get Sarah on a call with our design team if she's interested.</div>
+          <div class="transcript-line"><span class="timestamp">05:00</span><span class="speaker-client">Mike Richardson:</span> She'd love that. She's been on Pinterest nonstop collecting kitchen ideas. I'll have her reach out.</div>
+          <div class="transcript-line"><span class="timestamp">05:10</span><span class="speaker-rep">Sarah Chen:</span> That's great. I'll send over the Golden Eagle floor plan PDF and a 3D walkthrough video of a build we just completed in Whitefish. I think it'll give you both a really good sense of the space.</div>
+          <div class="transcript-line"><span class="timestamp">05:25</span><span class="speaker-client">Mike Richardson:</span> That would be awesome, thank you. I gotta say, I'm really excited about this. We visited the Bozeman area last summer and just fell in love with it. Can't wait to get the kids out there full time — they're 8 and 11 and already asking when they can go fishing in the creek.</div>
+          <div class="transcript-line"><span class="timestamp">05:45</span><span class="speaker-rep">Sarah Chen:</span> Ha, that's wonderful! You're going to love it out there. A lot of fly fishing out on that stretch too — do you fish?</div>
+          <div class="transcript-line"><span class="timestamp">05:52</span><span class="speaker-client">Mike Richardson:</span> Oh yeah, that's half the reason we're moving! I've been fly fishing for years and the Gallatin Valley is a dream.</div>
+          <div class="transcript-line"><span class="timestamp">06:02</span><span class="speaker-rep">Sarah Chen:</span> You're in for a treat. Alright Mike, let me get you those materials and the estimate by end of next week. Sound good?</div>
+          <div class="transcript-line"><span class="timestamp">06:12</span><span class="speaker-client">Mike Richardson:</span> Sounds great, Sarah. Really appreciate the time today. Talk soon!</div>
+          <div class="transcript-line"><span class="timestamp">06:18</span><span class="speaker-rep">Sarah Chen:</span> Thank you, Mike! Talk soon. Bye!</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Sticky Footer -->
+  <div class="sticky-footer py-4">
+    <div class="max-w-4xl mx-auto px-6 flex items-center justify-between">
+      <div class="text-sm text-stone-400" id="approval-status">0 of 4 sections approved</div>
+      <div class="flex items-center gap-3">
+        <button onclick="saveDraft()" class="px-5 py-2.5 text-sm font-medium text-stone-600 border border-stone-300 rounded-lg hover:bg-stone-50 transition-colors">
+          Save as Draft
+        </button>
+        <button id="approve-all-btn" onclick="approveAll()" class="px-6 py-2.5 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors">
+          Approve All &amp; Save to CRM
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---- Section collapse/expand ----
+    function toggleSection(headerEl) {
+      const card = headerEl.closest('.section-card');
+      const content = card.querySelector('.collapse-content');
+      const chevron = headerEl.querySelector('.section-chevron');
+      content.classList.toggle('collapsed');
+      chevron.classList.toggle('rotate-180');
+    }
+
+    // ---- Section approval ----
+    function toggleApproval(btn) {
+      btn.classList.toggle('approved');
+      updateApprovalStatus();
+    }
+
+    function updateApprovalStatus() {
+      const btns = document.querySelectorAll('.approve-btn');
+      const approved = document.querySelectorAll('.approve-btn.approved').length;
+      const total = btns.length;
+      document.getElementById('approval-status').textContent = `${approved} of ${total} sections approved`;
+
+      const approveAllBtn = document.getElementById('approve-all-btn');
+      if (approved === total) {
+        approveAllBtn.classList.add('pulse-green');
+      } else {
+        approveAllBtn.classList.remove('pulse-green');
+      }
+    }
+
+    function approveAll() {
+      document.querySelectorAll('.approve-btn').forEach(btn => {
+        btn.classList.add('approved');
+      });
+      updateApprovalStatus();
+      showToast('All sections approved and saved to CRM');
+    }
+
+    function saveDraft() {
+      showToast('Draft saved successfully');
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 3000);
+    }
+
+    // ---- Remove bullet ----
+    function removeBullet(btn) {
+      const li = btn.closest('li');
+      li.style.transition = 'opacity 0.2s, transform 0.2s';
+      li.style.opacity = '0';
+      li.style.transform = 'translateX(20px)';
+      setTimeout(() => li.remove(), 200);
+    }
+
+    // ---- Add action item ----
+    function addActionItem() {
+      const list = document.getElementById('action-items-list');
+      const today = new Date();
+      const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const dateStr = nextWeek.toISOString().split('T')[0];
+
+      const li = document.createElement('li');
+      li.className = 'flex items-center gap-3 group';
+      li.draggable = true;
+      li.ondragstart = dragItem;
+      li.ondragover = dragOver;
+      li.ondrop = dropItem;
+      li.innerHTML = `
+        <span class="drag-handle text-lg leading-none" title="Drag to reorder">&#8942;&#8942;</span>
+        <input type="checkbox" class="w-4 h-4 rounded border-stone-300 text-emerald-600 focus:ring-emerald-500 accent-emerald-600 mt-0.5">
+        <span class="editable-bullet flex-1 text-sm text-stone-700 py-0.5 px-1 -mx-1" contenteditable="true">New action item</span>
+        <span class="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">Sarah Chen</span>
+        <input type="date" value="${dateStr}" class="text-xs text-stone-500 border border-stone-200 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+      `;
+      list.appendChild(li);
+
+      // Focus the new item text
+      const span = li.querySelector('[contenteditable]');
+      span.focus();
+      document.execCommand('selectAll', false, null);
+    }
+
+    // ---- Drag and drop for action items ----
+    let dragSrcEl = null;
+
+    function dragItem(e) {
+      dragSrcEl = e.target.closest('li');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', dragSrcEl.innerHTML);
+      setTimeout(() => dragSrcEl.style.opacity = '0.4', 0);
+    }
+
+    function dragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    }
+
+    function dropItem(e) {
+      e.preventDefault();
+      const targetLi = e.target.closest('li');
+      if (dragSrcEl && targetLi && dragSrcEl !== targetLi) {
+        const list = document.getElementById('action-items-list');
+        const items = Array.from(list.children);
+        const srcIdx = items.indexOf(dragSrcEl);
+        const tgtIdx = items.indexOf(targetLi);
+        if (srcIdx < tgtIdx) {
+          list.insertBefore(dragSrcEl, targetLi.nextSibling);
+        } else {
+          list.insertBefore(dragSrcEl, targetLi);
+        }
+      }
+      if (dragSrcEl) dragSrcEl.style.opacity = '1';
+    }
+
+    // ---- Copy email ----
+    function copyEmail() {
+      const subject = document.getElementById('email-subject').value;
+      const body = document.getElementById('email-body').value;
+      const text = `Subject: ${subject}\n\n${body}`;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Email copied to clipboard');
+      });
+    }
+
+    // ---- Transcript search ----
+    function searchTranscript() {
+      const query = document.getElementById('transcript-search').value.toLowerCase();
+      const lines = document.querySelectorAll('#transcript-body .transcript-line');
+      lines.forEach(line => {
+        if (!query) {
+          line.style.display = '';
+          line.innerHTML = line.innerHTML.replace(/<mark[^>]*>(.*?)<\/mark>/gi, '$1');
+          return;
+        }
+        const text = line.textContent.toLowerCase();
+        if (text.includes(query)) {
+          line.style.display = '';
+        } else {
+          line.style.display = 'none';
+        }
+      });
+    }
+
+    // ---- Init: set chevron state for collapsed transcript ----
+    document.addEventListener('DOMContentLoaded', () => {
+      updateApprovalStatus();
+    });
+  </script>
+</body>
+</html>

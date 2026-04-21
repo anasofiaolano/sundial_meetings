@@ -1,0 +1,291 @@
+Speaker 1: No, totally. Yeah. Thanks.
+
+Speaker 2: Impersonal, if you—since you already met Marty and Maya in person and all of that, so.
+
+Speaker 1: No, totally. Yeah.
+
+Speaker 2: Yeah.
+
+Speaker 1: Um, yeah. No, it's—it's so good to meet you. I've heard—I've heard so much.
+
+Speaker 2: Good. Well, I've heard great things, too. You had—you made a great impression, so looking forward to talking with you.
+
+Speaker 1: Awesome. Yeah. So, um, yeah, I think it would be great to just kind of, like, do a little—a little meet. I'd love to hear about you, and I'll share about myself, and then we can just, like, chat a little bit about, like, how kind of, like, my onboarding is going and, like, talk about, yeah.
+
+Speaker 2: Sure. Yeah. Yeah. I mean, I'm—I'm happy to go first. I'm just, you know, curious—I know it sounds like you're doing some cool stuff, you know, immersed in the tech scene up in San Francisco, so I'm just curious to hear about that. But I can tell you a little bit about how I know Marty and am connected to DeepGlo.
+
+Speaker 1: Yeah, cool.
+
+Speaker 2: So I—I was—I went to Cal Poly for mechanical engineering, and I actually met the CEO of, um, Riptide—and I don't know if Marty had ever mentioned that, or Turntide, to you?
+
+Speaker 1: Yeah. Yeah.
+
+Speaker 2: Yeah. So that's kind of how I first met Marty was, um, the CEO of—of that company came and spoke, and I went down to Santa Barbara and—and met Marty and—and started working under her as my first job out of school. Um, and so I was doing, like, sales engineering and—and sales, um, under her at—at that time and sort in the, like, the building control space. Um, so several years after that—I mean, I was in that role—different roles at—at that company for about six years. Um, and then when Marty and Maya started up DeepGlo, you know, I—I had developed an interest in, um, product management and with everything that's developing with AI and, you know, just opening up some more opportunities, um, I've sort of just, like, immersed in that and, um—so that's kind of where—where I've landed with DeepGlo and, you know, just filling the roles that—that they need help with right now. Um, so yeah. And I'm here in San Diego. So, um, originally from Seattle, but, um—yeah. What about you? Are you from San Francisco originally?
+
+Speaker 1: Um, I grew up in Miami, um, and then I've just kind of been, like, all over the place. Um, and I'm coming up on, I guess, like, a year and a half or two years in SF. Um, yeah, and so, um, in school I did, like, data science, CS, applied math, um, and so I worked as a management consultant for a while, then I worked in Hollywood for a while, and then, um, for the last, like, two years, um, I've gone back to my technical roots because it was too exciting not to jump on the AI train.
+
+Speaker 2: Sure.
+
+Speaker 1: Yeah. And so, um—since you're up from Seattle, so I'm quite excited that, like, that's where, like, HeatTransfer is, um, 'cause actually I have, like, a ton of family in Seattle.
+
+Speaker 2: Oh, cool.
+
+Speaker 1: Yeah. And so, um, yeah, have you been up there to visit HeatTransfer?
+
+Speaker 2: Yeah, I have. So it's crazy coincidence, but it's actually my hometown. I'm from a town called Woodinville.
+
+Speaker 1: That's wild.
+
+Speaker 2: So about—about a quarter mile from where I went to high school is their office.
+
+Speaker 1: Wow, that's so crazy.
+
+Speaker 2: So just worked out that way.
+
+Speaker 1: Yeah. Do you still have, like, family up there or no?
+
+Speaker 2: I do. Yeah. My—parents are still up there. They moved out of Woodinville, so they're a little further away, but, um, still close by. So I stay there when I go visit and—um, but yeah, it works out really well that the—the office is up there and, yeah.
+
+Speaker 1: Cool.
+
+Speaker 2: What about you? Are you—do you know where your family's—where they live?
+
+Speaker 1: Yeah. Actually, I don't—I don't actually know, like, how close they are. Um, I've still yet to visit them, but yeah, I—like, I think, yeah, there's been such a weird migration from Miami to Seattle of, like, so much of, like, my generation of cousins. So it'll be, like, super fun to go up.
+
+Speaker 2: Interesting.
+
+Speaker 1: Yeah, I have no idea why, just the Pacific Northwest, like, migration—not for the weather, yeah, literally. Um, and, yeah, like, I have, like, a couple of—of family members there work, like, for, like, Lockheed Martin and then, like, maybe it was a bit of a chain migration situation, but anyway.
+
+Speaker 2: That's cool.
+
+Speaker 1: Um, yeah, so, um—as for me and kind of what I've been, like, doing the—the last couple years, um, yeah, I've been doing just a ton of development. I'm a full-stack engineer, um, and, like, the last two years have really been, like, about the, like, founder journey, the entrepreneurial journey. And so I started out with building a lot in the consumer space, um, and I can tell you about that, but I basically had this thesis of—of what I called anti-apps. So just kind of, like, what could consumers now, like, do that didn't involve, like, tapping on your phone? So it was a lot of, like, phone call-based apps or, like, messaging-based apps. Um, and—but then I decided to pivot away from consumer, um, for—for a couple of reasons, um, but I think mainly, like, I felt, like, B2B was probably, like, an easier way to just quickly gain experience with, like, actual, like, sales and, like, customer touchpoints and kind of the stuff that I was really familiar with at McKinsey. Um, and so I pivoted a number of times, like, within that. I worked in healthcare, um, in—in a couple of startups developing kind of, like, voice-based, like, AI training. And so I've done a lot of multimodal stuff.
+
+Speaker 2: Cool.
+
+Speaker 1: Yeah. And then I—I worked with, like, in private practice therapy, then I worked with, like, elder care homes to establish, like, a monitoring system, like, for their seniors. Um, and from then, um, have been doing some, like, basically consultative-style bespoke builds for, like, organizations. So, like, right now there's, like, this company that, like, wants, like, a bespoke CRM and a bespoke, like, sales co-pilot tool, um, and—and that's the sort of thing that I'm, like, building out for them. Um, and then just kind of, like, as part of that, making bespoke tools, like, kind of on the side, like, for example, like, lead gen and, like, email sequencing, right? It's, like—that's something that, like, we could build in-house, like, and kind of, like, make it really custom and tailored rather than, like, using, like, off-the-shelf, like, Apollo and stuff like that. Um, so yeah, just—I've had my hand on, like, a ton of builds. I've also done kind of, some, like, LLM, like, model—I—like, from what I've heard, you—I'm assuming you're, like, pretty technical?
+
+Speaker 2: Yeah. I mean, yeah, everything so far that you're saying, like, I've—I've kind of dove below the surface and—and communicate on that level, at least a little bit.
+
+Speaker 1: Yeah, I love it. Yeah. So, um, I've—I've kind of, like, trained Transformers, like, from scratch, right? So, like, gone through the whole, like, "how do you, like, actually, like, follow the, like, GPT cookbook to, like, make an LLM?" And so, like, I was—really early on was, like, working on, like, how good can you get, like, tiny models? And it's really—it's really cool. So, like, I was working on, like, sub-two-billion parameter models, um, to see how far you could push them. Um, and—and yeah, so it's really cool to see that a lot of, like, on-prem and, like, edge-deployed, like, LLMs and, like, small models are starting to, like, really gain traction as of the last year, um, 'cause yeah, that's—that's kind of a thesis that I've had for, like, you know, the last three years, you know, so it's exciting. Um, yeah. So, um—and then the other kind of one cool angle is that, um, my—my dad—so actually, I got connected to Maya and Marty via my dad, um, because he, um, is also a—a developer. He has, like, a number of companies. He's, like, semi-retired now, but he just loves programming and stuff. And so he's worked a lot in the, like, field service space, um, and—and has developed in that and done a bunch of HVAC stuff, right? And so it's something that I was kind of already immersed in, like, growing up, seeing my dad. And so, yeah, it was just, like, fun, like—what are the odds sort of deal? Of, like, this is, like, a really natural fit. So yeah, um, right now, like, what I—what my time has been being spent on is a lot of these, like, consultative-style builds, um, and I was kind of looking for what the next, like, business, like, opportunity was. And so, like, this, like—seems so—so awesome. It's so in line with, like, so many of my theses on, like, where the world is heading. Um, so yeah, so that's—that's kind of where I'm at.
+
+Speaker 2: That's great. Yeah, I mean, I—I imagine the bespoke consultative stuff right now is actually probably pretty fun to, like, meet with someone and create and—I have a—just short story, like, I have a buddy who has, like, a small eight-room hotel, um, here in San Diego, and he wanted to automate some of his housekeeping stuff because his housekeeper, like, didn't want to log into his app. So, kind of what, like, you just said—I mean, I know it's not—it's a little different reason for doing it, but, you know, he wanted to pull out, um, that part of the process from outside the app so she could have, like, a Spanish version that she could just say her phone and check—check the box and then it updates the locks, you know, early for early check-in and stuff. But it's just so fun to mess around on Claude, ChatGPT, even when you don't know that much. But, um, yeah. But I imagine it's fun to, you know, have new problems to solve all the time.
+
+Speaker 1: Totally. Yeah. And, um—no, that's—it's so crazy, you know, that, like, we're definitely moving to a place of, like, hyper-personalized software. Yeah. It's—it's a cool time. It's a cool time.
+
+Speaker 2: On the Hollywood side, what—what brought you into that? Like, what part of—are you a writer? Are you a—what—what interested you there?
+
+Speaker 1: For sure. So, like, I—I'm kind of half artsy, half tech, um, right? And so SF is actually a really great fit for me because it's got this whole kind of, like—I'm personally not a Burner, like, Burning Man, but, you know, that style of culture that's, like, so artsy—like, I have so many friends, like, that are part of that world, and so—and then there's that half, and then there's, like, the entire, like, tech side, so SF is so great for me. But yeah, at the end of the day, um, kind of this huge artsy side, um, I'm a musician, um, I was pretty burnt out at McKinsey—that was, like, during the pandemic. And man, I just, like, feel like I had my midlife crisis, like, way accelerated. I was, like, "What is the meaning of life? Why am I spending my hours doing something that's, like, soul-soul crushing?" Um, and kind of the answer that I had to that was, like, I wanted to work in something that I found really meaningful and, like, really beautiful. And my answer at that time was—was working in art. And, um, production ended up being a really good fit for, like, who I was, my skill set, kind of this mix of creative and management. Um, and—and yeah, it was an amazing time. And ultimately decided to leave because the kind of, like, expected value of a career in Hollywood was, like, not very good, especially, like, seeing kind of the, um, the instability of the industry right now, um, and kind of seeing how, like, even my boss who was, like—a real—like, hot shot in comedy, right? He was, like, one of the writers of—of The Hangover, right? Like, the movies I was working on him with were, like, Adam Sandler and Jennifer Aniston, um, and yet—and yet he, like, struggled to get by, you know, like, even being such a recognized name, you know, it's insane. Um, and—and yeah, and so, like, the really cool thing is things just kind of, like, converged well, um, because it was right at the time where, as I was making this decision to leave film, is when AI started to get so exciting, and so it was, like, a really obvious jump for me. Yeah.
+
+Speaker 2: Oh, cool. Well, I—I admire you taking that shot out of, you know, McKinsey and into that. I—I also would identify that I sort of struggle between an artistic and technical side and—
+
+Speaker 1: What's your artsy side?
+
+Speaker 2: I—I'm a musician as well. I—I play guitar mostly.
+
+Speaker 1: Cool.
+
+Speaker 2: Yeah. But I dabble in piano and I just do, like, um—a lot of production, like, on Logic and stuff. What about you?
+
+Speaker 1: Yo, that's—that's so awesome. Yeah. Um, I actually—my guitar's out in the living room, but I'm, like, practicing bass.
+
+Speaker 2: Oh, nice.
+
+Speaker 1: Yeah. And this is a—a Squire, yeah. Um, and so, like, I have, like, um—I live with some housemates, and so we have, like, basically, like, a little in-house band that we, like, jam together a ton. Um, so that's how that's getting tested.
+
+Speaker 2: That's awesome.
+
+Speaker 1: Yeah. No, but super cool that you play guitar. Have you ever been in bands and ensembles and stuff?
+
+Speaker 2: I have been in—yeah, I had a band in college and we just made a little EP and—
+
+Speaker 1: No way!
+
+Speaker 2: —but it kind of fizzled out, you know, obviously when everyone went—went their separate ways. But, um, yeah, it's since then, I mean, I just need to—um, I've jammed, you know, with—with some guys around here, but no—no official band or anything like that.
+
+Speaker 1: Yeah.
+
+Speaker 2: Definitely something I want to do.
+
+Speaker 1: It's hard—it's hard when you—when you got, like, a full-time job. Um, so yeah, jamming is—is kind of the way I express that too. Um, and so, um, you know, would love to kind of, like, hear what your experience with, like, DeepGlo has been, and I'm also just, like, curious, um, yeah, just—on the product management side, right? You probably, like, have, like—some—some really good perspective into, like, what's needed, right? And, like, what the product build should look like, and that's what I'm, like, super excited to—to dig into with you. Um, yeah.
+
+Speaker 2: Sure. Um—I'm happy to start wherever. I just don't want to, like, make you have to listen to 10 minutes of background if you feel like you already got some from Marty and Maya, like about the hardware story.
+
+Speaker 1: No, honestly, I'm at a point where redundancy is good, you know? Like, yeah, so would love to get as much as you want to share.
+
+Speaker 2: Okay. Yeah, so, um, I would just start by sort of positioning, like, the story that I'm sure Maya has told you is, you know, kind of, like, two sides where one is, um, a hardware story where we're sort of, like, getting some key data on these units and eventually, like, watching these units at all times and applying AI to sort of assist a—a technician when he's not there, you know, get—catch him up to speed before he goes back to site or when—when a problem comes up, be able to assist him there. And then also it's, like, learning from, um, the data that they're gathering right now, so, like, jobs and customers and—um, so there's a lot of different angles that we have, like, up in the air right now as we start working with Tolan, who's this first paid customer that we have. Um, and like, just today, actually, at—we—they have two different platforms, um, that we're going to be pulling data in from, and both of those, after several weeks, came in—started coming in today. So, like, we're just gathering the data right now. Um, and then on sort of, like, the product side itself, of DeepGlo, we've done a lot of, you know, testing and iterating on, you know, how can we apply AI to this space and, like, what's of value to the technician and to, like, the operator. Um, and so what we have today is a—sort of, like, a web app and a mobile app, sort of, um, created for different personas, like the web—the mobile app is more for the technician, um, and we've been building, but I would say, um, we have three engineers in India, and I think—you know, they're all great, and but, you know, AI is sort of, like, a learning experience for them, like they're sort of learning on the fly, like—one's a back-end engineer, one's a data engineer, um, so, like, we have a really strong foundation with the data itself, but I think that there's a lot that we're doing with our MCP server and, um, our AI assistant and our voice, um, experience, you know, a lot of it is just sort of, like—figure it out as we go. And so I think there's a lot of room to improve, uh, in that area. And I'm—I'm kind of rambling, but I'm happy to go into—
+
+Speaker 1: No, this is—this is really helpful. Yeah, please keep going. Yeah.
+
+Speaker 2: Yeah, so—um, so yeah, I think where—where I've been thinking about, you know, how—what an onboarding kind of looks like for you because what—what we really need is, um—part of it—part of the problem, too, is, you know, time zones can be pretty brutal, like, you know, I work with the team at night and then we work in the morning, but there is a big gap where I'm sort of, like, trying to create and trying to keep driving, um, but there's, you know, there's leadership, but then there's no one, like, who's—really pushing every day, can focus on the product. Um, so as we—like, it's a—it's good timing because we don't fully have, you know, Tolan using the product and all of that, but it's going to be happening, like, this month. So I think a lot of what, um, the vision that we have for the product where it's having conversations, it's being helpful, it's assisting on multiple levels, but then also capturing the—the conversations and identifying, like, the decision trace, like what—what was the intended outcome, what—what actually happened, like training a model to learn from that. That's all, like, what we're out, like, trying to solve, and we realistically haven't touched that side of it. Really it's just a—you know, um, like an API with—with Gemini at this point, and we're—and I've been doing some iterating with Gemini Live and now we're working on getting that into our production assistant, um, and it's just pulling data from our Postgres. And so we don't have anything, you know—and we're also storing, um, all the conversations in Postgres, but we're not doing any sort of, like, learning off of that. So, um, I think there's a lot of different areas we could go. Like, I think the—probably the—the most realistic, like, first step would probably just to get you, like, some level of access to what we're doing, because I would love to just get your—based on what you've been working on, get your sense of—should we really be using a, like, DeepGlo MCP server for our AI assistant, you know, like creating, like, an MCP client-server relationship for our internal tool? Like, I have my own opinions on that, but I don't know—I go and I meet with our engineer and we, you know, it's—I—I don't want to get too granular. But, like, those are the sort of, like, decisions and I would love to be able to just keep working until 5:00 p.m., you know, and—and be able to have these conversations. So, yeah, I'll pause there.
+
+Speaker 1: Yeah, that makes a ton of sense. Um, yeah, I think for me also it would just be—like the most helpful would just be, like, getting—getting repo access so I could just, like, dig around and just understand, like, what's been done. Um, and all the flows. Um, and you know, I'll, like, poke around and see, like, what's been, like, the most edited, kind of, like, where is the most activity concentrated, like, to kind of direct me, but then if you can kind of, like, point me, like, "Hey, look over here, look over there," um, that would be, like, helpful. Like, "What are the key files?" Um, and—and yeah, so, like, I've talked a lot with, um—with, like, Maya and Marty about kind of, like, where they want to go, and like, my sense of kind of the end state—or at least, like, rather—'cause I know that the question of, like, what's—going to drive the most value is still, like, a hypothesis and testing, right? And—and I know that, for example, even Marty occasionally, like, floats around, like, "Man, like, we might even, like, toy with, like, doing some, like, back-end—just back office stuff because there's value to be done there, right? Even though, like, we are focused on, like, field, right? And unstructured data collection, right? Like, this could also be valuable." And so there's all these hypotheses. Um, but I know that right now the sense I'm getting is, like, even though there's kind of all these ideas, what we want to look at first is the, like, AI assistant and, like, the Sam that, you know, the engineers can talk to for, like, each individual dispatch and kind of having the end-to-end, like, capture and the end-to-end kind of communication with the assistant. So, like, I'd love to hear, like—what your take is on—on what's—what's the priority build? Like, what's—what's the priority thing that's—that's going to, like, deliver the most value to Tolan, you know? Um, and what are the other ideas floating out there?
+
+Speaker 2: Yeah, so just, like, the background on why it probably feels like there's a lot of, like, like sticks in the fire is that, um, you know, I think—
+
+Speaker 1: Which is normal, right? Like, yeah.
+
+Speaker 2: Yeah. Well, I think—so there's a—it's much easier to identify, like to quantify, like a dollar value, like a savings with a lot of the back office ops that we're looking at. And we went and we met with Tolan and we tried to identify, like, what are some, like—after the—at the end of the six months, like, what are some, like, KPIs you want us to measure against, um, because the thesis was that, you know, even with the AI assistant we could help their technician save, like, two hours a day and free them up for, like, one more job. And, like, you can quantify, like, "Okay, this is $600—like they're not cheap, their hourly's not cheap." But kind of what we found is that, um, basically, it—their top metric that we identified, like in the first meeting, was just that technicians, like, won't want to stop using the assistant at the end of the six months. And it's, like, very technician-focused and it's going to be harder to, like, even if we free up an hour, like in the day, like it doesn't mean that the technicians are going to go to another site because, like, they—they allocate, like, four to eight hours for—for a job. So, like, the sooner you get them off, like, um—it doesn't necessarily move the needle for, like, the company, at least at first, but it will be something that if the—if it's helping the technician to get home sooner or, like, get off the roof faster, um, you know, I'm just giving you some background. Like, that's—so I think we still want to be looking at both because we want to be able to—we want to accomplish our goal of the technician saying, "Hey, don't take this away," but at the same time we want to also, like, uncover some dollar savings with things like, like, "Here are the customers you should go after for, like, a replacement on their unit because of these reasons and that sort of thing." So there's—I would call it, like, a—I would call it, like, an enrichment layer where you're actually just, like, identify—helping them identify their portfolio because they—they haven't gotten that kind of a view into their—business yet. And then there's, like, the technician assistant as well as, like, some—business workflows. So I would say workflows, enrichment, and AI assistant. So I think the AI assistant is kind of what we're—like—that's what we've committed to as far as the roadmap for them. It's, like, get the data in, perform enrichment, and then—like for the assistant and for you, and then provide you with, like, an assistant.
+
+Speaker 1: Cool.
+
+Speaker 2: Yeah. So, um, yeah, hopefully that answered your question.
+
+Speaker 1: Yeah, it does. So, my AirPods—
+
+Speaker 2: No problem.
+
+Speaker 1: —makes sense. Um, where do I want to go from here?
+
+Speaker 2: Yeah. Well, so I think it's probably—like—it probably makes sense to give you access to look around and—and maybe just, even just as a starting point, like assess, like—give your honest assessment for, like, what makes sense to you, what doesn't make sense to you. I feel like, you know, I've kind of been grappling with how do we not turn the fire hose all the way up and, you know, just say, "Go for it." Um, but yeah, I thought that maybe that would be a good next step is to, like, give you some guided entry into our—into what we're doing. And what you'll see is—and I'll make sure to identify, like, you'll see a lot of our strengths are on the, like, the data pipelines, like, the—MQTT pipeline for our live data, like, that's where the—those are the origins of, like, these engineers, like they've been working a lot on, like, building a really strong solution that transmits live data, like, to the cloud. And so, like, that's—that's where a lot of the tech stack is. There's a lot around, like, auth and, you know, they're very conscious about, like, for scale, like we're going to have, like, 500 technicians and they should only have access to, like, these sites. Um, so there's a—there's a lot of work that's gone into, like, the hierarchy of, like, the data. Um—
+
+Speaker 1: That's great.
+
+Speaker 2: And—yeah. So it's—there's a—there's a lot to be done—there's a lot to capitalize on there, I guess is what I'm saying.
+
+Speaker 1: Great. Awesome. So, yeah, this—makes a ton of sense, and I super agree with your next steps. Um, yeah, yeah. I think it's kind of one of those where, I love how you put it, you've got the assistant, the enrichment, and the workflows. Um, and so I'll—just want to dig in and see kind of where each of those stand. And then for, like, assistant, if that's somewhere where realistically, like, it hasn't—we haven't yet determined, like, the structure of that, like, let's just, like, ASAP set up, like, a follow-up conversation to talk through, like, what would that ideally look like, you know? Like, what's—what's the best—what's the best version of that? Um, and then you and I can, like, determine, you know, what should the—what should the building blocks or, like, the milestones look like to making that really awesome version, if that makes sense.
+
+Speaker 2: Yeah. Yeah. And—like, just—for you to think about, um, you know, the vision of this product is that it's something that the technician can rely on in the field, but also is, like, communicating with and it's capturing all that unstructured data because, like, at the end of the day, um—what we're doing is we're basically relying on their platform that they use out in the field to send data, like, to us, and then we capture it, and that's great. Like, we can—we're putting an AI layer on top of their data, and that's going to be very helpful. But I think, um, you know, we have—there's a—there's a lot of work to be done on how is it actually going to be possible for us to be, like, a—like, always-on, kind of, always-present, listening, like—we've—we've been putting a lot of thought into that. So, um, I just want you to be thinking about that too, like beyond what we've even built, thinking about, like, the user's need, like they're going on the roof or they're heading to site and they want to have a quick conversation. That's why I've been pushing recently, like, I've been pushing voice. But it—it should probably be beyond that, like it—it should—we should be thinking about, like, sending text messages or, you know—how do we—how do we meet the—how do we meet the technician, like, where they are? Has been—is going to be a big challenge, and—it can't just be, again, it always makes me—the first thing you said was just, like, clicking on an app and, you know, can't be quite, like, forcing them to—to use another app. So there's a—and I think technicians, like, HVAC technicians, is also just—I'm sure you're aware, like, probably more tech-averse than the average person as well. Like, at least when it comes to trying to tell them that this is going to help you do your job better or, you know, that sort of thing. There's some—there's some skepticism. Yeah.
+
+Speaker 1: "I'll believe it when I see it."
+
+Speaker 2: Yeah.
+
+Speaker 1: So, question on—on—so you mentioned kind of, like—would you say your role is, like, just product management, right?
+
+Speaker 2: Yeah.
+
+Speaker 1: So, like, kind of on that, like, um, how—how much do you typically like to do around kind of, like, spec-ing, like, a product, right, and, like, laying out capabilities, right? Because, um, that—that would be super helpful to—to me, right, is kind of, like, I've heard a couple of layers first from Marty and now from you of, like, here are some of the things that we'll want to consider. And so, for example, it's, like, you know, like, right before you're about to, like, leave the office for a dispatch, right? Like, we want to know, you know, what tools should I get, right? And, like, how—you're going to need the ladder, right? And, like, there's a part waiting for you at the store for you to pick up, right? And then when you arrive, it's, like, "Hey, this is the person to talk to," right? And so there's some geofencing to be done around that, right? Like, you arrived, like—or maybe some GPS tracking. Um, and like, "Here's where to go, like, here's who to talk to," and like, all of this, right? And then when you're there, it's, like—you might be getting, like, on the phone with a more senior technician and, like, asking them questions, right? And it's, like, "What are those sorts of questions and, like, can Sam answer those instead?" Right? Um, and so it's—I've gathered kind of in my mental model a number of these things from my conversations with Marty.
+
+Speaker 1: ...was thinking. Um, but you know, if you have any like, kind of specing work around like, you know, I've really drilled into specifically what's going to be needed at each stage. Uh, like that would probably just like, drive it ahead real fast. Um, or, or maybe it could just be like kind of like you and me in a conversation with AI and kind of like, what are we missing in this list? Um, but yeah. Yeah, what do you think there? 'Cause you're probably just much smarter about this than I am at this point and like, here's everything we need.
+
+Speaker 2: No. Well, so I definitely, like I said, I mean, I'm not like, I haven't been—I don't have a bunch of product management direct experience. Um, but I've been trying to like, skill up as much as possible. And, and when I first came onboard, I was doing pretty much that, like, very traditional, like PM, like, here's a spec, like, for this sprint, here's the spec, like, that kind of thing. And, uh, it just—the reason, um, I still am doing that, but it's—it's definitely not so much a traditional PM role where, like, that's all I'm doing and then I have like, a full team and...
+
+Speaker 1: No, it's a startup. Yeah. I mean, yeah.
+
+Speaker 2: Yeah. So, so like, a lot of what I was putting together, like, I was starting to feel like this was not even getting read and it was not like the right team yet, um, to be just like, staying in my lane and doing traditional PM, uh, work. Um, but I do have a lot as far as, like, workflows. Like, I've got sort of like three workflows identified. And, um, it's just like, I want to like, get you started like, today, obviously, like, as much information as I can. But, um, we—part of what—part of what I'm kind of waiting on with those workflows is also just making sure like, it's based on like, the data that we actually get from them, which is what we just received today.
+
+Speaker 1: Great.
+
+Speaker 2: Because there's some—some still unknowns about like, how much of their schedule is really in like, these platforms. They—they pride themselves on like, part of their hiring, like, appeal is that they give the technicians a lot of autonomy, they give them—they only fill their schedules like 50% and then the rest is like, the technician interacting with the customer directly. So these are all like challenges I need to be synthesizing as like, a PM, but, um, I just want to like, see it before I just like, put—put out a new spec for a workflow that's like, here's what we're going to do and then we don't have any schedule data, you know? So...
+
+Speaker 1: Yeah. Cool.
+
+Speaker 2: But yeah, I will—yeah.
+
+Speaker 1: What—so what—and what is the—oh yeah, I was just going to ask, like, uh, what are some of the specifics on, like, the data that's coming in? Um, I'm super curious. And if you could, yeah, share that or kind of share what you're seeing, like, would be super cool.
+
+Speaker 2: Yeah. So they have—they have a—what's called like an FSM, which I'm sure maybe you're familiar with, if you've been...
+
+Speaker 1: Yeah. BuildOps, right? No.
+
+Speaker 2: So, yeah, it's not currently—it's actually one called Winsoft, which is one they've been using for a while.
+
+Speaker 1: Right. Okay. Yeah, sorry.
+
+Speaker 2: And, uh, so that has data like customer sites, jobs—I mean, it's where they're managing like the day-to-day for the customers. And then they also have one that's—and then within that there's like, uh, service agreements and, like, filter sizes and, um, sort of just like metadata associated with the customer. And then on the other side they have like a—like a field app called XOI. And that, um, has—I haven't seen—we haven't gotten—been able to see it yet, so I don't know exactly what lives there, uh, as far as fields, but it's stuff like workflows, um, like service workflows for them to take pictures and, uh, put completion notes, like, stuff that they're doing in the field. And then this gets pushed, I think, to Winsoft, but, um, we just set up like a Snowflake connector this morning, um, with that.
+
+Speaker 1: Cool.
+
+Speaker 2: So, part of their problem that we're trying to solve is that they do—they have never like, seen like a—one view for the—all this data. Like, it lives with the technician and it gets very like, spread—spread out.
+
+Speaker 1: Mhmm.
+
+Speaker 2: So, um, yeah. So those are really the two like data sources. And then we have—and then we're eventually in the next couple months we're planning to deploy like a hundred of these, um, sensor boards, which go in rooftop units and they capture, um, two—two current—so a compressor current and blower fan current, and then a couple temperatures, like supply and return air temperature. It's kind of like—like a health, like—like a Fitbit, I guess. I'm sure maybe Marty said that.
+
+Speaker 1: She did actually, that's hilarious.
+
+Speaker 2: Okay.
+
+Speaker 1: Okay, yeah. The EC—EC HVAC, yeah.
+
+Speaker 2: What's that?
+
+Speaker 1: Easy HVAC, yeah.
+
+Speaker 2: Easy HVAC, yeah. And so, um, so that—we have some—like a layer that's sort of like an analytics layer and that's Raghavan who's sort of the data specialist on our team. Um, and it's looking for things like insufficient cooling capacity and—and just other KPIs that we've kind of created through working with Heat Transfer. And, um, and so we have some—I, you know, some people call them KPIs, some don't, but essentially they're like KPIs and, um, it's a way for us to package up the—the data, um, and feed it to the LLM. And so there's just—I would say right now, like, those are like the three main, uh, sources of data, um, that we're trying to through MCP tools, you know, when a—like, we—we started with just like an AI assistant with like an OpenAI API and then we built an MCP server and that has a bunch of tools. It's like 'get sites' and 'get live data' and, uh, it returns a lot of data right now.
+
+Speaker 2: Um, but, uh, you know, the goal is basically what I'm trying to do with the workflows is like, um, one workflow, for example, is like they identified that the technician on Friday, part of their job is to, um, like plan their next week. So like I said, they have 50% and then they have to fill it with like service agreements. And I won't get—I'm sorry, I'm starting to like, treat it like you have to hear everything.
+
+Speaker 1: No, this is—this is really good, actually. Like, yeah, this level of detail is valuable.
+
+Speaker 2: So what—like, that's kind of like a natural thing that they do, but it's not—they kind of are like figuring it out. Like, they're—they're—there's some optimization to be done there around some of the stuff you said, like it would be great if we could have our—our assistant like look at what they have scheduled for next week and like match some locations to like—because these service agreements, when I say a service agreement, it's like a batch of like let's say 30 agreements that they get for the month and it's their job to make sure they do them all, but they have the autonomy to not just be like, here's where you go today, here's where you go tomorrow.
+
+Speaker 1: Gotcha.
+
+Speaker 2: So that's one example. And once we like really see what that looks like then the workflow, I think, you know, we can start refining it. But, um, that's what I—that's my vision for like the first version that we want to present to Tolan is like, um, an assistant that's got like a daily briefing associated with bit-by-user. So it says, here's what you've got today. And then three workflows, like: help me diagnose an issue, help me plan my week, and, um, like prep me for my next job. Something along those lines. And then they have the ability to just ask a question or tap our like voice assistant, um, which I would say, I mean, I just vibe coded it, but, um, it's probably like the best like overall experience that we've gotten so far.
+
+Speaker 1: Yeah, I saw. It was—it was actually pretty low latency. Um, what did you use for that? I've—I've done a number of, like, voice tools, but it's been about six months since I've really touched voice. So I'm just curious what you used. You used Gemini, right?
+
+Speaker 2: Yeah. I just, um, had it make a WebSocket with Gemini 3 Live, and, um, just like helped it to build the prompt to be like, don't be too wordy, and, uh, it matched—like it—it was very insistent, like you don't need MCP here. So it—it used its own like local executor with—and matched the tools. Um, but anyways, the reason I just say it's a better experience is that we just—so far it's like, prep me for my next job and it just gives you like a—like an essay of like...
+
+Speaker 1: Word salad.
+
+Speaker 2: Yeah. And, and so we've—obviously I know like prompt refinement and stuff, that's part of what we've done. But it's also just—just something to keep in mind, like there's a lot of data, especially when it's like a—a site that they've had for like 15 years and we—and we're calling like, we're trying to like identify the history of a unit, you know? Just a lot—obviously I think it makes sense, like you have to be—there has to be a layer of like helping the LLM to identify what's important and that sort of thing. So...
+
+Speaker 1: Totally.
+
+Speaker 2: Perfect. That's super helpful. Thank you.
+
+Speaker 1: Yeah, sure. Yeah, yeah. I mean, we can just, um, pause there so that it's not too much just verbally telling you stuff. And I'm—I'll get—I'll work on getting you, um, some access to stuff and, and give you some as much context as I can, uh, on like the assistant and, um, other stuff that we're doing. 'Cause I didn't really talk—tell you about, uh—we have—you'll see like in the—um, in—it's in one called BB Cloud, it's called Richie, and that's like our enrichment agent.
+
+Speaker 1: Cute.
+
+Speaker 2: But, um, there's more I want to do with enrichment, so we'll talk about that later.
+
+Speaker 1: Cool. Are you sure you don't want to just give me an overview now?
+
+Speaker 2: Yeah. Well, yeah. So we—um, for the first—we basically did that with Heat Transfer. We—we gave our engineer like the list of like, I think it ended up being like a hundred parameters that we wanted to go do like web search and like enrich at the site level and at the equipment level based on like serial number. And, um, and it's—it's helpful. Like it was—I would just consider like a first like pass at like an enrichment agent because, um, you know, first of all it—it used a lot—it was very token heavy, like it cost us like 30 dollars to like run each time. And it's very like tucked away like with our engineer. Like it's like, okay, I'm going to go do this and then like four days later he comes back and we've got like three enrichment fields with like hit-or-miss enrichment.
+
+Speaker 1: Yeah, I see what you mean.
+
+Speaker 2: Um, and so what I'm—what I am like planning is for us to just utilize our DG—what I'll—it's called DG MCP, like our MCP server, and have some new tools that like allow Marty and me and you, um, to like just use Claude for—for that layer and—and I'm—this is just a—one idea that I have. Um, and just do the enrichment from there. Like using MCP and like put it more in our hands to do this enrichment once we get all the data, um, because that's just been part of the experience is that we don't—we want to just enable ourselves as much as possible because we're interacting with Tolan and, um, some of these things have taken a while and the, you know, there's a lot of iteration on like the output and, um, Postgres is sort of hard to just like get your head in like at all times. So...
+
+Speaker 1: Yeah.
+
+Speaker 2: Um, so yeah.
+
+Speaker 1: So, yeah, that's really helpful. Um, and you know, it'll be really cool to kind of—what I'm most going to focus on looking at is like the desired end state, right? And the—so for example for enrichment, what's the desired output? Right? Like, what's an example of—of great? And then like where I'm going to be really helpful is like kind of identifying what are the maybe best tools to use for—for each job. Right? And so it's like off the bat, right, we should be using like Exa or Firecrawl like to do kind of like AI-native like search, right? Um, and so stuff like this. Um, so yeah, that's super helpful. What, um, for the enrichments that you did run for like Heat Transfer...
+
+Speaker 2: Yeah.
+
+Speaker 1: Like, uh, how was that helpful to the techs on the field or like, did that get deployed or not yet?
+
+Speaker 2: No, I mean it did get deployed. And, um, we kind of—I mean, we use Richie for like two things. Like one is for like more of like the passive enriching the account, like, here's the type of customer it is and, you know, that sort of thing. The other is like enriching the—the job history. So like access notes, um, like recurring issues, like that sort of thing. So I think I would say in my experience like a—some of that was helpful because it like digs up like, get the key from Subway. Like, that was kind of like what I demoed and, um, and then other times it's like there's like six phone numbers and it's hard for it to—it just—it looked and it just—it found like five different customer—like different contacts and put them all in there. And, um, so that's been like when I say like the—it's been hit or miss and then it's hard for us to like—hard for us to like resolve that. That's why I—like Marty's like gotten more—she really is like enjoying using Claude and getting better at it. So like to be able to just like say, okay, like here's a tool like to—to get like all of the customers and then for her to be able to just say like enrich it and then customer by customer, like pick—find me the top 10 candidates for like a planned replacement for Tolan and then for her to be able to just like quickly modify these fields and like—there's just been some frustration, for lack of a better word, just like around feeling like we have control over like the—the, you know, the database and a connection to it. So, um, not—I mean I would love to have as much like IP as possible and we don't need to be using Claude, but for stuff like that where it's not necessarily like a customer facing process, it's just to help them to get some quick wins for them or, you know, help them plan things.
+
+Speaker 1: Gotcha.
+
+Speaker 2: Um, like creating that connection even for us to work better, um, with our own product is, you know, another opportunity that I would—I would see. But, um, yeah. What—like I—before I just tell you what we should have you work on, like is there a—like an area based on what you've been doing like that you, um, like are most interested in when it comes to Deep Glow? Or is it...
+
+Speaker 1: Yeah. So, I mean, I—I have a bit of experience, well, I have experience across like all three of like enrichment, workflow stuff, and assistant plus kind of like dealing with like how the assistant like will manage like data and communications and all that. And so, um, what I'm excited about is that it really just feels like we're in a stage—we're in a stage of like finding where the top value is. Right? And so you're—you're phrasing it really well in terms of like we want to give them some of these quick wins, um, and at the same time like what's—our north star is like this really great like assistant that, um, is—is going to save them a ton of time and hence money. And so I think my—my kind of MO is to just the majority of the time drive towards like the 80/20. You know, like what's—the number one like most valuable thing, like what's the thing that's really going to move the needle and like go towards that. Um, so that's kind of my MO. Um, but at the same time, like—like putting things together can sometimes be so quick, a few days turnaround or less, right, that it's like some of these easy wins like as soon as I see them like maybe—maybe they're things that we can like knock off too. Right?
+
+Speaker 2: Yeah.
+
+Speaker 1: So I really think I'm at a point where like I'd need more data. Um, like I need more information like access to like figure—figure out like where—where to go. But, um, yeah. And in terms of like just excitement, it's—I really think that like I've been wanting a project that deals a lot with like unstructured data and just like recording and like the real world. Right? And that's kind of like the—the final frontier.
+
+Speaker 2: Mhmm.
+
+Speaker 1: Yeah. And so I'm—I'm super stoked about that. Um, so I don't really think that there's a part of the project I'm not stoked about. Right? It's—it's really just about let's together figure out what moves the needle for these people. You know?
+
+Speaker 2: Yeah.
+
+Speaker 1: Yeah.
+
+Speaker 2: Yeah. Okay. I—and like I—I fully intend on us probably needing to like pivot several times with them because like they—you know, they don't know exactly what they want. Like it's—we're kind of like reinventing something for them in some ways where like they haven't—it's like they're still like trying to figure out like exactly what—how this will all work. You know? Some use ChatGPT but that's, you know, that's it. So having the context behind it, I think hopefully gets them excited, but they—they've been struggling to sort of like fully identify like what can you—what problems can you solve until I—I think their mind will get going once they like start using it and seeing like what's possible.
+
+Speaker 1: Yeah. And I think you—you show them a lot of different things, right? Like a—death by a thousand papercuts. Right? And like something is bound to—to be it. You know? And then you like double down on that when you do find it. So I'm also just a big believer in trying a lot of things and like rapid iteration and then like doubling down on making the one thing great like once you find that. So yeah, it sounds like we're like pretty like aligned in like how to tackle this thing. So that's—that's good.
+
+Speaker 2: Cool. Yeah, I agree.
+
+Speaker 1: Yeah. Sweet.
+
+Speaker 2: Okay. All right. Well, I will, um, just tomorrow, uh, by the end of the day, I'll try to have like a—organized package for you and, um, yeah. And we'll just go from there.
+
+Speaker 1: Thanks.
+
+Speaker 2: Amazing. So good to—to meet you. Yeah.
+
+Speaker 1: Yeah, likewise. Yeah. Thanks for—for talking.
+
+Speaker 2: All right. Talk soon. Bye.
+
+Speaker 1: Okay. All right. Bye.

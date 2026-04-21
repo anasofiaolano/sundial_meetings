@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Detail — Sundial Pipeline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          colors: {
+            page: '#fafaf9',
+            card: '#ffffff',
+            border: '#e7e5e4',
+            primary: '#1c1917',
+            secondary: '#78716c',
+            accent: '#f59e0b',
+            health: { green: '#10b981', amber: '#f59e0b', red: '#ef4444' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #fafaf9; color: #1c1917; }
+
+    /* Shimmer loading placeholder */
+    .shimmer {
+      background: linear-gradient(90deg, #f5f5f4 25%, #ececeb 50%, #f5f5f4 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 6px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Timeline entry expand */
+    .timeline-detail {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.25s ease;
+    }
+    .timeline-detail.open {
+      max-height: 400px;
+      opacity: 1;
+    }
+
+    /* Collapsible section */
+    .collapsible-body {
+      max-height: 800px;
+      overflow: hidden;
+      transition: max-height 0.35s ease, opacity 0.25s ease;
+      opacity: 1;
+    }
+    .collapsible-body.collapsed {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    /* Inline editable field */
+    .inline-edit {
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: background 0.15s;
+      border: 1px solid transparent;
+    }
+    .inline-edit:hover {
+      background: #f5f5f4;
+      border-color: #e7e5e4;
+    }
+    .inline-edit-input {
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #f59e0b;
+      outline: none;
+      font-size: inherit;
+      font-family: inherit;
+      background: #fffbeb;
+      width: 100%;
+    }
+
+    /* Modal overlay */
+    .modal-backdrop {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-panel {
+      transform: translateY(20px) scale(0.97);
+      opacity: 0;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+    }
+    .modal-backdrop.visible .modal-panel {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    /* Snooze dropdown */
+    .snooze-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      z-index: 50;
+    }
+    .snooze-menu.open { display: block; }
+
+    /* Temperature dot */
+    .temp-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: inline-block;
+    }
+
+    /* Card hover */
+    .hover-lift { transition: box-shadow 0.2s, transform 0.15s; }
+    .hover-lift:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); transform: translateY(-1px); }
+
+    /* Scrollbar */
+    .scroll-area::-webkit-scrollbar { width: 5px; }
+    .scroll-area::-webkit-scrollbar-track { background: transparent; }
+    .scroll-area::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 3px; }
+
+    /* Drag zone */
+    .drag-zone {
+      border: 2px dashed #d6d3d1;
+      border-radius: 12px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .drag-zone:hover, .drag-zone.dragover {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ===== HEADER STRIP (fixed) ===== -->
+  <header id="headerStrip" class="fixed top-0 left-0 right-0 z-40 bg-white border-b border-border" style="box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
+    <div class="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between gap-6">
+
+      <!-- Left: Name, location, lot status -->
+      <div class="flex items-center gap-4 min-w-0">
+        <a href="/pipeline" class="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-stone-100 transition-colors flex-shrink-0" title="Back to Pipeline">
+          <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </a>
+        <div class="min-w-0">
+          <div class="flex items-center gap-3">
+            <h1 id="contactName" class="text-lg font-bold text-primary truncate">Loading...</h1>
+            <span id="lotStatus" class="hidden px-2 py-0.5 text-xs font-medium rounded-full bg-stone-100 text-secondary border border-border"></span>
+          </div>
+          <p id="contactLocation" class="text-xs text-secondary truncate mt-0.5"></p>
+        </div>
+      </div>
+
+      <!-- Center: Stage, temperature, last touch -->
+      <div class="flex items-center gap-5 flex-shrink-0">
+        <span id="stagePill" class="px-3 py-1 text-xs font-semibold rounded-full"></span>
+        <div id="tempIndicator" class="flex items-center gap-1.5">
+          <span class="temp-dot"></span>
+          <span class="text-xs font-medium text-secondary"></span>
+        </div>
+        <div id="lastTouch" class="text-xs text-secondary">
+          <span class="font-medium">Last touch:</span> <span id="lastTouchValue">--</span>
+        </div>
+      </div>
+
+      <!-- Right: Call Now, Snooze, Back -->
+      <div class="flex items-center gap-3 flex-shrink-0">
+        <div class="relative">
+          <button id="snoozeBtn" onclick="toggleSnooze()" class="px-3 py-2 text-xs font-medium text-secondary bg-stone-50 border border-border rounded-lg hover:bg-stone-100 transition-colors">
+            Snooze
+            <svg class="w-3 h-3 inline ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div id="snoozeMenu" class="snooze-menu bg-white border border-border rounded-lg shadow-lg py-1 w-44">
+            <button onclick="snooze(1)" class="w-full text-left px-3 py-2 text-sm hover:bg-stone-50">Tomorrow</button>
+            <button onclick="snooze(3)" class="w-full text-left px-3 py-2 text-sm hover:bg-stone-50">In 3 days</button>
+            <button onclick="snooze(7)" class="w-full text-left px-3 py-2 text-sm hover:bg-stone-50">In 1 week</button>
+            <button onclick="snooze(14)" class="w-full text-left px-3 py-2 text-sm hover:bg-stone-50">In 2 weeks</button>
+            <button onclick="snooze(30)" class="w-full text-left px-3 py-2 text-sm hover:bg-stone-50">In 1 month</button>
+          </div>
+        </div>
+        <button id="callNowBtn" onclick="callNow()" class="px-5 py-2 text-sm font-semibold text-white rounded-lg transition-all hover:shadow-md active:scale-[0.97]" style="background: #10b981;">
+          <svg class="w-4 h-4 inline mr-1.5 -mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          Call Now
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT (below header) ===== -->
+  <main class="max-w-[1440px] mx-auto px-6 pt-24 pb-12">
+    <div class="flex gap-6" style="min-height: calc(100vh - 120px);">
+
+      <!-- ===== LEFT COLUMN (60%) ===== -->
+      <div class="w-[60%] flex flex-col gap-5">
+
+        <!-- Timeline -->
+        <section class="bg-white border border-border rounded-xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-semibold text-primary tracking-wide uppercase">Timeline</h2>
+            <button onclick="openAddInteraction()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-accent bg-amber-50 border border-amber-200 rounded-lg hover:bg-amber-100 transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+              Add interaction
+            </button>
+          </div>
+          <div id="timelineList" class="space-y-1 scroll-area" style="max-height: 520px; overflow-y: auto;">
+            <!-- Shimmer placeholders -->
+            <div class="shimmer h-12 mb-2"></div>
+            <div class="shimmer h-12 mb-2"></div>
+            <div class="shimmer h-12 mb-2"></div>
+            <div class="shimmer h-12 mb-2"></div>
+          </div>
+        </section>
+
+        <!-- Project Details -->
+        <section class="bg-white border border-border rounded-xl p-5">
+          <div class="flex items-center justify-between cursor-pointer" onclick="toggleProjectDetails()">
+            <h2 class="text-sm font-semibold text-primary tracking-wide uppercase">Project Details</h2>
+            <svg id="projectChevron" class="w-4 h-4 text-secondary transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </div>
+          <div id="projectBody" class="collapsible-body mt-4">
+            <div id="projectGrid" class="grid grid-cols-2 gap-x-8 gap-y-3">
+              <!-- Shimmer placeholders -->
+              <div><span class="text-xs text-secondary">Build location</span><div class="shimmer h-5 mt-1 w-3/4"></div></div>
+              <div><span class="text-xs text-secondary">Lot status</span><div class="shimmer h-5 mt-1 w-1/2"></div></div>
+              <div><span class="text-xs text-secondary">Budget range</span><div class="shimmer h-5 mt-1 w-2/3"></div></div>
+              <div><span class="text-xs text-secondary">Financing</span><div class="shimmer h-5 mt-1 w-1/2"></div></div>
+              <div><span class="text-xs text-secondary">Sqft</span><div class="shimmer h-5 mt-1 w-1/3"></div></div>
+              <div><span class="text-xs text-secondary">Style</span><div class="shimmer h-5 mt-1 w-2/3"></div></div>
+              <div><span class="text-xs text-secondary">Current floor plan</span><div class="shimmer h-5 mt-1 w-3/4"></div></div>
+              <div><span class="text-xs text-secondary">Revision count</span><div class="shimmer h-5 mt-1 w-1/4"></div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Files & Attachments -->
+        <section class="bg-white border border-border rounded-xl p-5">
+          <h2 class="text-sm font-semibold text-primary tracking-wide uppercase mb-4">Files & Attachments</h2>
+          <div class="drag-zone flex flex-col items-center justify-center py-10 text-center" id="dropZone">
+            <svg class="w-8 h-8 text-stone-300 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.338-2.32 3.75 3.75 0 013.547 5.345A3.75 3.75 0 0118 19.5H6.75z"/></svg>
+            <p class="text-sm text-secondary mb-1">Drag files here or click to upload</p>
+            <p class="text-xs text-stone-400">Coming soon -- file management is under development</p>
+          </div>
+        </section>
+      </div>
+
+      <!-- ===== RIGHT COLUMN (40%) ===== -->
+      <div class="w-[40%] flex flex-col gap-5">
+
+        <!-- Before You Call Briefing (HERO CARD) -->
+        <section id="briefingCard" class="bg-amber-50 border-2 border-amber-200 rounded-xl p-5 hover-lift" style="box-shadow: 0 2px 12px rgba(245,158,11,0.08);">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center">
+              <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </div>
+            <h2 class="text-sm font-bold text-amber-900 tracking-wide uppercase">Before You Call</h2>
+          </div>
+
+          <div id="briefingContent">
+            <!-- Shimmer loading state -->
+            <div id="briefingShimmer">
+              <div class="mb-4">
+                <div class="shimmer h-3 w-28 mb-2"></div>
+                <div class="shimmer h-4 w-full mb-1"></div>
+                <div class="shimmer h-4 w-3/4"></div>
+              </div>
+              <div class="mb-4">
+                <div class="shimmer h-3 w-24 mb-2"></div>
+                <div class="shimmer h-4 w-full mb-1"></div>
+                <div class="shimmer h-4 w-5/6"></div>
+              </div>
+              <div class="mb-4">
+                <div class="shimmer h-3 w-20 mb-2"></div>
+                <div class="shimmer h-4 w-full mb-1"></div>
+                <div class="shimmer h-4 w-2/3"></div>
+              </div>
+              <div class="mb-4">
+                <div class="shimmer h-3 w-20 mb-2"></div>
+                <div class="shimmer h-4 w-full"></div>
+              </div>
+              <div>
+                <div class="shimmer h-3 w-32 mb-2"></div>
+                <div class="shimmer h-4 w-full mb-1"></div>
+                <div class="shimmer h-4 w-full mb-1"></div>
+                <div class="shimmer h-4 w-3/4"></div>
+              </div>
+            </div>
+
+            <!-- Populated state (hidden initially) -->
+            <div id="briefingPopulated" class="hidden">
+              <!-- Last conversation -->
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-xs font-semibold text-amber-800 uppercase tracking-wide">Last Conversation</span>
+                  <button onclick="editBriefingSection('lastConversation')" class="p-1 rounded hover:bg-amber-100 transition-colors">
+                    <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                  </button>
+                </div>
+                <p id="briefLastConvo" class="text-sm text-amber-950 leading-relaxed"></p>
+              </div>
+
+              <!-- Open questions -->
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-xs font-semibold text-amber-800 uppercase tracking-wide">Open Questions</span>
+                  <button onclick="editBriefingSection('openQuestions')" class="p-1 rounded hover:bg-amber-100 transition-colors">
+                    <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                  </button>
+                </div>
+                <ul id="briefOpenQuestions" class="space-y-1"></ul>
+              </div>
+
+              <!-- Rapport hooks -->
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-xs font-semibold text-amber-800 uppercase tracking-wide">Rapport Hooks</span>
+                  <button onclick="editBriefingSection('rapportHooks')" class="p-1 rounded hover:bg-amber-100 transition-colors">
+                    <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                  </button>
+                </div>
+                <ul id="briefRapportHooks" class="space-y-1"></ul>
+              </div>
+
+              <!-- What's new -->
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-xs font-semibold text-amber-800 uppercase tracking-wide">What's New</span>
+                  <button onclick="editBriefingSection('whatsNew')" class="p-1 rounded hover:bg-amber-100 transition-colors">
+                    <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                  </button>
+                </div>
+                <p id="briefWhatsNew" class="text-sm text-amber-950 leading-relaxed"></p>
+              </div>
+
+              <!-- Suggested talking points -->
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-xs font-semibold text-amber-800 uppercase tracking-wide">Suggested Talking Points</span>
+                  <button onclick="editBriefingSection('talkingPoints')" class="p-1 rounded hover:bg-amber-100 transition-colors">
+                    <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                  </button>
+                </div>
+                <ul id="briefTalkingPoints" class="space-y-1"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Rapport Notes -->
+        <section class="bg-white border border-border rounded-xl p-5">
+          <h2 class="text-sm font-semibold text-primary tracking-wide uppercase mb-3">Rapport Notes</h2>
+          <textarea id="rapportTextarea" class="w-full h-32 p-3 text-sm text-primary bg-stone-50 border border-border rounded-lg resize-y focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-amber-300 transition-all placeholder:text-stone-400" placeholder="Freeform notes about this contact -- hobbies, family details, preferences, conversation style..."></textarea>
+          <div class="flex items-center justify-between mt-2">
+            <p id="rapportTimestamp" class="text-xs text-stone-400"></p>
+            <span id="rapportSaveStatus" class="text-xs text-stone-400 hidden">Saved</span>
+          </div>
+        </section>
+
+        <!-- Follow-up Schedule -->
+        <section class="bg-white border border-border rounded-xl p-5">
+          <h2 class="text-sm font-semibold text-primary tracking-wide uppercase mb-3">Follow-up Schedule</h2>
+
+          <!-- Countdown card -->
+          <div id="followUpCountdown" class="bg-stone-50 border border-border rounded-lg p-4 mb-4">
+            <div class="flex items-center gap-2 mb-1">
+              <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span id="followUpNext" class="text-sm font-semibold text-primary"></span>
+            </div>
+            <p id="followUpLabel" class="text-xs text-secondary ml-6"></p>
+          </div>
+
+          <!-- Past touches -->
+          <div id="pastTouches" class="space-y-2 mb-4">
+            <div class="shimmer h-8"></div>
+            <div class="shimmer h-8"></div>
+            <div class="shimmer h-8"></div>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="flex gap-2">
+            <button onclick="toggleSnooze()" class="flex-1 px-3 py-2 text-xs font-medium text-secondary bg-stone-50 border border-border rounded-lg hover:bg-stone-100 transition-colors text-center">
+              Snooze
+            </button>
+            <button onclick="disqualify()" class="flex-1 px-3 py-2 text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors text-center">
+              Disqualify
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== ADD INTERACTION MODAL ===== -->
+  <div id="addInteractionModal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(0,0,0,0.3);">
+    <div class="modal-panel bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-base font-semibold text-primary">Add Interaction</h3>
+        <button onclick="closeAddInteraction()" class="p-1 rounded-lg hover:bg-stone-100 transition-colors">
+          <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="text-xs font-medium text-secondary uppercase tracking-wide mb-1.5 block">Type</label>
+          <select id="interactionType" class="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-amber-300">
+            <option value="call">Phone Call</option>
+            <option value="email">Email</option>
+            <option value="text">Text Message</option>
+            <option value="meeting">In-Person Meeting</option>
+            <option value="note">Internal Note</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-medium text-secondary uppercase tracking-wide mb-1.5 block">Summary</label>
+          <textarea id="interactionSummary" class="w-full h-28 px-3 py-2 text-sm border border-border rounded-lg resize-y focus:outline-none focus:ring-2 focus:ring-amber-200 focus:border-amber-300 placeholder:text-stone-400" placeholder="What happened? Key points, next steps..."></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-1">
+          <button onclick="closeAddInteraction()" class="px-4 py-2 text-sm font-medium text-secondary bg-stone-50 border border-border rounded-lg hover:bg-stone-100 transition-colors">Cancel</button>
+          <button onclick="saveInteraction()" class="px-4 py-2 text-sm font-semibold text-white rounded-lg transition-all hover:shadow-md active:scale-[0.97]" style="background: #f59e0b;">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // ---- State ----
+    const contactId = window.location.pathname.split('/').pop();
+    let contactData = null;
+    let briefingData = null;
+    let rapportSaveTimer = null;
+    let projectDetailsCollapsed = false;
+
+    // ---- Type icons for timeline ----
+    const typeIcons = {
+      call: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>',
+      email: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
+      text: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>',
+      meeting: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
+      note: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>',
+      stage_change: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>'
+    };
+
+    // ---- Outcome icons ----
+    const outcomeIcons = {
+      positive: '<span class="w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs">+</span>',
+      neutral: '<span class="w-5 h-5 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center text-xs">=</span>',
+      negative: '<span class="w-5 h-5 rounded-full bg-red-100 text-red-500 flex items-center justify-center text-xs">-</span>',
+      none: '<span class="w-5 h-5 rounded-full bg-stone-100 text-stone-400 flex items-center justify-center text-xs">.</span>'
+    };
+
+    // ---- Stage colors ----
+    const stageColors = {
+      'new_lead':    { bg: '#ede9fe', text: '#6d28d9', label: 'New Lead' },
+      'contacted':   { bg: '#e0f2fe', text: '#0369a1', label: 'Contacted' },
+      'qualified':   { bg: '#fef3c7', text: '#b45309', label: 'Qualified' },
+      'proposal':    { bg: '#fce7f3', text: '#be185d', label: 'Proposal' },
+      'negotiation': { bg: '#ffedd5', text: '#c2410c', label: 'Negotiation' },
+      'closed_won':  { bg: '#d1fae5', text: '#065f46', label: 'Closed Won' },
+      'closed_lost': { bg: '#fecaca', text: '#991b1b', label: 'Closed Lost' }
+    };
+
+    // ---- Temperature colors ----
+    const tempColors = {
+      hot:  { bg: '#ef4444', label: 'Hot' },
+      warm: { bg: '#f59e0b', label: 'Warm' },
+      cold: { bg: '#6b7280', label: 'Cold' }
+    };
+
+    // ---- Demo data ----
+    const demoContact = {
+      id: contactId || 'demo-001',
+      name: 'Michael & Sarah Chen',
+      location: 'Dripping Springs, TX 78620',
+      lot_status: 'Under Contract',
+      stage: 'qualified',
+      temperature: 'warm',
+      last_touch_date: '2026-03-25',
+      phone: '(512) 555-0184',
+      email: 'chen.family@email.com',
+      rapport_notes: 'Michael is an engineer at AMD. Sarah teaches 3rd grade. Two kids -- Emma (8) and Liam (5). They love hiking at Pedernales Falls. Michael is detail-oriented, wants to understand every line item. Sarah cares most about the kitchen and outdoor living space. They have a golden retriever named Bear.',
+      rapport_updated_at: '2026-03-20T14:30:00Z',
+      project: {
+        build_location: '14200 Sawyer Ranch Rd, Lot 47',
+        lot_status: 'Under Contract',
+        budget_range: '$485,000 - $540,000',
+        financing: 'Pre-approved, First National Bank',
+        sqft: '2,650',
+        style: 'Hill Country Modern',
+        current_floor_plan: 'Ridgeline 2650-B (Rev 3)',
+        revision_count: 3
+      },
+      follow_up: {
+        next_date: '2026-04-09',
+        next_label: 'Ballpark follow-up',
+        past_touches: [
+          { date: '2026-03-25', outcome: 'positive', summary: 'Sent revised ballpark estimate' },
+          { date: '2026-03-18', outcome: 'positive', summary: 'Design meeting -- selected Ridgeline plan' },
+          { date: '2026-03-10', outcome: 'neutral', summary: 'Left voicemail about lot status' },
+          { date: '2026-03-02', outcome: 'positive', summary: 'Initial consultation at office' },
+          { date: '2026-02-25', outcome: 'neutral', summary: 'Responded to website inquiry' }
+        ]
+      },
+      timeline: [
+        {
+          id: 't1', date: '2026-03-25', type: 'email', summary: 'Sent revised ballpark estimate with updated lumber pricing',
+          notes: 'Updated the ballpark to reflect Q2 lumber pricing. Total came in at $512K which is within their range. Broke out the kitchen upgrade options separately as Sarah requested.', transcript: null,
+          questions: ['Did they review the line items?', 'Are they comfortable with the kitchen upgrade cost?'],
+          actions: ['Follow up in 2 weeks for reaction', 'Prepare financing timeline document']
+        },
+        {
+          id: 't2', date: '2026-03-18', type: 'meeting', summary: 'Design meeting -- selected Ridgeline 2650-B plan',
+          notes: 'Met at the design center for 2 hours. Walked through 4 plans. They gravitated toward Ridgeline immediately. Michael liked the garage workshop space. Sarah loved the open kitchen layout. Discussed 3 modifications: extended patio, butler pantry, mudroom expansion.', transcript: '/transcripts/chen-20260318.pdf',
+          questions: ['Confirm patio extension cost impact', 'Check if mudroom expansion affects structural'],
+          actions: ['Send Rev 3 with modifications', 'Get structural review for mudroom change']
+        },
+        {
+          id: 't3', date: '2026-03-10', type: 'call', summary: 'Left voicemail about lot status update',
+          notes: 'Called to let them know their lot survey came back clean. No easement issues. Left VM as Michael was at work.', transcript: null,
+          questions: [], actions: []
+        },
+        {
+          id: 't4', date: '2026-03-05', type: 'stage_change', summary: 'Moved from Contacted to Qualified',
+          notes: 'Qualified based on financing pre-approval and lot under contract.', transcript: null,
+          questions: [], actions: []
+        },
+        {
+          id: 't5', date: '2026-03-02', type: 'meeting', summary: 'Initial consultation at office -- toured model home',
+          notes: 'Great first meeting. They drove from Austin, spent about 90 minutes. Very engaged. Michael had a spreadsheet of questions. Sarah took photos of finishes she liked in the model. They have realistic expectations and a clear timeline -- want to break ground by August.', transcript: null,
+          questions: ['What is their ideal move-in date?', 'Do they need temporary housing?'],
+          actions: ['Send follow-up packet', 'Schedule design meeting', 'Connect with their lender']
+        },
+        {
+          id: 't6', date: '2026-02-25', type: 'email', summary: 'Responded to website inquiry about Hill Country lots',
+          notes: 'They submitted a form asking about available lots in Sawyer Ranch. Sent info packet and available lot list.', transcript: null,
+          questions: [], actions: ['Schedule initial consultation']
+        }
+      ]
+    };
+
+    const demoBriefing = {
+      last_conversation: 'Sent the revised ballpark estimate on March 25. They were expecting updated lumber pricing. The total of $512K is within their stated range. Kitchen upgrade options were broken out separately at Sarah\'s request.',
+      open_questions: [
+        'Have they reviewed the ballpark line items with their lender?',
+        'Is the $28K kitchen upgrade package a go?',
+        'Timeline for lot closing -- any delays?',
+        'Did Michael finish his own cost comparison spreadsheet?'
+      ],
+      rapport_hooks: [
+        'Emma\'s spring soccer season just started -- ask how the team is doing',
+        'Michael mentioned wanting to build a workshop in the garage -- reference that',
+        'They were planning a family trip to Big Bend over spring break',
+        'Sarah is reading a book about Montessori kitchen design'
+      ],
+      whats_new: 'Lumber pricing dropped 4% this quarter which improved their estimate. New Ridgeline Rev 3 drawings include all three requested modifications. Their lot survey came back clean.',
+      talking_points: [
+        'Walk through the updated ballpark line by line -- Michael will want this',
+        'Mention the lumber cost savings as a win',
+        'Ask about the lot closing timeline and any lender updates',
+        'Discuss next step: pre-construction meeting to lock selections',
+        'Offer to schedule a site walk once lot closes'
+      ]
+    };
+
+    // ---- Initialization ----
+    async function init() {
+      await Promise.all([
+        loadContactData(),
+        loadBriefingData()
+      ]);
+    }
+
+    async function loadContactData() {
+      try {
+        const res = await fetch(`/api/pipeline/contacts/${contactId}`);
+        if (!res.ok) throw new Error('API unavailable');
+        contactData = await res.json();
+      } catch {
+        contactData = demoContact;
+      }
+      renderContact();
+    }
+
+    async function loadBriefingData() {
+      try {
+        const res = await fetch(`/api/pipeline/contacts/${contactId}/briefing`);
+        if (!res.ok) throw new Error('API unavailable');
+        briefingData = await res.json();
+      } catch {
+        briefingData = demoBriefing;
+      }
+      renderBriefing();
+    }
+
+    // ---- Render: Header ----
+    function renderContact() {
+      const c = contactData;
+      document.title = `${c.name} — Sundial Pipeline`;
+
+      document.getElementById('contactName').textContent = c.name;
+      document.getElementById('contactLocation').textContent = c.location;
+
+      if (c.lot_status) {
+        const el = document.getElementById('lotStatus');
+        el.textContent = c.lot_status;
+        el.classList.remove('hidden');
+      }
+
+      // Stage pill
+      const stage = stageColors[c.stage] || { bg: '#f5f5f4', text: '#78716c', label: c.stage };
+      const pill = document.getElementById('stagePill');
+      pill.textContent = stage.label;
+      pill.style.background = stage.bg;
+      pill.style.color = stage.text;
+
+      // Temperature
+      const temp = tempColors[c.temperature] || tempColors.cold;
+      const tempEl = document.getElementById('tempIndicator');
+      tempEl.querySelector('.temp-dot').style.background = temp.bg;
+      tempEl.querySelector('span:last-child').textContent = temp.label;
+
+      // Last touch
+      const touchDate = new Date(c.last_touch_date);
+      const today = new Date();
+      const daysDiff = Math.floor((today - touchDate) / (1000 * 60 * 60 * 24));
+      const touchEl = document.getElementById('lastTouchValue');
+      touchEl.textContent = daysDiff === 0 ? 'Today' : daysDiff === 1 ? 'Yesterday' : `${daysDiff} days ago`;
+      if (daysDiff > 10) {
+        touchEl.classList.add('text-red-500', 'font-semibold');
+      }
+
+      // Rapport
+      document.getElementById('rapportTextarea').value = c.rapport_notes || '';
+      if (c.rapport_updated_at) {
+        const rapDate = new Date(c.rapport_updated_at);
+        document.getElementById('rapportTimestamp').textContent = `Last edited ${rapDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+      }
+
+      // Follow-up
+      renderFollowUp(c.follow_up);
+
+      // Project details
+      renderProjectDetails(c.project);
+
+      // Timeline
+      renderTimeline(c.timeline);
+    }
+
+    // ---- Render: Briefing ----
+    function renderBriefing() {
+      const b = briefingData;
+      document.getElementById('briefingShimmer').classList.add('hidden');
+      document.getElementById('briefingPopulated').classList.remove('hidden');
+
+      document.getElementById('briefLastConvo').textContent = b.last_conversation;
+
+      renderBulletList('briefOpenQuestions', b.open_questions, 'text-sm text-amber-950');
+      renderBulletList('briefRapportHooks', b.rapport_hooks, 'text-sm text-amber-950');
+      renderBulletList('briefTalkingPoints', b.talking_points, 'text-sm text-amber-700 font-medium');
+
+      document.getElementById('briefWhatsNew').textContent = b.whats_new;
+    }
+
+    function renderBulletList(elId, items, textClass) {
+      const ul = document.getElementById(elId);
+      ul.innerHTML = '';
+      (items || []).forEach(item => {
+        const li = document.createElement('li');
+        li.className = `flex items-start gap-2 ${textClass}`;
+        li.innerHTML = `<span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0"></span><span>${escapeHtml(item)}</span>`;
+        ul.appendChild(li);
+      });
+    }
+
+    // ---- Render: Follow-up ----
+    function renderFollowUp(fu) {
+      if (!fu) return;
+
+      const nextDate = new Date(fu.next_date);
+      const today = new Date();
+      const daysUntil = Math.ceil((nextDate - today) / (1000 * 60 * 60 * 24));
+
+      const nextEl = document.getElementById('followUpNext');
+      if (daysUntil <= 0) {
+        nextEl.innerHTML = `<span class="text-red-600">Overdue</span> -- was ${Math.abs(daysUntil)} day${Math.abs(daysUntil) !== 1 ? 's' : ''} ago`;
+      } else if (daysUntil === 1) {
+        nextEl.textContent = 'Next: Call tomorrow';
+      } else {
+        nextEl.textContent = `Next: Call in ${daysUntil} days`;
+      }
+      document.getElementById('followUpLabel').textContent = fu.next_label;
+
+      const touchesEl = document.getElementById('pastTouches');
+      touchesEl.innerHTML = '';
+      (fu.past_touches || []).forEach(t => {
+        const d = new Date(t.date);
+        const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const icon = outcomeIcons[t.outcome] || outcomeIcons.none;
+        touchesEl.innerHTML += `
+          <div class="flex items-center gap-3 py-1.5">
+            ${icon}
+            <span class="text-xs text-secondary w-16 flex-shrink-0">${dateStr}</span>
+            <span class="text-xs text-primary truncate">${escapeHtml(t.summary)}</span>
+          </div>`;
+      });
+    }
+
+    // ---- Render: Project details ----
+    function renderProjectDetails(proj) {
+      if (!proj) return;
+      const fields = [
+        { key: 'build_location', label: 'Build location' },
+        { key: 'lot_status', label: 'Lot status' },
+        { key: 'budget_range', label: 'Budget range' },
+        { key: 'financing', label: 'Financing' },
+        { key: 'sqft', label: 'Sqft' },
+        { key: 'style', label: 'Style' },
+        { key: 'current_floor_plan', label: 'Current floor plan' },
+        { key: 'revision_count', label: 'Revision count' }
+      ];
+
+      const grid = document.getElementById('projectGrid');
+      grid.innerHTML = '';
+      fields.forEach(f => {
+        const val = proj[f.key] ?? '--';
+        grid.innerHTML += `
+          <div>
+            <span class="text-xs text-secondary block mb-0.5">${f.label}</span>
+            <span class="inline-edit text-sm text-primary font-medium" data-field="${f.key}" onclick="startInlineEdit(this)">${escapeHtml(String(val))}</span>
+          </div>`;
+      });
+    }
+
+    // ---- Render: Timeline ----
+    function renderTimeline(entries) {
+      const list = document.getElementById('timelineList');
+      list.innerHTML = '';
+      if (!entries || entries.length === 0) {
+        list.innerHTML = '<p class="text-sm text-secondary py-4 text-center">No interactions yet</p>';
+        return;
+      }
+      entries.forEach(entry => {
+        const d = new Date(entry.date);
+        const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const icon = typeIcons[entry.type] || typeIcons.note;
+
+        const hasDetails = entry.notes || (entry.questions && entry.questions.length) || (entry.actions && entry.actions.length) || entry.transcript;
+
+        const el = document.createElement('div');
+        el.className = 'group';
+        el.innerHTML = `
+          <div class="flex items-center gap-3 py-3 px-3 rounded-lg cursor-pointer hover:bg-stone-50 transition-colors" onclick="toggleTimelineEntry(this)">
+            <span class="text-xs text-secondary w-20 flex-shrink-0">${dateStr}</span>
+            <span class="text-secondary flex-shrink-0">${icon}</span>
+            <span class="text-sm text-primary flex-1 truncate">${escapeHtml(entry.summary)}</span>
+            ${hasDetails ? '<svg class="w-3.5 h-3.5 text-stone-300 flex-shrink-0 transition-transform group-hover:text-stone-500 timeline-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>' : ''}
+          </div>
+          ${hasDetails ? `
+          <div class="timeline-detail px-3 ml-[116px]">
+            <div class="border-l-2 border-amber-200 pl-4 pb-3 space-y-3">
+              ${entry.notes ? `<p class="text-sm text-secondary leading-relaxed">${escapeHtml(entry.notes)}</p>` : ''}
+              ${entry.transcript ? `<a href="${entry.transcript}" class="inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>View transcript</a>` : ''}
+              ${entry.questions && entry.questions.length ? `
+                <div>
+                  <span class="text-xs font-semibold text-secondary uppercase tracking-wide">Questions detected</span>
+                  <ul class="mt-1 space-y-1">${entry.questions.map(q => `<li class="flex items-start gap-2 text-sm text-secondary"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-300 flex-shrink-0"></span>${escapeHtml(q)}</li>`).join('')}</ul>
+                </div>` : ''}
+              ${entry.actions && entry.actions.length ? `
+                <div>
+                  <span class="text-xs font-semibold text-secondary uppercase tracking-wide">Action items</span>
+                  <ul class="mt-1 space-y-1">${entry.actions.map(a => `<li class="flex items-start gap-2 text-sm text-primary"><svg class="w-3.5 h-3.5 mt-0.5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>${escapeHtml(a)}</li>`).join('')}</ul>
+                </div>` : ''}
+            </div>
+          </div>` : ''}`;
+        list.appendChild(el);
+      });
+    }
+
+    // ---- Timeline expand/collapse ----
+    function toggleTimelineEntry(rowEl) {
+      const detail = rowEl.nextElementSibling;
+      if (!detail || !detail.classList.contains('timeline-detail')) return;
+
+      const chevron = rowEl.querySelector('.timeline-chevron');
+      const isOpen = detail.classList.contains('open');
+
+      // Close all others first
+      document.querySelectorAll('.timeline-detail.open').forEach(d => {
+        d.classList.remove('open');
+        const ch = d.previousElementSibling?.querySelector('.timeline-chevron');
+        if (ch) ch.style.transform = '';
+      });
+
+      if (!isOpen) {
+        detail.classList.add('open');
+        if (chevron) chevron.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    // ---- Project details collapse ----
+    function toggleProjectDetails() {
+      projectDetailsCollapsed = !projectDetailsCollapsed;
+      const body = document.getElementById('projectBody');
+      const chevron = document.getElementById('projectChevron');
+      if (projectDetailsCollapsed) {
+        body.classList.add('collapsed');
+        chevron.style.transform = 'rotate(-90deg)';
+      } else {
+        body.classList.remove('collapsed');
+        chevron.style.transform = '';
+      }
+    }
+
+    // ---- Inline edit for project fields ----
+    function startInlineEdit(el) {
+      if (el.querySelector('input')) return;
+      const field = el.dataset.field;
+      const currentValue = el.textContent;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = currentValue;
+      input.className = 'inline-edit-input';
+      input.onblur = () => finishInlineEdit(el, field, input.value, currentValue);
+      input.onkeydown = (e) => {
+        if (e.key === 'Enter') input.blur();
+        if (e.key === 'Escape') { input.value = currentValue; input.blur(); }
+      };
+      el.textContent = '';
+      el.appendChild(input);
+      input.focus();
+      input.select();
+    }
+
+    async function finishInlineEdit(el, field, newValue, oldValue) {
+      el.textContent = newValue || oldValue;
+      if (newValue && newValue !== oldValue) {
+        contactData.project[field] = newValue;
+        try {
+          await fetch(`/api/pipeline/contacts/${contactId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ project: { [field]: newValue } })
+          });
+        } catch { /* silent fail -- local state already updated */ }
+      }
+    }
+
+    // ---- Rapport save on blur with debounce ----
+    document.getElementById('rapportTextarea').addEventListener('blur', () => {
+      clearTimeout(rapportSaveTimer);
+      rapportSaveTimer = setTimeout(saveRapport, 300);
+    });
+
+    document.getElementById('rapportTextarea').addEventListener('input', () => {
+      clearTimeout(rapportSaveTimer);
+      const status = document.getElementById('rapportSaveStatus');
+      status.classList.add('hidden');
+    });
+
+    async function saveRapport() {
+      const value = document.getElementById('rapportTextarea').value;
+      const status = document.getElementById('rapportSaveStatus');
+      try {
+        await fetch(`/api/pipeline/contacts/${contactId}/rapport`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ rapport_notes: value })
+        });
+      } catch { /* silent */ }
+      status.textContent = 'Saved';
+      status.classList.remove('hidden');
+      const now = new Date();
+      document.getElementById('rapportTimestamp').textContent = `Last edited ${now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+      setTimeout(() => status.classList.add('hidden'), 2000);
+    }
+
+    // ---- Add interaction modal ----
+    function openAddInteraction() {
+      document.getElementById('addInteractionModal').classList.add('visible');
+      document.getElementById('interactionSummary').value = '';
+      document.getElementById('interactionType').value = 'call';
+    }
+
+    function closeAddInteraction() {
+      document.getElementById('addInteractionModal').classList.remove('visible');
+    }
+
+    async function saveInteraction() {
+      const type = document.getElementById('interactionType').value;
+      const summary = document.getElementById('interactionSummary').value.trim();
+      if (!summary) return;
+
+      const entry = {
+        id: 't' + Date.now(),
+        date: new Date().toISOString().split('T')[0],
+        type,
+        summary,
+        notes: summary,
+        questions: [],
+        actions: []
+      };
+
+      try {
+        await fetch(`/api/pipeline/contacts/${contactId}/interactions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(entry)
+        });
+      } catch { /* silent */ }
+
+      contactData.timeline.unshift(entry);
+      renderTimeline(contactData.timeline);
+      closeAddInteraction();
+    }
+
+    // ---- Snooze ----
+    function toggleSnooze() {
+      document.getElementById('snoozeMenu').classList.toggle('open');
+    }
+
+    async function snooze(days) {
+      const next = new Date();
+      next.setDate(next.getDate() + days);
+      document.getElementById('snoozeMenu').classList.remove('open');
+      try {
+        await fetch(`/api/pipeline/contacts/${contactId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ follow_up: { next_date: next.toISOString().split('T')[0] } })
+        });
+      } catch { /* silent */ }
+      contactData.follow_up.next_date = next.toISOString().split('T')[0];
+      renderFollowUp(contactData.follow_up);
+    }
+
+    // Close snooze on outside click
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('snoozeMenu');
+      const btn = document.getElementById('snoozeBtn');
+      if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.remove('open');
+      }
+    });
+
+    // ---- Call Now ----
+    function callNow() {
+      if (contactData && contactData.phone) {
+        window.location.href = `tel:${contactData.phone}`;
+      }
+    }
+
+    // ---- Disqualify ----
+    async function disqualify() {
+      if (!confirm('Disqualify this contact? They will be moved to the Closed Lost stage.')) return;
+      try {
+        await fetch(`/api/pipeline/contacts/${contactId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stage: 'closed_lost' })
+        });
+      } catch { /* silent */ }
+      contactData.stage = 'closed_lost';
+      renderContact();
+    }
+
+    // ---- Edit briefing section (placeholder) ----
+    function editBriefingSection(section) {
+      // Future: open inline editor for briefing section
+      console.log('Edit briefing section:', section);
+    }
+
+    // ---- Utility ----
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ---- Boot ----
+    init();
+  </script>
+</body>
+</html>

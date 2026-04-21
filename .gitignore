@@ -1,0 +1,28 @@
+node_modules/
+.env
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+
+# Vite cache
+frontend/.vite/
+
+# Run artifacts
+backend/runs/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/

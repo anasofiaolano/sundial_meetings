@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Today — Sundial Pipeline</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background: #fafaf9; }
+
+    .card-enter { animation: cardEnter 0.3s ease-out; }
+    @keyframes cardEnter {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-exit {
+      animation: cardExit 0.3s ease-in forwards;
+    }
+    @keyframes cardExit {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(60px); }
+    }
+
+    .expand-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, opacity 0.25s ease;
+      opacity: 0;
+    }
+    .expand-content.open {
+      max-height: 600px;
+      opacity: 1;
+    }
+
+    .bottom-sheet {
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .bottom-sheet.visible {
+      transform: translateY(0);
+    }
+
+    .backdrop {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .progress-fill {
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .temp-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .action-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+    }
+    .action-btn:hover { background: #f5f5f4; transform: scale(1.05); }
+    .action-btn:active { transform: scale(0.95); }
+
+    .stage-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d6d3d1;
+    }
+    .stage-dot.active { background: #f59e0b; }
+    .stage-dot.completed { background: #22c55e; }
+
+    .banner-card {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 1px solid #fde68a;
+    }
+
+    .queue-card {
+      background: white;
+      border: 1px solid #e7e5e4;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+    .queue-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .queue-card.overdue { border-left: 4px solid #ef4444; }
+    .queue-card.today-priority { border-left: 4px solid #f59e0b; }
+    .queue-card.this-week { border-left: 4px solid #d6d3d1; }
+
+    .outcome-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid #e7e5e4;
+      background: white;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .outcome-btn:hover { background: #f5f5f4; border-color: #d6d3d1; }
+    .outcome-btn.selected { background: #1c1917; color: white; border-color: #1c1917; }
+  </style>
+</head>
+<body class="min-h-screen text-stone-900">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-stone-200">
+    <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#f59e0b" stroke-width="2"/>
+          <circle cx="12" cy="12" r="4" fill="#f59e0b"/>
+          <line x1="12" y1="2" x2="12" y2="6" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+          <line x1="12" y1="18" x2="12" y2="22" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+          <line x1="2" y1="12" x2="6" y2="12" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+          <line x1="18" y1="12" x2="22" y2="12" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="font-semibold text-sm text-stone-800">Sundial Pipeline</span>
+      </div>
+      <time id="headerDate" class="text-sm font-medium text-stone-500"></time>
+      <nav class="flex items-center gap-4">
+        <a href="/pipeline/kanban" class="text-xs font-medium text-stone-400 hover:text-stone-700 transition-colors">Kanban</a>
+        <a href="/copilot" class="text-xs font-medium text-stone-400 hover:text-stone-700 transition-colors">Copilot</a>
+        <a href="/" class="text-xs font-medium text-stone-400 hover:text-stone-700 transition-colors">Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="max-w-3xl mx-auto px-4 pt-20 pb-32">
+
+    <!-- Daily snapshot bar -->
+    <section id="snapshotBar" class="mb-6">
+      <div class="flex items-center justify-between mb-2">
+        <p class="text-sm text-stone-600">
+          <span id="totalCount" class="font-semibold text-stone-900">0</span> actions today
+          <span class="mx-1 text-stone-300">/</span>
+          <span id="overdueCount" class="font-semibold text-red-500">0</span> overdue
+          <span class="mx-1 text-stone-300">/</span>
+          <span id="hotCount" class="font-semibold text-amber-500">0</span> hot leads need you
+        </p>
+        <span id="progressLabel" class="text-xs font-medium text-stone-400">0%</span>
+      </div>
+      <div class="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
+        <div id="progressBar" class="progress-fill h-full bg-amber-400 rounded-full" style="width: 0%"></div>
+      </div>
+    </section>
+
+    <!-- Soft-touch banner -->
+    <section id="videoBanner" class="hidden mb-6">
+      <div class="banner-card rounded-xl px-5 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
+          </svg>
+          <p class="text-sm text-stone-700">
+            <span class="font-medium">New video available</span> — <span id="bannerContactCount">0</span> contacts would benefit.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="handleBannerSendAll()" class="text-xs font-semibold text-amber-700 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-lg transition-colors">Send to all</button>
+          <button onclick="handleBannerReview()" class="text-xs font-medium text-stone-500 hover:text-stone-700 px-2 py-1.5 transition-colors">Review</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Queue -->
+    <section id="queueContainer"></section>
+
+    <!-- Empty state -->
+    <section id="emptyState" class="hidden text-center py-20">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-stone-100 rounded-full mb-4">
+        <svg class="w-7 h-7 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-stone-700 mb-1">All caught up</h3>
+      <p class="text-sm text-stone-400">No actions remaining for today. Nice work.</p>
+    </section>
+
+  </main>
+
+  <!-- Completion modal backdrop -->
+  <div id="modalBackdrop" class="backdrop fixed inset-0 bg-black/30 z-[60]" onclick="closeModal()"></div>
+
+  <!-- Completion modal (bottom sheet) -->
+  <div id="completionModal" class="bottom-sheet fixed bottom-0 left-0 right-0 z-[70] bg-white rounded-t-2xl shadow-2xl">
+    <div class="max-w-3xl mx-auto px-6 py-6">
+      <div class="w-10 h-1 bg-stone-200 rounded-full mx-auto mb-5"></div>
+      <h3 class="text-lg font-semibold text-stone-900 mb-1">How did it go?</h3>
+      <p id="modalContactName" class="text-sm text-stone-500 mb-5"></p>
+
+      <div class="flex gap-3 mb-5">
+        <button class="outcome-btn flex-1" data-outcome="connected" onclick="selectOutcome(this)">
+          <span class="block text-base mb-0.5">Connected</span>
+        </button>
+        <button class="outcome-btn flex-1" data-outcome="left_message" onclick="selectOutcome(this)">
+          <span class="block text-base mb-0.5">Left message</span>
+        </button>
+        <button class="outcome-btn flex-1" data-outcome="no_answer" onclick="selectOutcome(this)">
+          <span class="block text-base mb-0.5">No answer</span>
+        </button>
+      </div>
+
+      <textarea id="modalNote" rows="2" placeholder="Optional note..." class="w-full px-4 py-3 border border-stone-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent mb-4"></textarea>
+
+      <button id="modalDoneBtn" onclick="submitCompletion()" disabled
+        class="w-full py-3 bg-stone-900 text-white text-sm font-semibold rounded-xl disabled:opacity-30 disabled:cursor-not-allowed hover:bg-stone-800 transition-colors">
+        Done
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ---------------------------------------------------------------
+    // State
+    // ---------------------------------------------------------------
+    let queueItems = [];
+    let summaryData = null;
+    let completedIds = new Set();
+    let currentModalItem = null;
+    let selectedOutcome = null;
+
+    // ---------------------------------------------------------------
+    // Date display
+    // ---------------------------------------------------------------
+    const now = new Date();
+    document.getElementById('headerDate').textContent = now.toLocaleDateString('en-US', {
+      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+    });
+
+    // ---------------------------------------------------------------
+    // API helpers
+    // ---------------------------------------------------------------
+    async function apiFetch(url, opts = {}) {
+      try {
+        const res = await fetch(url, {
+          headers: { 'Content-Type': 'application/json', ...opts.headers },
+          ...opts
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      } catch (err) {
+        console.error('API error:', err);
+        return null;
+      }
+    }
+
+    // ---------------------------------------------------------------
+    // Load data
+    // ---------------------------------------------------------------
+    // Map API fields (contact_name, contact_stage, etc.) to what the UI expects (name, stage, etc.)
+    function normalizeItem(item) {
+      return {
+        id: item.followup_id || item.id,
+        contact_id: item.contact_id,
+        name: item.contact_name || item.name || 'Unknown',
+        location: item.contact_location || item.location || '',
+        stage: item.contact_stage || item.stage || '',
+        temperature: item.contact_temperature || item.temperature || 'warm',
+        reason: item.reason || '',
+        priority: item.priority_band || item.priority || 'today',
+        days_overdue: item.days_overdue || 0,
+        last_touch: item.last_touch || `Due: ${item.due_date || 'unknown'}`,
+        context: item.contact_budget_range ? `Budget: ${item.contact_budget_range}` : (item.context || ''),
+        rapport_hooks: item.rapport_hooks || '',
+        suggested_action: item.suggested_action || `${(item.action_type || 'call').charAt(0).toUpperCase() + (item.action_type || 'call').slice(1)} — ${item.reason || 'follow up'}`,
+        non_response_count: item.contact_non_response_count || item.non_response_count || 0,
+        estimated_value: item.contact_estimated_value || item.estimated_value || 0,
+        stage_index: ['new_lead','discovery','ballpark','dsa','design','materials','contract','build'].indexOf(item.contact_stage || item.stage || ''),
+        total_stages: 8,
+      };
+    }
+
+    async function loadQueue() {
+      const data = await apiFetch('/api/pipeline/today');
+      if (data) {
+        const raw = data.items || data;
+        queueItems = raw.map(normalizeItem);
+        summaryData = data.summary || null;
+        renderAll();
+      } else {
+        queueItems = getDemoData();
+        renderAll();
+      }
+    }
+
+    function getDemoData() {
+      return [
+        { id: 1, contact_id: 'c1', name: 'Sarah Mitchell', temperature: 'hot', reason: 'Opened pricing email 3x this week', location: 'Denver, CO', stage: 'Proposal', stage_index: 3, total_stages: 5, priority: 'overdue', last_touch: '4 days ago', context: 'Interested in enterprise tier. Mentioned budget approval in Q2.', rapport_hooks: 'Loves hiking, recently promoted to VP of Ops.', suggested_action: 'Call to discuss enterprise pricing. Reference Q2 budget window.', non_response_count: 0 },
+        { id: 2, contact_id: 'c2', name: 'James Torres', temperature: 'hot', reason: 'Replied asking for a demo', location: 'Austin, TX', stage: 'Discovery', stage_index: 1, total_stages: 5, priority: 'overdue', last_touch: '6 days ago', context: 'Runs a 50-person sales team. Currently using a competitor.', rapport_hooks: 'Big football fan. Mentioned his daughter plays soccer.', suggested_action: 'Schedule demo within 48 hours. Emphasize migration support.', non_response_count: 0 },
+        { id: 3, contact_id: 'c3', name: 'Linda Nakamura', temperature: 'warm', reason: 'Follow-up after webinar attendance', location: 'Seattle, WA', stage: 'Nurture', stage_index: 2, total_stages: 5, priority: 'overdue', last_touch: '8 days ago', context: 'Attended the product deep-dive webinar last Tuesday.', rapport_hooks: 'Passionate about AI and automation.', suggested_action: 'Send personalized webinar recap with relevant case study.', non_response_count: 6 },
+        { id: 4, contact_id: 'c4', name: 'David Park', temperature: 'hot', reason: 'Contract review in progress', location: 'New York, NY', stage: 'Negotiation', stage_index: 4, total_stages: 5, priority: 'today', last_touch: '2 days ago', context: 'Legal team reviewing contract. Expected sign-off by Friday.', rapport_hooks: 'Enjoys jazz, recently moved to Brooklyn.', suggested_action: 'Check in on contract status. Offer to answer any legal questions.', non_response_count: 0 },
+        { id: 5, contact_id: 'c5', name: 'Rachel Gomez', temperature: 'warm', reason: 'Requested case study last week', location: 'Chicago, IL', stage: 'Discovery', stage_index: 1, total_stages: 5, priority: 'today', last_touch: '3 days ago', context: 'Marketing director evaluating solutions for Q3 campaigns.', rapport_hooks: 'Marathon runner, loves data visualization.', suggested_action: 'Send the SaaS marketing case study and suggest a 15-min call.', non_response_count: 2 },
+        { id: 6, contact_id: 'c6', name: 'Tom Whitfield', temperature: 'cold', reason: 'Periodic check-in — 30 days since last touch', location: 'Portland, OR', stage: 'Nurture', stage_index: 2, total_stages: 5, priority: 'this_week', last_touch: '30 days ago', context: 'Was interested but timing was off. Said to revisit in spring.', rapport_hooks: 'Homebrewer. Has a golden retriever named Barley.', suggested_action: 'Light email check-in referencing spring timing. Keep it short.', non_response_count: 5 },
+        { id: 7, contact_id: 'c7', name: 'Anika Patel', temperature: 'warm', reason: 'Engaged with 2 blog posts this week', location: 'San Francisco, CA', stage: 'Awareness', stage_index: 0, total_stages: 5, priority: 'this_week', last_touch: '12 days ago', context: 'CTO at a growing startup. Reading content about scaling teams.', rapport_hooks: 'Board game enthusiast. Speaks 3 languages.', suggested_action: 'Send a personalized LinkedIn message referencing blog topics.', non_response_count: 0 },
+      ];
+    }
+
+    // ---------------------------------------------------------------
+    // Rendering
+    // ---------------------------------------------------------------
+    function renderAll() {
+      updateSnapshot();
+      renderQueue();
+      checkBanner();
+    }
+
+    function updateSnapshot() {
+      const active = queueItems.filter(i => !completedIds.has(i.id));
+      const overdue = active.filter(i => i.priority === 'overdue');
+      const hot = active.filter(i => i.temperature === 'hot');
+
+      document.getElementById('totalCount').textContent = active.length;
+      document.getElementById('overdueCount').textContent = overdue.length;
+      document.getElementById('hotCount').textContent = hot.length;
+
+      const total = queueItems.length;
+      const pct = total > 0 ? Math.round((completedIds.size / total) * 100) : 0;
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('progressLabel').textContent = pct + '%';
+
+      document.getElementById('emptyState').classList.toggle('hidden', active.length > 0);
+    }
+
+    function checkBanner() {
+      // Simulated: show banner if there is video content available
+      const bannerCount = 6;
+      if (bannerCount > 0) {
+        document.getElementById('videoBanner').classList.remove('hidden');
+        document.getElementById('bannerContactCount').textContent = bannerCount;
+      }
+    }
+
+    function renderQueue() {
+      const container = document.getElementById('queueContainer');
+      container.innerHTML = '';
+
+      const groups = { overdue: [], today: [], this_week: [] };
+      queueItems.forEach(item => {
+        if (completedIds.has(item.id)) return;
+        const bucket = item.priority === 'overdue' ? 'overdue' : item.priority === 'today' ? 'today' : 'this_week';
+        groups[bucket].push(item);
+      });
+
+      const sections = [
+        { key: 'overdue', label: 'OVERDUE', color: 'text-red-500', cardClass: 'overdue' },
+        { key: 'today', label: 'TODAY', color: 'text-amber-500', cardClass: 'today-priority' },
+        { key: 'this_week', label: 'THIS WEEK', color: 'text-stone-400', cardClass: 'this-week' },
+      ];
+
+      sections.forEach(sec => {
+        const items = groups[sec.key];
+        if (items.length === 0) return;
+
+        // Divider
+        const divider = document.createElement('div');
+        divider.className = 'flex items-center gap-3 mb-3 mt-6 first:mt-0';
+        divider.innerHTML = `
+          <span class="text-xs font-bold tracking-wider ${sec.color}">${sec.label}</span>
+          <span class="flex-1 h-px bg-stone-200"></span>
+          <span class="text-xs text-stone-400">${items.length}</span>
+        `;
+        container.appendChild(divider);
+
+        items.forEach((item, idx) => {
+          const card = createCard(item, sec.cardClass, idx);
+          container.appendChild(card);
+        });
+      });
+    }
+
+    function tempColor(temp) {
+      if (temp === 'hot') return '#ef4444';
+      if (temp === 'warm') return '#f59e0b';
+      return '#60a5fa';
+    }
+
+    function createCard(item, cardClass, idx) {
+      const wrapper = document.createElement('div');
+      wrapper.className = `queue-card ${cardClass} mb-3 card-enter`;
+      wrapper.style.animationDelay = `${idx * 50}ms`;
+      wrapper.id = `card-${item.id}`;
+
+      const stagesHTML = Array.from({ length: item.total_stages }, (_, i) => {
+        const cls = i < item.stage_index ? 'completed' : i === item.stage_index ? 'active' : '';
+        return `<div class="stage-dot ${cls}"></div>`;
+      }).join('');
+
+      wrapper.innerHTML = `
+        <!-- Collapsed view -->
+        <div class="card-collapsed flex items-center gap-3 px-4 py-3.5" onclick="toggleCard(${item.id})">
+          <div class="temp-dot" style="background: ${tempColor(item.temperature)}"></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-baseline gap-2">
+              <span class="font-semibold text-sm text-stone-900 truncate">${item.name}</span>
+              <span class="text-xs text-stone-400 truncate hidden sm:inline">${item.reason}</span>
+            </div>
+            <p class="text-xs text-stone-400 mt-0.5">${item.location} &middot; ${item.stage}</p>
+          </div>
+          <div class="flex items-center gap-1 flex-shrink-0" onclick="event.stopPropagation()">
+            <button class="action-btn" title="Call" onclick="handleCall('${item.id}')">
+              <svg class="w-4 h-4 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+              </svg>
+            </button>
+            <button class="action-btn" title="Email" onclick="handleEmail('${item.id}')">
+              <svg class="w-4 h-4 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </button>
+            <button class="action-btn" title="Snooze 7 days" onclick="handleSnooze('${item.id}')">
+              <svg class="w-4 h-4 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </button>
+            <button class="action-btn" title="Done" onclick="handleDone(${item.id})">
+              <svg class="w-4 h-4 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Expanded view -->
+        <div class="expand-content" id="expand-${item.id}">
+          <div class="px-4 pb-4 border-t border-stone-100">
+            <div class="grid grid-cols-2 gap-4 mt-4 text-sm">
+              <div>
+                <p class="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Last Touch</p>
+                <p class="text-stone-700">${item.last_touch}</p>
+              </div>
+              <div>
+                <p class="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Temperature</p>
+                <div class="flex items-center gap-1.5">
+                  <div class="temp-dot" style="background: ${tempColor(item.temperature)}; width: 8px; height: 8px;"></div>
+                  <span class="text-stone-700 capitalize">${item.temperature}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <p class="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Key Context</p>
+              <p class="text-sm text-stone-600">${item.context}</p>
+            </div>
+
+            <div class="mt-3">
+              <p class="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Rapport Hooks</p>
+              <p class="text-sm text-stone-600">${item.rapport_hooks}</p>
+            </div>
+
+            <div class="mt-3">
+              <p class="text-xs font-medium text-stone-400 uppercase tracking-wider mb-1">Suggested Action</p>
+              <p class="text-sm text-stone-800 font-medium">${item.suggested_action}</p>
+            </div>
+
+            <div class="mt-4">
+              <p class="text-xs font-medium text-stone-400 uppercase tracking-wider mb-2">Stage Progress</p>
+              <div class="flex items-center gap-2">
+                ${stagesHTML}
+                <span class="text-xs text-stone-400 ml-1">${item.stage}</span>
+              </div>
+            </div>
+
+            ${item.non_response_count > 0 ? `
+              <div class="mt-3 flex items-center justify-between">
+                <p class="text-xs text-stone-400">${item.non_response_count} non-response${item.non_response_count > 1 ? 's' : ''}</p>
+                ${item.non_response_count >= 5 ? `
+                  <button onclick="event.stopPropagation(); handleDisqualify('${item.contact_id}', '${item.name}')"
+                    class="text-xs text-red-400 hover:text-red-600 font-medium transition-colors">
+                    Disqualify
+                  </button>
+                ` : ''}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+
+      return wrapper;
+    }
+
+    // ---------------------------------------------------------------
+    // Card interactions
+    // ---------------------------------------------------------------
+    function toggleCard(id) {
+      const el = document.getElementById(`expand-${id}`);
+      if (el) el.classList.toggle('open');
+    }
+
+    function handleCall(id) {
+      console.log('Call action for item', id);
+    }
+
+    function handleEmail(id) {
+      console.log('Email action for item', id);
+    }
+
+    async function handleSnooze(id) {
+      const card = document.getElementById(`card-${id}`);
+      if (!card) return;
+
+      await apiFetch(`/api/pipeline/today/${id}/snooze`, {
+        method: 'POST',
+        body: JSON.stringify({ days: 7 })
+      });
+
+      card.classList.add('card-exit');
+      setTimeout(() => {
+        completedIds.add(Number(id));
+        renderAll();
+      }, 300);
+    }
+
+    function handleDone(id) {
+      const item = queueItems.find(i => i.id === id);
+      if (!item) return;
+      currentModalItem = item;
+      selectedOutcome = null;
+      document.getElementById('modalContactName').textContent = item.name;
+      document.getElementById('modalNote').value = '';
+      document.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('modalDoneBtn').disabled = true;
+      openModal();
+    }
+
+    async function handleDisqualify(contactId, name) {
+      if (!confirm(`Disqualify ${name}? This will remove them from your pipeline.`)) return;
+
+      await apiFetch(`/api/pipeline/today/${contactId}/disqualify`, {
+        method: 'POST',
+        body: JSON.stringify({ reason: 'non_response_threshold' })
+      });
+
+      const item = queueItems.find(i => i.contact_id === contactId);
+      if (item) {
+        const card = document.getElementById(`card-${item.id}`);
+        if (card) card.classList.add('card-exit');
+        setTimeout(() => {
+          completedIds.add(item.id);
+          renderAll();
+        }, 300);
+      }
+    }
+
+    // ---------------------------------------------------------------
+    // Modal
+    // ---------------------------------------------------------------
+    function openModal() {
+      document.getElementById('modalBackdrop').classList.add('visible');
+      document.getElementById('completionModal').classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modalBackdrop').classList.remove('visible');
+      document.getElementById('completionModal').classList.remove('visible');
+      document.body.style.overflow = '';
+      currentModalItem = null;
+    }
+
+    function selectOutcome(btn) {
+      document.querySelectorAll('.outcome-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedOutcome = btn.dataset.outcome;
+      document.getElementById('modalDoneBtn').disabled = false;
+    }
+
+    async function submitCompletion() {
+      if (!currentModalItem || !selectedOutcome) return;
+
+      const note = document.getElementById('modalNote').value.trim();
+
+      await apiFetch(`/api/pipeline/today/${currentModalItem.id}/complete`, {
+        method: 'POST',
+        body: JSON.stringify({ outcome: selectedOutcome, note: note || undefined })
+      });
+
+      const card = document.getElementById(`card-${currentModalItem.id}`);
+      closeModal();
+
+      if (card) card.classList.add('card-exit');
+      setTimeout(() => {
+        completedIds.add(currentModalItem.id);
+        renderAll();
+      }, 300);
+    }
+
+    // ---------------------------------------------------------------
+    // Banner actions
+    // ---------------------------------------------------------------
+    function handleBannerSendAll() {
+      console.log('Send video to all eligible contacts');
+      document.getElementById('videoBanner').classList.add('hidden');
+    }
+
+    function handleBannerReview() {
+      console.log('Review video contacts');
+    }
+
+    // ---------------------------------------------------------------
+    // Init
+    // ---------------------------------------------------------------
+    loadQueue();
+  </script>
+</body>
+</html>

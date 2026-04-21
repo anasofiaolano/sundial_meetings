@@ -1,0 +1,130 @@
+## Audio Transcription: Ana and Daniel
+
+**Daniel:** Yo.
+**Ana:** Hey.
+**Daniel:** How was the... how was the dinner last night?
+**Ana:** It was good. I just made like stir-fry.
+**Daniel:** Cool. We talked to Mateo and he's... we had this other guy who's like a stand-up comedian from Austin. He's like kind of mid-level famous. And so he's in SF because I guess he was like, "Austin sucks now, no one's cool. I want to be where people are cool." And I was like, I was like, "really, that's your perspective is that you came here to find cool people?" Who are... I mean, like artist... like he's trying to talk to like artists and other comedians and stuff and I was like SF... like...
+**Ana:** It probably would be like LA or New York.
+**Daniel:** Even Chicago. I mean... like... but anyway, so he's at the hotel and then we had a bunch of conversations about like art and creativity in the world of AI and all the "where's the world going" stuff. And then I spent a few hours last night... I have been in this bed for like 12 hours, like on a bunch of cool shit. So I'm excited.
+**Ana:** Nice. I also have just been like not step away from my computer, like all day yesterday and today. It's great. 
+**Daniel:** Well you want to go first?
+**Ana:** Yeah, yeah, for sure. 
+**Daniel:** Okay.
+**Ana:** So first, I'll show you what I set Claude to like play like noises like from a game whenever it finishes something. 
+**Daniel:** You told it to do that?
+**Ana:** It just went off, yeah. That's cute. I love it.
+**Daniel:** What, did you like update it in memory and then it like made a little file and then now it does it whenever it finishes a build?
+**Ana:** I like, I like... Okay, have you seen like where people make it like where it's like Warcraft and it's like an orc going like "ready?" 
+**Daniel:** No, that's awesome.
+**Ana:** There's different games that have different like ready sounds and so I just like basically put some files into a folder and said use these when you have different completions or like basically when you need me to go into Claude and like hit enter or whatever. 
+**Daniel:** That's awesome. Wow. Is it in the plugin thing? This is so great.
+**Ana:** I just prompted it and it it it found it found the files... 
+**Daniel:** Wow. It just like opened Claude itself?
+**Ana:** Yeah, and and I think it just wrote a script. So it it it's I think it's basically just like a trigger script when it's like "when I have made an edit to a file and completed it, play this noise." And then like when it does like a more substantial thing it plays like a more like intense noise. 
+**Daniel:** Yeah. Nice.
+**Ana:** Okay, so... this one you will like. Essentially, it's the email template and so now you can just drop in to the GUI I'm about to show you any like file. In practice, be in the on the backend it's just like a database and a worker cycling through and picking up jobs and so whenever like a call finishes in the system, then this thing gets generated and then sending it is like really trivial, right? So this is like auto-generated and obviously like all this like can be edited to whatever we like want it to say. 
+**Daniel:** How how custom is is like did you spend like a lot of time on the prompt here?
+**Ana:** No, not at all.
+**Daniel:** Okay.
+**Ana:** Cool. And then the rest of my time was spent while creating the pipeline, but how do I switch presents something else? So this is this is the the kind of GUI version that I've like showed you before. And it's it's pretty cool cuz I like really wanted this like for us, right? Like as one of our tools. So what this has now is all of the calls that we have had and it has all of these like project files that every time I drop in a new file, it goes and it figures out what files it has to update and now it has all the content on like the both the individual people and all of the sales meetings and all the like kind of key individuals in the organization and I'm making right now like a... let's see if it reloads... No, not yet... a like the AI chat that was there so you can be like across all the sales calls like what's the what's the thing? And then each one just has this is the same thing. This is like the the...
+**Daniel:** Would you... I just I just texted you a tweet, would you go to that tweet real quick?
+**Ana:** Yeah. Andrej Karpathy.
+**Daniel:** Have you have you seen this tweet?
+**Ana:** LMs to build personal knowledge bases. I mean, yeah, this is what everyone's doing. Yeah, and so exactly, Obsidian. Like that's I literally just wanted to like make an Obsidian for their calls. Like that's exactly what this is. Because I've been using this for two years already, like using Cursor and I'm just like update my notes on this, my notes on this.
+**Daniel:** Is is is this an Obsidian wrapper or is this this is just your own implementation of like it's a file it's a bunch of MDs in a file somewhere and you have you've built the UI on top of it?
+**Ana:** Uh, yeah. So it's um my implementation. What it does is that it will take a transcript, it will look at all the existing files, it first generates proposed um extracts from the transcript to add. Then it does the same apply mechanism as Claude. So Claude whenever it's editing a codebase, it has to find the old value and suggest the new value. And that's what Cursor also does under the hood. So the cool thing is that Claude was leaked. So I like took Claude's like basically based off of Claude's implementation of that before and after. And then it updates the files. So this is now like the way Claude is doing it. Um and yeah, so it's my implementation of that.
+**Daniel:** Gotcha.
+**Ana:** And yeah, Obsidian only works with Markdown files. I mean, with like kind of text-based text-based files is my understanding. 
+**Daniel:** Oh, I thought you said you'd been working with Obsidian for two what what did you say that you've been working with for two years?
+**Ana:** Uh, with Cursor and so like or just Claude code and I only need it to update MD files. So my understanding is like I mean yeah, you can...
+**Daniel:** So yeah, I like did that Karpathy thing last night for basically like an art project and I scraped a bunch of like web pages and made like a I made a Wiki. 
+**Ana:** Cool. 
+**Daniel:** But that was my first time really I I like had a friend who was really into Obsidian like a year ago and I like downloaded it. I honestly just couldn't really figure it out so I played with it for like a little bit. So like I have an Obsidian open right now that is a Wiki. 
+**Ana:** Nice.
+**Daniel:** But I don't really know like if that's the right solution or just building your own thing is a solution. Like I think Golden Eagle has an intranet. Like the whole time I was doing this I was like yeah, like if you're a company like like at IBM you probably had this like at at McKinsey. Like we had a thing called like W3, which was like the intranet. 
+**Ana:** Yeah, we have our knowledge base. 
+**Daniel:** Yeah yeah, and like you could go search like how to make a proposal the McKinsey way and it would be some blog that somebody wrote 10 years ago. Um and we used it to like find like the we had an internal directory right? And like one big thing was there was it was a huge mess, right? It was like a huge just horrific 50 years of dead in there. But like if you are Golden Eagle, like you might want to just have something where you just like the end state wouldn't even be like it it would start with sales and then it would go to ops or whatever, but like it would eventually be just a UI, it's the Golden Eagle UI and you just query "hey, I'm on a sales call" or "hey, I'm making a design plan" and it just knows where to go and find the information and like it's like... I don't want to even say this... but Cursor for your business, right? Um but I think it all it all relies on the the Wiki or like the data... 
+**Ana:** Corpus.
+**Daniel:** I don't know if it's a data lake technically, but for lack of a better word, the folder of files.
+**Ana:** With a with a corpus that's very big, then that's when you would get into RAG stuff. Yeah, and like yeah, vector vector indices. Um but yeah, that's exactly the direction the world is going. And that's why I was psyched to to do this, right? Cuz at least like now you have like a systematized way to look across um look across like the calls that you have had like with a person. Um the issue with like, you know, setting up an Obsidian for them is that it's not an opinionated system at all. Like it's just like Claude code on Obsidian, right? And so we can't add like the call summary and we can't add all the other stuff, right? Like that's all the custom tooling that I did or that like we can tailor. 
+**Daniel:** Yeah. I've seen people say awesome things about Obsidian. Again, like I... like I read some tweet and someone was like, "yeah, I actually do all my coding in Obsidian now" because he can edit a Markdown it's so triggers all these other things. I don't know. I I don't know. All I know is that right now I can open up a Markdown file and it looks nice in Obsidian. Sort of looks like Notion. So to me I'm like well what's the real difference? 
+**Ana:** Yeah. 
+**Daniel:** And I'm using the free version. I'm not paying for it. I don't know what the paid feature I don't even know what the paid features are. I barely even know how to open up a file in Obsidian so a lot of these things probably are like 80% the same. 
+**Ana:** Yeah. 
+**Daniel:** And it's the 20% of difference that like matters.
+**Ana:** Yeah, right? And so it's like for Golden Eagle, it's like they like an Obsidian vault does not have like the intricacies that they want, right? And so even if like this is doing something... because Obsidian what it is is like you connect it to Claude code and then Claude code does the same that it does to your code repo. You say "hey, add a button here" and so it says "I'm going to read the code, I'm going to figure out what I should say instead, I'm going to find the exact line that I have to replace and I'm going to say hey, here's the old value, here's the new value, do you approve?" And I click yes. And all that Obsidian is doing is like that exact same thing but in your notes, right? And so um right, so like that's um that's a very just like basic foundational thing, um and for someone who like doesn't is not tech-savvy, it's not the ideal solution, right? For the Golden Eagle people. You wouldn't give them Obsidian, yeah. 
+**Daniel:** No, without even knowing the word Obsidian. 
+**Ana:** No, yeah yeah. So you would basically make some of their own instance. 
+**Daniel:** Exactly. And so I fucking love that Claude like leaked their code. Cuz now, yeah, we know exactly how they do like all of their like... like they had like a little like a couple of like fixes, right? It's like if you like can find the file, like or if you like can't find the old suggested value, it might mean this error case or this error case. So it was just like nice to get the ready-made.
+**Ana:** Yeah.
+**Daniel:** Also um in other ideas that are in the meta... 
+**Ana:** Yeah. 
+**Daniel:** You know the little annotate idea I had where you basically... I actually like built that out, like the demo feedback thing. 
+**Ana:** The demo, yeah? Did you make it?
+**Daniel:** Yeah, yeah, yeah. And basically what I built was this little Claude skill where if I'm making if I'm making an HTML file, um you can /annotate and it'll just open it up with like a little kind of screen that you can click basically so that it knows where you're clicking and it can make a Markdown file that says like "he clicked on this HTML little piece" and it makes it easier to actually get feedback. 
+**Ana:** Show me!
+**Daniel:** Yeah, let me... I have so many I have so many things running on all these different like nodes on localhost. I'd like to learn how to make that better. Okay. So you see this? 
+**Ana:** Mhm. 
+**Daniel:** So in in Claude or whatever or or if it's in the browser itself, which is probably the easiest way, but sort of like PostHog I think does this a little bit, but you would come here click annotate and then if you come here and like get feedback... 
+**Ana:** Nice. 
+**Daniel:** Then you can like get a little Markdown file that you can put into your Claude and it like knows where you're doing stuff. Otherwise I'm like in Claude typing out like "on page one fix this, on this fix this" and it's like a lot of me having to type where even to go. Um and then I literally saw this get released today or like last night by um I can't... the like Replit or something or one of those on Twitter. 
+**Ana:** This like this sort of like annotation style thing?
+**Daniel:** Yes, this like exact like where you can click and they had a little bit more functionality like like where you could um you could draw little things too, but the kind of core functionality...
+**Ana:** Yes! Do you want to send me send me this um and I'll like put a proper proper like backend on it and then we'll use it for for when we're sending demos. 
+**Daniel:** Yeah, for sure. Yeah, like I was trying to think of cuz one thing you could just do is just record the screen, right? And just mine that because the use case here is you are an AI advisor firm trying to get feedback on your tool from from users. Um and my use case for this is like when I am editing things it's helpful to actually do this. 
+**Ana:** Awesome.
+**Daniel:** Um this is a skill not sure if that's local... 
+**Ana:** Yeah, a skill is just a Markdown file. Yeah.
+**Daniel:** How do I send this to Ana? I also upgraded to Whisper Premium now. 
+**Ana:** Is is it a lot better?
+**Daniel:** It's just because I ran out of words. You only get so many words. 
+**Ana:** Oh, I had to update to Pro. I don't know if that's the same thing. 
+**Daniel:** Yeah, yeah, we're I basically had to pay for Whisper now. 
+**Ana:** Yeah, I'm paying for Whisper as well. I gave in. Which I hate, but it's okay. 
+**Daniel:** So where I want to go with this is um now I think what I want to investigate is their like phone system. Like I want to send the email to Sean to clarify like what they have. After doing like some investigation myself um and consider how we're going to get like various like methods of of input into it, right? So if like we have like text or emails or whatever. Um and so so we have like the the four ways like call, video call, text or email. And right now what they're doing is literally just like input text notes for call, input text notes for like video meeting, copy paste text, copy paste email. So figure out how to record the first two and then if there's an easy way to like use Elevator connect with their like mail messenger thing to get those other two um and if not like for a first version we have workarounds. Like the baseline is copy-pasting so we could just copy-paste here as well or you could have something where you like forward the emails that you want um and they like populate in our system um and forward the text that you want to populate them in our system, right? Or like send screenshots or things like that. So those would be like the worst case workarounds. Um yeah, so those kind of like other like the methods of communication is probably going to be like what I'm looking at next. 
+**Ana:** Yeah, and like trying to actually integrate into a feed or into that into that knowledge base.
+**Daniel:** Um both, both. Yeah, so like for any given like client view, you want to be able to have like the history log of like all communications that you've had with them to inform whatever you should say next, yeah. 
+**Ana:** Yeah. 
+**Daniel:** And then like after that, right? Like we'll want to start thinking about generating and in fact like I'll probably kind of work in parallel, right? Because like the figuring out the input system for like the communication channels, that one's like probably just going to be the trickiest element of the build um but like then in parallel um we want to start creating the like endpoints to like connect with the CRM to be like "hey, this is your first call with a client, like do you want to like set a reminder for like one week from that?" and then you just click yes and the reminder like populates, right? And so um that's something that I like can just start making now like the any sort of like auto suggestions and those endpoints. Um that are based off of the context you have with the client. There's going to be a little bit also of or like a fair amount of kind of like behind the scenes work, like um you know how Claude has this like memory file that you don't look at? 
+**Ana:** Yeah. 
+**Daniel:** Yeah, and so it's like we'll definitely want for things like that that we have a logic to updating so that it um it gets things right for the company. Um so fine tuning, but yeah, those are kind of like the next two biggest steps. Um is the like CRM endpoints and like auto-generating content based on your history and like the channel integration. So that's what I'm going to look at for the rest of the day and I can give you an update. Thoughts?
+**Ana:** Yeah, I what do you think about the Claude Office integration? 
+**Daniel:** Um yeah, I need to I need to consider it. Let's let's think about it live together right now. 
+**Ana:** Yeah, because like part of me thinks that that means our first step should basically actually just be to like train everybody on Claude Office integration and doing workflows like basically learning how to pull data out of their email and pull data out of their like files and then manipulating that. 
+**Daniel:** 100%. 
+**Ana:** Because then like we may not need to build a full UI slash a full system that like for example creates email follow-ups because that might be something that like once we create the I don't know if knowledge graph is the right word... like once we create like the repository that their Claude can hook up into, they might be able to just prompt "write me a follow-up with Charlene." 
+**Daniel:** Yeah, like write me like the follow-up. Yeah, potentially. Interesting. Do you have thoughts?
+**Ana:** I mean, just based on like how I built a knowl... I built this thing last night where, you know, there might be like a hundred files and then it just has like an index file and the index file has pointers to like all of the other files where it would go like read and query things and kind of figure it out. 
+**Daniel:** Right, so the um so I mean you could create like it would basically be exactly what we have now minus a GUI, right? Which is basically like a a running a running database. So like forget about like the actual Obsidian, like you would use this like in a database. And then like you have a database full of every single communication that you've ever had with the client. And we make a skill that says "when a user tells you to make a follow-up email to Alice, go to the database and query everything for the customer tracking number that pertains to Alice, read all of those entries and compose the email." That's what that skill would be. Um and so whether we do it here or in a Claude Claude skill, like it's um the same foundational knowledge. Or like same foundational work. 
+**Ana:** Yeah. Yeah, I think the data sources are going to be... 
+**Daniel:** You want to talk to Sean and have him give input on it because I don't necessarily want to give options like that to like the executive team because they're not even going to like know like what... 
+**Ana:** Yeah. 
+**Daniel:** Yeah, no. They shouldn't be involved. 
+**Ana:** Exactly. And so I I can talk to Sean and have him...
+**Daniel:** Yeah, and then so the other big piece of it is like one thing that we might run into as a risk for implementation is shit that they have on-prem is going to be a challenge because how do we get it? Like versus stuff in the cloud is easy, we just extract it out of we just make a connector to O365, easy, get the emails, emails are probably easy, SMS are probably easy, but like if they have stuff that are like in files local like in their private cloud or it's probably not a private cloud, it's probably like a hardwired on-prem system that they have that that might be hard. Like I'm actually not really sure how we'd get that. We'd have to like convince Sean to like extract it or something or build some kind of network connection. 
+**Ana:** Yeah, and so for um for what sort of things are you imagining we might need to get that currently exist in their servers?
+**Daniel:** I just like I don't know where their stuff lives. Like I don't know where their stuff lives.
+**Ana:** So like the cool thing is right now for let's say that for our implementation the at least the way that we're thinking about it now is like the only thing that you need is a full log of all communications with the client, right? And so those are really the only four channels to worry about is like call and for that we know that they have Elevate. So there's got to be something there. Then um video which we know that they use Teams. So that's okay too. And then text which again also Elevate. And then finally email, which actually it's possible that they have their own email servers if Sean configured like a custom like IMAP. Um and so actually funny enough like that might be like the weird one. Um but those are the only four data sources and it doesn't sound like those are things that live on-prem. 
+**Daniel:** Well, unless there's stuff in the CRM that like reps put like... I think it'd be useful to get all the historical data at some point...
+**Ana:** Yeah.
+**Daniel:** I don't think it's like critical. I think it I think it will be very useful. 
+**Ana:** The good thing is that that would be a one-time thing, so that's not a huge deal. 
+**Daniel:** Yeah, that's fair. Um and then the cool thing is the CRM data, like you heard my dad he was like like he's not going to do business with them unless the data is in the cloud in his S3 buckets. So we have access to all the data on in the CRM. 
+**Daniel:** If they can migrate. 
+**Ana:** Yeah, exactly. 
+**Daniel:** Cool. 
+**Ana:** Yeah.
+Ana: My dad will probably take care of migrating it. Yeah, yeah, he's done a lot of migrations. A lot of large-scale migrations, so, yeah. However, however it is he handles those, I don't actually know. Would be cool to ask him someday. Um, okay. So, how are you feeling about like, the product that we're delivering here, right? And it's like, whether we look at, you know, the Claude skill we're talking about or whether we look at this GUI—like, the actual form factor is what's mutable. But like, the business logic we're delivering is like, we're giving you a bespoke way to capture all of your communication channels. And we're giving you like, the briefing and the prompts—like, we're giving you control over those in an easy way because you're not a tech-savvy person, and so like, we're going to let you... and then, we're going to like create bespoke things for you, like auto-suggested updates to your CRM. And that's bespoke—like, the reminder thing—and we're going to let you bake in like, the logic that you like—the one week, the three months, the whatever. And we're also going to like, let's say, let you customize the way that you like your emails in an easy way. So that's kind of like the value that we're adding. It feels a little bit to me like... I want to give a little bit more sauce than this.
+
+Daniel: Well, like, I think it's totally fine saying, "Here's our full roadmap and vision," which is like, awesome, right? It's all these awesome cool things. It's going to make your life great, you know, your wife's going to make you dinner for the first time in 20 years. But what you get in the first batch is the first taste. And the first taste doesn't have to be... it just has to kind of hook them. And so like, I think the kind of early, easy features are kind of what we should do and then grow from there. Because like, the stuff that's more complicated and will take longer and needs more testing—that stuff we should just like charge them out the ass for and make a ton of money on it, and it'll be a long engagement. Like, great. Embed... like, they'll know us deeply, we'll know them deeply, we'll be building their systems. It'll also have to be, like, honestly, enterprise-ready, right? These guys are a real business. It's got to actually work all the time. And so like...
+
+Ana: And that's why one of the decisions I'm making is to keep it simple, you know? Like, in terms of front-end, I've worked with React a lot in the past because it gives you a lot of conveniences in terms of auto-rendering components and things like this. And building in just vanilla HTML, JS—sorry, JavaScript, CSS—like, there's a couple more things to keep track of, but it's like so battle-proven, there's no layers of abstraction. And so it's like, it works.
+
+Daniel: Yeah, I have to go get my reporter and take him to lunch at 1:00.
+
+Ana: Oh, for sure. Go for it. I think we're like set here. You know what I'm going to look at next.
+
+Daniel: Yeah, um, I also have some cool hacky shit to show you later, so I'll let you know.
+
+Ana: Great. Okay, yeah, please do. Hope lunch is great. Talk soon.
